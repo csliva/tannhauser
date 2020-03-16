@@ -23,6 +23,7 @@ module.exports = {
   ** Global CSS
   */
   css: [
+    // '@/assets/sass/global.sass'
   ],
   /*
   ** Plugins to load before mounting the App
@@ -40,7 +41,13 @@ module.exports = {
   modules: [
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
+    '@nuxtjs/style-resources'
   ],
+  styleResources: {
+    sass: [
+      'assets/sass/_global.sass'
+    ]
+  },
   /*
   ** Build configuration
   */
