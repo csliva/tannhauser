@@ -1,36 +1,90 @@
 <template>
-  <div>
-    <p class="piano">{{ title }}</p>
-    <div class="">
-      <button v-on:click="playnote('C', '8n')">C</button>
-      <button v-on:click="playnote('D', '8n')">D</button>
-      <button v-on:click="playnote('E', '8n')">E</button>
+  <div class="piano">
+    <h1>{{ title }}</h1>
+    <div class="piano__synth">
+      <div v-if="synth">
+        Oscilator
+        <select v-model="synth.oscillator.type">
+          <option>sine</option>
+          <option>square</option>
+          <option>triangle</option>
+          <option>sawtooth</option>
+        </select>
+      </div>
+      <div v-else>
+        <p>No Synth Loaded</p>
+      </div>
+    </div>
+    <div class="piano__octave">
+      <select v-model="octave">
+        <option v-for="o in 6">{{ o }}</option>
+      </select>
+    </div>
+    <div class="piano__roll">
+      <button v-for="k in keys"
+      class="piano__key"
+      :class="{'piano__key--black': k.color === 'black'}"
+      :key="k.val"
+      v-on:click="playnote(k.val + octave, '8n')">
+        {{ k.val + octave }}
+      </button>
     </div>
   </div>
 </template>
+
 
 <style lang="sass">
   .piano
     background: #fff
     color: #666
     padding: $blh
+    &__octave
+      display: block
+    &__roll
+      display: block
+    &__key
+      display: inline-block
+      appearance: none
+      border-radius: 0
+      &--black
+        background-color: #ddd
 </style>
+
 
 <script>
   import Tone from 'tone'
-  if (process.client) {
-    var synth = new Tone.Synth().toMaster()
-  }
   export default {
     name: 'piano',
     data () {
       return {
-        title: "Kyle's Piano (WIP)"
+        title: "Kyle's Piano (WIP)",
+        octave: 4,
+        keys: [
+          { val: 'C', color: 'white'},
+          { val: 'C#', color: 'black'},
+          { val: 'D', color: 'white'},
+          { val: 'D#', color: 'black'},
+          { val: 'E', color: 'white'},
+          { val: 'F', color: 'white'},
+          { val: 'F#', color: 'black'},
+          { val: 'G', color: 'white'},
+          { val: 'G#', color: 'black'},
+          { val: 'A', color: 'white'},
+          { val: 'A#', color: 'black'},
+          { val: 'B', color: 'white'},
+          { val: 'B#', color: 'black'}
+        ],
+        synth: false
       }
+    },
+    mounted: function(){
+      console.log('MOUNTED')
+      this.synth = new Tone.Synth().toMaster()
+      console.log(this.synth)
     },
     methods: {
       playnote: function (note, time) {
-        synth.triggerAttackRelease(note, time)
+        this.synth.triggerAttackRelease(note, time)
       }
     }
   }
