@@ -1,6 +1,6 @@
 <template>
   <div class="piano">
-    <h1>{{ title }}</h1>
+    <h1 class="piano__title">{{ title }}</h1>
     <div class="piano__synth">
       <div v-if="synth">
         Oscilator
@@ -38,6 +38,8 @@
     background: #fff
     color: #666
     padding: $blh
+    &__title
+      margin-bottom: $blh
     &__octave
       display: block
     &__roll
@@ -48,6 +50,11 @@
       border-radius: 0
       &--black
         background-color: #ddd
+    &__synth
+      display: block
+      border: solid 1px #ddd
+      padding: $blh
+      margin-bottom: $blh
 </style>
 
 
@@ -78,7 +85,6 @@
       }
     },
     mounted: function(){
-      console.log('MOUNTED')
       this.synth = new Tone.Synth().toMaster()
       console.log(this.synth)
     },
