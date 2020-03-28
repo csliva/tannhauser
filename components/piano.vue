@@ -3,16 +3,18 @@
     <h1 class="piano__title">{{ title }}</h1>
     <div class="piano__synth">
       <div v-if="synth">
-        Oscilator
-        <select v-model="synth.oscillator.type">
-          <option>sine</option>
-          <option>square</option>
-          <option>triangle</option>
-          <option>sawtooth</option>
-        </select>
+        <span>
+          Oscilator Type:
+          <select v-model="synth.oscillator.type">
+            <option>sine</option>
+            <option>square</option>
+            <option>triangle</option>
+            <option>sawtooth</option>
+          </select>
+        </span>
       </div>
-      <div v-else>
-        <p>No Synth Loaded</p>
+      <div v-else >
+        <p>No Synth Loaded...</p>
       </div>
     </div>
     <div class="piano__octave">
@@ -23,11 +25,11 @@
 
     <div class="piano__roll">
       <button v-for="k in keys"
-      class="piano__key"
-      :class="{'piano__key--black': k.color === 'black'}"
-      :key="k.val"
-      v-on:click="playnote(k.val + octave, '8n')">
-        {{ k.val + octave }}
+        class="piano__key"
+        :class="{'piano__key--black': k.color === 'black'}"
+        :key="k.val"
+        v-on:click="playnote(k.val + octave, '8n')">
+          {{ k.val + octave }}
       </button>
     </div>
   </div>
@@ -47,6 +49,7 @@
       margin-bottom: $blh
     &__octave
       display: block
+      margin-bottom: $blh/2
     &__roll
       display: block
     &__key
