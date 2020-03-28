@@ -1,5 +1,5 @@
 <template>
-  <p class="piano">Piano</p>
+  <p class="piano">Piano!</p>
 </template>
 
 <style lang="sass">
