@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="range">
+  <div class="asdr">
     <p>{{ msg }}</p>
   </div>
 </template>
@@ -9,13 +9,13 @@
     props: ['value', 'synth'],
     data(){
       return {
-        msg: 'Range Loaded'
+        msg: 'ASDR Loaded'
       }
     }
   }
 </script>
 
 <style lang="sass">
-  .range
+  .asdr
     display: block
 </style>

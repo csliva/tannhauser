@@ -128,9 +128,11 @@
 <script>
   import Tone from 'tone'
   import SynthSelect from './synth/Select.vue'
+  import SynthRange from './synth/Range.vue'
+  import SynthAsdr from './synth/Asdr.vue'
   export default {
     components: {
-      SynthSelect
+      SynthSelect, SynthRange, SynthAsdr
     },
     data () {
       return {
