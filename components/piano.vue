@@ -1,18 +1,12 @@
-<template>
+<template lang="html">
   <div class="piano">
     <h1 class="piano__title">{{ title }}</h1>
     <div class="piano__synth">
       <!-- Synth (Start) -->
       <div v-if="synth" class="synth">
-        <p>
-          Volume: <input v-model.number.lazy="synth.volume.value" type="range" min="-12" max="10" step="1" name="synth-volume">
-          {{ synth.volume.value }}
-        </p>
         <span class="synth__param">
           <label>Oscilator Type:</label>
-          <select v-model="synth.oscillator.type" name="synth-osc-type">
-            <option v-for="t in synthOpts.oscTypes">{{ t }}</option>
-          </select>
+          <synth-select v-model="synth.oscillator.type" :options="synthOpts.oscTypes" name="synth-osc-type" />
         </span>
         <span class="synth__param">
           <label>Amp Envelope</label>
@@ -40,6 +34,11 @@
             <select v-model.lazy="synth.envelope.releaseCurve" name="synth-env-attack-curve">
               <option v-for="c in synthOpts.curves">{{ c }}</option>
             </select>
+          </div>
+          <br>
+          <div class="#">
+            Volume: <input v-model.number.lazy="synth.volume.value" type="range" min="-12" max="10" step="1" name="synth-volume">
+            {{ synth.volume.value }}
           </div>
         </span>
         <span class="synth__param">
@@ -99,8 +98,17 @@
       <!-- Synth (End) -->
     </div>
     <div class="piano__octave">
+      <label>Octave:</label>
       <select v-model="octave">
         <option v-for="o in 6">{{ o }}</option>
+      </select>
+      <label>Note Duration:</label>
+      <select v-model="noteDuration">
+        <option>1n</option>
+        <option>2n</option>
+        <option>4n</option>
+        <option>8n</option>
+        <option>16n</option>
       </select>
     </div>
 
@@ -109,7 +117,7 @@
         class="piano__key"
         :class="{'piano__key--black': k.color === 'black'}"
         :key="k.val"
-        @click="playnote(k.val + octave, '8n')">
+        @click="playnote(k.val + octave, noteDuration)">
           {{ k.val + octave }}
       </button>
     </div>
@@ -117,59 +125,18 @@
 </template>
 
 
-<style lang="sass">
-  .piano
-    background: #fff
-    color: #666
-    padding: $blh
-    &__octave
-      display: block
-    &__keyboard
-      display: block
-    &__title
-      margin-bottom: $blh
-    &__octave
-      display: block
-      margin-bottom: $blh/2
-    &__roll
-      display: block
-    &__key
-      position: relative
-      display: inline-block
-      appearance: none
-      border-radius: 0
-      padding: $blh ($blh/4)
-      z-index: 0
-      &--black
-        background-color: #ddd
-      &:focus
-        z-index: 10
-    &__synth
-      display: block
-      border: solid 1px #ddd
-      padding: $blh
-      margin-bottom: $blh
-  // Synth
-  .synth
-    display: block
-    &__param
-      display: inline-block
-      vertical-align: top
-      margin-right: $blh/2
-      label
-        display: block
-        margin-bottom: $blh/4
-</style>
-
-
 <script>
   import Tone from 'tone'
+  import SynthSelect from './synth/Select.vue'
   export default {
-    name: 'piano',
+    components: {
+      SynthSelect
+    },
     data () {
       return {
-        title: "Tone JS Piano (WIP)",
+        title: "Tone JS Piano",
         octave: 4,
+        noteDuration: '8n',
         keys: [
           { val: 'C', color: 'white', key: 9},
           { val: 'C#', color: 'black', key: 49},
@@ -210,7 +177,7 @@
       that.keys.map(note => {
         // check if keypress matches a note
         if (note.key === e.keyCode){
-          that.synth.triggerAttackRelease(note.val+that.octave, '8n')
+          that.synth.triggerAttackRelease(note.val+that.octave, that.noteDuration)
         }
       })
     }
@@ -224,3 +191,52 @@
   },
 }
 </script>
+
+
+<style lang="sass">
+  .piano
+    background: #fff
+    color: #666
+    padding: $blh
+    &__octave
+      display: block
+    &__keyboard
+      display: block
+    &__title
+      margin-bottom: $blh
+    &__octave
+      display: block
+      margin-bottom: $blh/2
+    &__roll
+      display: block
+    &__key
+      position: relative
+      display: inline-block
+      appearance: none
+      border-radius: 0
+      padding: $blh ($blh/4)
+      z-index: 0
+      &--black
+        background-color: #ddd
+      &:focus
+        z-index: 10
+    &__synth
+      display: block
+      border: solid 1px #ddd
+      background: #eee
+      padding: $blh/2
+      margin-bottom: $blh
+  // Synth
+  .synth
+    display: block
+    border: solid 1px #ddd
+    background: #fff
+    padding: $blh/2
+    &__param
+      display: inline-block
+      vertical-align: top
+      margin-right: $blh/2
+      label
+        display: block
+        margin-bottom: $blh/4
+</style>
