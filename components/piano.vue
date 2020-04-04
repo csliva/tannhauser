@@ -13,7 +13,7 @@
           </select>
         </span>
       </div>
-      <div v-else >
+      <div v-else>
         <p>No Synth Loaded...</p>
       </div>
     </div>
@@ -72,7 +72,7 @@
     name: 'piano',
     data () {
       return {
-        title: "Kyle's Piano (WIP)",
+        title: "Tone JS Piano (WIP)",
         octave: 4,
         keys: [
           { val: 'C', color: 'white', key: 9},
@@ -88,7 +88,8 @@
           { val: 'A#', color: 'black', key: 54},
           { val: 'B', color: 'white', key: 89},
           { val: 'B#', color: 'black', key: 85}
-        ]
+        ],
+        synth: false
       }
     },
   methods: {
