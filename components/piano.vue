@@ -2,15 +2,37 @@
   <div class="piano">
     <h1 class="piano__title">{{ title }}</h1>
     <div class="piano__synth">
-      <div v-if="synth">
-        <span>
-          Oscilator Type:
+      <div v-if="synth" class="synth">
+        <p>
+          <button @click="logSynth">Log Synth</button>
+        </p>
+        <span class="synth__param">
+          <label>Oscilator Type:</label>
           <select v-model="synth.oscillator.type">
             <option>sine</option>
             <option>square</option>
             <option>triangle</option>
             <option>sawtooth</option>
           </select>
+        </span>
+        <span class="synth__param">
+          <label>Amp Envelope</label>
+          <div class="#">
+            A: <input v-model="synth.envelope.attack" type="range" min="0" max="1" step="0.001">
+            {{ synth.envelope.attack }}
+          </div>
+          <div class="#">
+            S: <input v-model="synth.envelope.sustain" type="range" min="0" max="1" step="0.001" >
+            {{ synth.envelope.sustain }}
+          </div>
+          <div class="">
+            D: <input v-model="synth.envelope.decay" type="range" min="0" max="1" step="0.001" >
+            {{ synth.envelope.decay }}
+          </div>
+          <div class="">
+            R: <input v-model="synth.envelope.release" type="range" min="0" max="1" step="0.001" >
+            {{ synth.envelope.release }}
+          </div>
         </span>
       </div>
       <div v-else>
@@ -28,7 +50,7 @@
         class="piano__key"
         :class="{'piano__key--black': k.color === 'black'}"
         :key="k.val"
-        v-on:click="playnote(k.val + octave, '8n')">
+        @click="playnote(k.val + octave, '8n')">
           {{ k.val + octave }}
       </button>
     </div>
@@ -53,16 +75,31 @@
     &__roll
       display: block
     &__key
+      position: relative
       display: inline-block
       appearance: none
       border-radius: 0
+      padding: $blh ($blh/4)
+      z-index: 0
       &--black
         background-color: #ddd
+      &:focus
+        z-index: 10
     &__synth
       display: block
       border: solid 1px #ddd
       padding: $blh
       margin-bottom: $blh
+  // Synth
+  .synth
+    display: block
+    &__param
+      display: inline-block
+      vertical-align: top
+      margin-right: $blh/2
+      label
+        display: block
+        margin-bottom: $blh/4
 </style>
 
 
@@ -93,11 +130,14 @@
       }
     },
   methods: {
+    logSynth: function() {
+      console.log(this.synth)
+    },
     playnote: function (note, time) {
       this.synth.triggerAttackRelease(note, time)
     },
     handleKey: (e, that) => {
-      console.log(e.keyCode)
+      // console.log(e.keyCode)
       that.keys.map(note => {
         // check if keypress matches a note
         if (note.key === e.keyCode){
@@ -107,7 +147,7 @@
     }
   },
   mounted: function () {
-    this.synth = new Tone.Synth().toMaster()
+    this.synth = new Tone.MonoSynth().toMaster()
     window.addEventListener("keydown", e => {
       e.preventDefault()
       this.handleKey(e, this)
