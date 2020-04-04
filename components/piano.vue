@@ -2,6 +2,8 @@
   <div class="piano">
     <h1 class="piano__title">{{ title }}</h1>
     <div class="piano__synth">
+
+
       <!-- Synth (Start) -->
       <div v-if="synth" class="synth">
         <span class="synth__param">
@@ -10,31 +12,9 @@
         </span>
         <span class="synth__param">
           <label>Amp Envelope</label>
-          <div class="#">
-            A: <input v-model.number.lazy="synth.envelope.attack" type="range" min="0.01" max="2" step="0.001">
-            {{ synth.envelope.attack }}
-            <select v-model.lazy="synth.envelope.attackCurve" name="synth-env-attack-curve">
-              <option v-for="c in synthOpts.curves">{{ c }}</option>
-            </select>
-          </div>
-          <div class="#">
-            D: <input v-model.number.lazy="synth.envelope.decay" type="range" min="0.01" max="1" step="0.001" >
-            {{ synth.envelope.decay }}
-            <select v-model.lazy="synth.envelope.decayCurve" name="synth-env-attack-curve">
-              <option v-for="c in synthOpts.curvesAlt">{{ c }}</option>
-            </select>
-          </div>
-          <div class="#">
-            S: <input v-model.number.lazy="synth.envelope.sustain" type="range" min="0" max="1" step="0.001" >
-            {{ synth.envelope.sustain }}
-          </div>
-          <div class="#">
-            R: <input v-model.number.lazy="synth.envelope.release" type="range" min="0.1" max="4" step="0.001" >
-            {{ synth.envelope.release }}
-            <select v-model.lazy="synth.envelope.releaseCurve" name="synth-env-attack-curve">
-              <option v-for="c in synthOpts.curves">{{ c }}</option>
-            </select>
-          </div>
+
+          <synth-adsr v-model="synth.envelope" name="synth-env" />
+
           <br>
           <div class="#">
             Volume: <input v-model.number.lazy="synth.volume.value" type="range" min="-12" max="10" step="1" name="synth-volume">
@@ -44,43 +24,19 @@
         <span class="synth__param">
           <p>
             <label>Filter (Type, Rolloff, Q)</label>
-            <select v-model.lazy="synth.filter.type" name="synth-filter-type">
-              <option v-for="t in synthOpts.filterTypes">{{ t }}</option>
-            </select>
-            <select v-model.lazy="synth.filter.rolloff" name="synth-filter-rolloff">
-              <option v-for="r in synthOpts.filterRolloffs">{{ r }}</option>
-            </select>
+
+            <synth-select v-model="synth.filter.type" :options="synthOpts.filterTypes" name="synth-filter-type" />
+            <synth-select v-model="synth.filter.rolloff" :options="synthOpts.filterRolloffs" name="synth-filter-rolloff" />
+
             Q: <input v-model.number.lazy="synth.filter.Q.value" type="range" min="0" max="10" step="1" >
             {{ synth.filter.Q.value }}
           </p>
+
           <div class="#">
             <label>Filter Envelope</label>
-            <div class="#">
-              A: <input v-model.number.lazy="synth.filterEnvelope.attack" type="range" min="0.01" max="2" step="0.001">
-              {{ synth.filterEnvelope.attack }}
-              <select v-model.lazy="synth.filterEnvelope.attackCurve">
-                <option v-for="c in synthOpts.curves">{{ c }}</option>
-              </select>
-            </div>
-            <div class="#">
-              D: <input v-model.number.lazy="synth.filterEnvelope.decay" type="range" min="0.01" max="1" step="0.001" >
-              {{ synth.filterEnvelope.decay }}
-              <select v-model.lazy="synth.filterEnvelope.decayCurve">
-                <option v-for="c in synthOpts.curvesAlt">{{ c }}</option>
-              </select>
-            </div>
-            <div class="#">
-              S: <input v-model.number.lazy="synth.filterEnvelope.sustain" type="range" min="0" max="1" step="0.001" >
-              {{ synth.filterEnvelope.sustain }}
-            </div>
-            <div class="#">
-              R: <input v-model.number.lazy="synth.filterEnvelope.release" type="range" min="0.1" max="4" step="0.001" >
-              {{ synth.filterEnvelope.release }}
-              <select v-model.lazy="synth.filterEnvelope.releaseCurve">
-                <option v-for="c in synthOpts.curves">{{ c }}</option>
-              </select>
-            </div>
+            <synth-adsr v-model="synth.filterEnvelope" name="synth-filter-env" />
           </div>
+
           <br>
           <div class="#">
             Freq: <input v-model.number.lazy="synth.filterEnvelope.baseFrequency" type="range" min="20" max="20000" step="1" >
@@ -96,6 +52,8 @@
         <p>No Synth Loaded...</p>
       </div>
       <!-- Synth (End) -->
+
+
     </div>
     <div class="piano__octave">
       <label>Octave:</label>
@@ -129,10 +87,10 @@
   import Tone from 'tone'
   import SynthSelect from './synth/Select.vue'
   import SynthRange from './synth/Range.vue'
-  import SynthAsdr from './synth/Asdr.vue'
+  import SynthAdsr from './synth/Adsr.vue'
   export default {
     components: {
-      SynthSelect, SynthRange, SynthAsdr
+      SynthSelect, SynthRange, SynthAdsr
     },
     data () {
       return {

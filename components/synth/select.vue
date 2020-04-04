@@ -4,7 +4,6 @@
       <option v-for="o in options">{{ o }}</option>
     </select>
   </div>
-
 </template>
 
 <script>
@@ -20,5 +19,5 @@
 
 <style lang="sass">
   .select
-    display: block
+    display: inline-block
 </style>
