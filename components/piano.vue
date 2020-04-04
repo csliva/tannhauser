@@ -2,11 +2,8 @@
   <div class="piano">
     <h1 class="piano__title">{{ title }}</h1>
     <div class="piano__synth">
+      <!-- Synth (Start) -->
       <div v-if="synth" class="synth">
-        <p>
-          <button @click="logSynth">Log Synth</button>
-          <button @click="initSynth">Init Synth</button>
-        </p>
         <p>
           Volume: <input v-model.number.lazy="synth.volume.value" type="range" min="-12" max="10" step="1" name="synth-volume">
           {{ synth.volume.value }}
@@ -14,10 +11,7 @@
         <span class="synth__param">
           <label>Oscilator Type:</label>
           <select v-model="synth.oscillator.type" name="synth-osc-type">
-            <option>sine</option>
-            <option>square</option>
-            <option>triangle</option>
-            <option>sawtooth</option>
+            <option v-for="t in synthOpts.oscTypes">{{ t }}</option>
           </select>
         </span>
         <span class="synth__param">
@@ -26,21 +20,14 @@
             A: <input v-model.number.lazy="synth.envelope.attack" type="range" min="0.01" max="2" step="0.001">
             {{ synth.envelope.attack }}
             <select v-model.lazy="synth.envelope.attackCurve" name="synth-env-attack-curve">
-              <option>linear</option>
-              <option>exponential</option>
-              <option>sine</option>
-              <option>cosine</option>
-              <option>bounce</option>
-              <option>ripple</option>
-              <option>step</option>
+              <option v-for="c in synthOpts.curves">{{ c }}</option>
             </select>
           </div>
           <div class="#">
             D: <input v-model.number.lazy="synth.envelope.decay" type="range" min="0.01" max="1" step="0.001" >
             {{ synth.envelope.decay }}
             <select v-model.lazy="synth.envelope.decayCurve" name="synth-env-attack-curve">
-              <option>linear</option>
-              <option>exponential</option>
+              <option v-for="c in synthOpts.curvesAlt">{{ c }}</option>
             </select>
           </div>
           <div class="#">
@@ -51,13 +38,7 @@
             R: <input v-model.number.lazy="synth.envelope.release" type="range" min="0.1" max="4" step="0.001" >
             {{ synth.envelope.release }}
             <select v-model.lazy="synth.envelope.releaseCurve" name="synth-env-attack-curve">
-              <option>linear</option>
-              <option>exponential</option>
-              <option>sine</option>
-              <option>cosine</option>
-              <option>bounce</option>
-              <option>ripple</option>
-              <option>step</option>
+              <option v-for="c in synthOpts.curves">{{ c }}</option>
             </select>
           </div>
         </span>
@@ -65,20 +46,10 @@
           <p>
             <label>Filter (Type, Rolloff, Q)</label>
             <select v-model.lazy="synth.filter.type" name="synth-filter-type">
-              <option>lowpass</option>
-              <option>highpass</option>
-              <option>bandpass</option>
-              <option>lowshelf </option>
-              <option>highshelf</option>
-              <option>notch </option>
-              <option>allpass</option>
-              <option>peaking</option>
+              <option v-for="t in synthOpts.filterTypes">{{ t }}</option>
             </select>
             <select v-model.lazy="synth.filter.rolloff" name="synth-filter-rolloff">
-              <option>-12</option>
-              <option>-24</option>
-              <option>-48</option>
-              <option>-96</option>
+              <option v-for="r in synthOpts.filterRolloffs">{{ r }}</option>
             </select>
             Q: <input v-model.number.lazy="synth.filter.Q.value" type="range" min="0" max="10" step="1" >
             {{ synth.filter.Q.value }}
@@ -89,21 +60,14 @@
               A: <input v-model.number.lazy="synth.filterEnvelope.attack" type="range" min="0.01" max="2" step="0.001">
               {{ synth.filterEnvelope.attack }}
               <select v-model.lazy="synth.filterEnvelope.attackCurve">
-                <option>linear</option>
-                <option>exponential</option>
-                <option>sine</option>
-                <option>cosine</option>
-                <option>bounce</option>
-                <option>ripple</option>
-                <option>step</option>
+                <option v-for="c in synthOpts.curves">{{ c }}</option>
               </select>
             </div>
             <div class="#">
               D: <input v-model.number.lazy="synth.filterEnvelope.decay" type="range" min="0.01" max="1" step="0.001" >
               {{ synth.filterEnvelope.decay }}
               <select v-model.lazy="synth.filterEnvelope.decayCurve">
-                <option>linear</option>
-                <option>exponential</option>
+                <option v-for="c in synthOpts.curvesAlt">{{ c }}</option>
               </select>
             </div>
             <div class="#">
@@ -114,13 +78,7 @@
               R: <input v-model.number.lazy="synth.filterEnvelope.release" type="range" min="0.1" max="4" step="0.001" >
               {{ synth.filterEnvelope.release }}
               <select v-model.lazy="synth.filterEnvelope.releaseCurve">
-                <option>linear</option>
-                <option>exponential</option>
-                <option>sine</option>
-                <option>cosine</option>
-                <option>bounce</option>
-                <option>ripple</option>
-                <option>step</option>
+                <option v-for="c in synthOpts.curves">{{ c }}</option>
               </select>
             </div>
           </div>
@@ -129,12 +87,16 @@
             Freq: <input v-model.number.lazy="synth.filterEnvelope.baseFrequency" type="range" min="20" max="20000" step="1" >
             {{ synth.filterEnvelope.baseFrequency }}
           </div>
-
         </span>
+        <footer class="synth__foot">
+          <button @click="logSynth">Log Synth</button>
+          <button @click="initSynth">Init Synth</button>
+        </footer>
       </div>
       <div v-else>
         <p>No Synth Loaded...</p>
       </div>
+      <!-- Synth (End) -->
     </div>
     <div class="piano__octave">
       <select v-model="octave">
@@ -223,7 +185,14 @@
           { val: 'B', color: 'white', key: 89},
           { val: 'B#', color: 'black', key: 85}
         ],
-        synth: false
+        synth: false,
+        synthOpts: {
+          oscTypes: ['sine', ' square', 'triangle', 'sawtooth'],
+          curves: ['linear', 'exponential', 'sine', 'cosine', 'bounce', 'ripple', 'step'],
+          curvesAlt: ['linear', 'exponential'],
+          filterTypes: ['lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'notch', 'allpass', 'peaking'],
+          filterRolloffs: ['-12', '-24', '-48', '-96']
+        }
       }
     },
   methods: {
