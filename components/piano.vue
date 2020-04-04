@@ -5,6 +5,7 @@
       <div v-if="synth" class="synth">
         <p>
           <button @click="logSynth">Log Synth</button>
+          <button @click="initSynth">Init Synth</button>
         </p>
         <span class="synth__param">
           <label>Oscilator Type:</label>
@@ -18,19 +19,19 @@
         <span class="synth__param">
           <label>Amp Envelope</label>
           <div class="#">
-            A: <input v-model="synth.envelope.attack" type="range" min="0" max="1" step="0.001">
+            A: <input v-model.number.lazy="synth.envelope.attack" type="range" min="0.01" max="2" step="0.001">
             {{ synth.envelope.attack }}
           </div>
           <div class="#">
-            S: <input v-model="synth.envelope.sustain" type="range" min="0" max="1" step="0.001" >
-            {{ synth.envelope.sustain }}
-          </div>
-          <div class="">
-            D: <input v-model="synth.envelope.decay" type="range" min="0" max="1" step="0.001" >
+            D: <input v-model.number.lazy="synth.envelope.decay" type="range" min="0.01" max="1" step="0.001" >
             {{ synth.envelope.decay }}
           </div>
-          <div class="">
-            R: <input v-model="synth.envelope.release" type="range" min="0" max="1" step="0.001" >
+          <div class="#">
+            S: <input v-model.number.lazy="synth.envelope.sustain" type="range" min="0" max="1" step="0.001" >
+            {{ synth.envelope.sustain }}
+          </div>
+          <div class="#">
+            R: <input v-model.number.lazy="synth.envelope.release" type="range" min="0.1" max="4" step="0.001" >
             {{ synth.envelope.release }}
           </div>
         </span>
@@ -130,6 +131,9 @@
       }
     },
   methods: {
+    initSynth: function(){
+      this.synth = new Tone.MonoSynth().toMaster()
+    },
     logSynth: function() {
       console.log(this.synth)
     },
@@ -147,7 +151,7 @@
     }
   },
   mounted: function () {
-    this.synth = new Tone.MonoSynth().toMaster()
+    this.initSynth()
     window.addEventListener("keydown", e => {
       e.preventDefault()
       this.handleKey(e, this)
