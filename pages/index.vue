@@ -1,13 +1,13 @@
 <template>
-  <Piano />
+  <synth />
 </template>
 
 <script>
-import Piano from '~/components/Piano.vue'
+import Synth from '~/components/Synth.vue'
 
 export default {
   components: {
-    Piano
+    Synth
   }
 }
 </script>
