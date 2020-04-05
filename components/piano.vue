@@ -47,6 +47,30 @@
           <div class="synth__module">
             <label>Amp Envelope</label>
             <synth-adsr v-model="synth.envelope" name="synth-env" />
+            <br>
+            <div class="#">
+              <label>Effects:</label> <br><br>
+              <button @click="toggleFx('chorus')"
+              class="button"
+              :class="{ 'button--active': effects.chorus.active }">
+                Chorus
+              </button>
+              <button @click="toggleFx('reverb')"
+              class="button"
+              :class="{ 'button--active': effects.reverb.active }">
+                Reverb
+              </button>
+              <button @click="toggleFx('phaser')"
+              class="button"
+              :class="{ 'button--active': effects.phaser.active }">
+                Phaser
+              </button>
+              <button @click="toggleFx('distortion')"
+              class="button"
+              :class="{ 'button--active': effects.distortion.active }">
+                Distortion
+              </button>
+            </div>
           </div>
         </main>
         <footer class="synth__foot">
@@ -74,7 +98,7 @@
         :class="{'piano__key--black': k.color === 'black'}"
         :data-key-code="k.key"
         :key="k.val"
-        @click="playnote(k.val + octave, noteDuration)" >
+        @click="playNote(k.val + octave, noteDuration)" >
           {{ k.val + octave }}
       </button>
     </div>
@@ -112,6 +136,12 @@
           { val: 'B#',  color: 'black', key: 85, active: false }
         ],
         synth: false,
+        effects: {
+          chorus: { active: false, settings: {} },
+          reverb: { active: false, settings: {} },
+          phaser: { active: false, settings: {} },
+          distortion: { active: false, settings: {} }
+        },
         synthOpts: {
           oscTypes: ['sine', ' square', 'triangle', 'sawtooth'],
           oscSrc: ['', 'am', 'fm', 'fat'],
@@ -128,7 +158,7 @@
     logSynth: function() {
       console.log(this.synth)
     },
-    playnote: function (note, time) {
+    playNote: function (note, time) {
       this.synth.triggerAttackRelease(note, time)
     },
     handleKey: (e, that) => {
@@ -139,6 +169,17 @@
           that.synth.triggerAttackRelease(note.val+that.octave, that.noteDuration)
         }
       })
+    },
+    toggleFx: function(unit) {
+      let fx = this.effects, s = this.synth
+      if(!fx[unit].active){
+        s = s.connect(fx[unit].settings)
+        fx[unit].active = true
+        console.log(fx[unit].settings)
+      } else {
+        s = s.disconnect(fx[unit].settings)
+        fx[unit].active = false
+      }
     }
   },
   mounted: function () {
@@ -151,6 +192,12 @@
     for(let i = 0; i <= 32; i++){
       this.synthOpts.oscPartials.push(i)
     }
+    // populate effects rack
+    const fx = this.effects
+    fx.chorus.settings = new Tone.Chorus().toMaster()
+    fx.reverb.settings = new Tone.Reverb().toMaster()
+    fx.phaser.settings = new Tone.Phaser().toMaster()
+    fx.distortion.settings = new Tone.Distortion().toMaster();
   },
 }
 </script>
@@ -206,4 +253,10 @@
     &__foot
       border-top: solid 1px #eee
       padding: $blh/2
+  // Button
+  .button
+    border-radius: 0
+    border: solid 1px #ddd
+    &--active
+      border: solid 1px blue
 </style>
