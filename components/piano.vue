@@ -3,79 +3,74 @@
     <h1 class="piano__title">{{ title }}</h1>
     <div class="piano__synth">
 
-
       <!-- Synth (Start) -->
       <div v-if="synth" class="synth">
-        <span class="synth__param">
-          <label>Oscilator Type:</label>
-          <synth-select v-model="synth.oscillator.type" :options="synthOpts.oscTypes" name="synth-osc-type" />
-        </span>
-        <span class="synth__param">
-          <label>Amp Envelope</label>
-
-          <synth-adsr v-model="synth.envelope" name="synth-env" />
-
-          <br>
-          <div class="#">
-            Volume: <input v-model.number.lazy="synth.volume.value" type="range" min="-12" max="10" step="1" name="synth-volume">
-            {{ synth.volume.value }}
+        <main class="synth__main">
+          <div class="synth__module">
+            <label>Oscilator:</label>
+            <synth-select v-model="synth.oscillator.baseType" :options="synthOpts.oscTypes" name="synth-osc-type" />
+            <synth-select v-model="synth.oscillator.partialCount" :options="synthOpts.oscPartials" name="synth-osc-partialCount" />
+            <synth-select v-model="synth.oscillator.sourceType" :options="synthOpts.oscSrc" name="synth-osc-source" />
+            <br><br>
+            <div class="#">
+              {{ synth.oscillator.type }}
+            </div>
           </div>
-        </span>
-        <span class="synth__param">
-          <p>
-            <label>Filter (Type, Rolloff, Q)</label>
-
-            <synth-select v-model="synth.filter.type" :options="synthOpts.filterTypes" name="synth-filter-type" />
-            <synth-select v-model="synth.filter.rolloff" :options="synthOpts.filterRolloffs" name="synth-filter-rolloff" />
-
-            Q: <input v-model.number.lazy="synth.filter.Q.value" type="range" min="0" max="10" step="1" >
-            {{ synth.filter.Q.value }}
-          </p>
-
-          <div class="#">
-            <label>Filter Envelope</label>
-            <synth-adsr v-model="synth.filterEnvelope" name="synth-filter-env" />
+          <div class="synth__module">
+            <p>
+              <label>Filter (Type, Rolloff, Q)</label>
+              <synth-select v-model="synth.filter.type" :options="synthOpts.filterTypes" name="synth-filter-type" />
+              <synth-select v-model="synth.filter.rolloff" :options="synthOpts.filterRolloffs" name="synth-filter-rolloff" />
+              <div class="#">
+                Q: <input v-model.number="synth.filter.Q.value" type="range" min="0" max="10" step="1" >
+                {{ synth.filter.Q.value }}
+              </div>
+            </p>
+            <div class="#">
+              <label>Filter Envelope</label>
+              <synth-adsr v-model="synth.filterEnvelope" name="synth-filter-env" />
+            </div>
+            <br>
+            <div class="#">
+              Freq: <input v-model.number="synth.filterEnvelope.baseFrequency" type="range" min="20" max="20000" step="1" >
+              {{ synth.filterEnvelope.baseFrequency }}
+            </div>
+            <div class="#">
+              Octaves: <input v-model.number="synth.filterEnvelope.octaves" type="range" min="-8" max="8" step="1" >
+              {{ synth.filterEnvelope.octaves }}
+            </div>
           </div>
-
-          <br>
-          <div class="#">
-            Freq: <input v-model.number.lazy="synth.filterEnvelope.baseFrequency" type="range" min="20" max="20000" step="1" >
-            {{ synth.filterEnvelope.baseFrequency }}
+          <div class="synth__module">
+            <label>Amp Envelope</label>
+            <synth-adsr v-model="synth.envelope" name="synth-env" />
           </div>
-        </span>
+        </main>
         <footer class="synth__foot">
           <button @click="logSynth">Log Synth</button>
           <button @click="initSynth">Init Synth</button>
         </footer>
       </div>
-      <div v-else>
+      <div v-else class="synth">
         <p>No Synth Loaded...</p>
       </div>
       <!-- Synth (End) -->
 
-
     </div>
+
     <div class="piano__octave">
       <label>Octave:</label>
-      <select v-model="octave">
-        <option v-for="o in 6">{{ o }}</option>
-      </select>
+      <synth-select v-model="octave" :options="octaveRange" name="synth-octave" />
       <label>Note Duration:</label>
-      <select v-model="noteDuration">
-        <option>1n</option>
-        <option>2n</option>
-        <option>4n</option>
-        <option>8n</option>
-        <option>16n</option>
-      </select>
+      <synth-select v-model="noteDuration" :options="durationRange" name="synth-duration" />
     </div>
 
     <div class="piano__roll">
       <button v-for="k in keys"
         class="piano__key"
         :class="{'piano__key--black': k.color === 'black'}"
+        :data-key-code="k.key"
         :key="k.val"
-        @click="playnote(k.val + octave, noteDuration)">
+        @click="playnote(k.val + octave, noteDuration)" >
           {{ k.val + octave }}
       </button>
     </div>
@@ -89,34 +84,34 @@
   import SynthRange from './synth/Range.vue'
   import SynthAdsr from './synth/Adsr.vue'
   export default {
-    components: {
-      SynthSelect, SynthRange, SynthAdsr
-    },
+    components: { SynthSelect, SynthRange, SynthAdsr },
     data () {
       return {
         title: "Tone JS Piano",
         octave: 4,
+        octaveRange: [0, 1, 2, 3, 4, 5, 6, 7, 8],
         noteDuration: '8n',
+        durationRange: ['1n', '2n', '4n', '8n', '16n'],
         keys: [
-          { val: 'C', color: 'white', key: 9},
-          { val: 'C#', color: 'black', key: 49},
-          { val: 'D', color: 'white', key: 81},
-          { val: 'D#', color: 'black', key: 50},
-          { val: 'E', color: 'white', key: 87},
-          { val: 'F', color: 'white', key: 69},
-          { val: 'F#', color: 'black', key: 52},
-          { val: 'G', color: 'white', key: 82},
-          { val: 'G#', color: 'black', key: 53},
-          { val: 'A', color: 'white', key: 84},
-          { val: 'A#', color: 'black', key: 54},
-          { val: 'B', color: 'white', key: 89},
-          { val: 'B#', color: 'black', key: 85}
+          { val: 'C',   color: 'white', key: 9 , active: false },
+          { val: 'C#',  color: 'black', key: 49, active: false },
+          { val: 'D',   color: 'white', key: 81, active: false },
+          { val: 'D#',  color: 'black', key: 50, active: false },
+          { val: 'E',   color: 'white', key: 87, active: false },
+          { val: 'F',   color: 'white', key: 69, active: false },
+          { val: 'F#',  color: 'black', key: 52, active: false },
+          { val: 'G',   color: 'white', key: 82, active: false },
+          { val: 'G#',  color: 'black', key: 53, active: false },
+          { val: 'A',   color: 'white', key: 84, active: false },
+          { val: 'A#',  color: 'black', key: 54, active: false },
+          { val: 'B',   color: 'white', key: 89, active: false },
+          { val: 'B#',  color: 'black', key: 85, active: false }
         ],
         synth: false,
         synthOpts: {
           oscTypes: ['sine', ' square', 'triangle', 'sawtooth'],
-          curves: ['linear', 'exponential', 'sine', 'cosine', 'bounce', 'ripple', 'step'],
-          curvesAlt: ['linear', 'exponential'],
+          oscSrc: ['', 'am', 'fm', 'fat'],
+          oscPartials: [],
           filterTypes: ['lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'notch', 'allpass', 'peaking'],
           filterRolloffs: ['-12', '-24', '-48', '-96']
         }
@@ -148,6 +143,10 @@
       e.preventDefault()
       this.handleKey(e, this)
     });
+    // populate partials in data
+    for(let i = 0; i <= 32; i++){
+      this.synthOpts.oscPartials.push(i)
+    }
   },
 }
 </script>
@@ -169,7 +168,9 @@
       margin-bottom: $blh/2
     &__roll
       display: block
+      font-size: 0
     &__key
+      font-size: 11px
       position: relative
       display: inline-block
       appearance: none
@@ -191,12 +192,14 @@
     display: block
     border: solid 1px #ddd
     background: #fff
-    padding: $blh/2
-    &__param
-      display: inline-block
+    &__main
+      font-size: 0
+    &__module
       vertical-align: top
-      margin-right: $blh/2
-      label
-        display: block
-        margin-bottom: $blh/4
+      display: inline-block
+      font-size: 14px
+      padding: $blh/2
+    &__foot
+      border-top: solid 1px #eee
+      padding: $blh/2
 </style>

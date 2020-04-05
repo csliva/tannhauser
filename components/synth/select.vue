@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="select">
-    <select :value="value" @input="$emit('input', $event.target.value)" :name="name">
+    <select v-model.lazy="value" :name="name">
       <option v-for="o in options">{{ o }}</option>
     </select>
   </div>
@@ -9,9 +9,14 @@
 <script>
   export default {
     props: ['value', 'options', 'name'],
-    data(){
+    data() {
       return {
         msg: 'Select Loaded'
+      }
+    },
+    watch: {
+      value() {
+        this.$emit('input', this.value);
       }
     }
   }
