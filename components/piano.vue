@@ -15,6 +15,10 @@
             <div class="#">
               {{ synth.oscillator.type }}
             </div>
+            <div class="#">
+              Portamento: <input v-model.number="synth.portamento" type="range" min="0" max="4" step="0.1" >
+              {{ synth.portamento }}
+            </div>
           </div>
           <div class="synth__module">
             <p>
