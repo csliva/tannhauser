@@ -5,74 +5,114 @@
 
       <!-- Synth (Start) -->
       <div v-if="synth" class="synth">
+        <header class="synth__head">
+          <h1 class="synth__title">MonoSynth</h1>
+        </header>
         <main class="synth__main">
           <div class="synth__module">
-            <label>Oscilator:</label>
-            <synth-select v-model="synth.oscillator.baseType" :options="synthOpts.oscTypes" name="synth-osc-type" />
-            <synth-select v-model="synth.oscillator.partialCount" :options="synthOpts.oscPartials" name="synth-osc-partialCount" />
-            <synth-select v-model="synth.oscillator.sourceType" :options="synthOpts.oscSrc" name="synth-osc-source" />
-            <br><br>
-            <div class="#">
+            <label class="synth__label">Oscilator</label>
+            <div class="synth__param">
               {{ synth.oscillator.type }}
             </div>
-            <div class="#">
-              Portamento: <input v-model.number="synth.portamento" type="range" min="0" max="4" step="0.1" >
-              {{ synth.portamento }}
+            <div class="synth__param">
+              <synth-select v-model="synth.oscillator.baseType" :options="synthOpts.oscTypes" name="synth-osc-type" />
+              <synth-select v-model="synth.oscillator.sourceType" :options="synthOpts.oscSrc" name="synth-osc-source" />
+            </div>
+            <div class="synth__param">
+              Partials:
+              <input v-model.number="synth.oscillator.partialCount" type="range" min="0" max="32" step="1" >
+              {{ synth.oscillator.partialCount }}
+            </div>
+            <div class="synth__param">
+              Detune:
+              <input v-model.number="synth.oscillator.detune.value" type="range" min="0" max="100" step="1">
+              {{ synth.oscillator.detune.value }}
+            </div>
+            <div class="synth__param">
+              Phase:
+              <input name="synth-oscillator-phase"
+              v-model.number="synth.oscillator.phase"
+              type="range" min="0" max="360" step="1" >
+              {{ synth.oscillator.phase | round }}
             </div>
           </div>
           <div class="synth__module">
-            <p>
-              <label>Filter (Type, Rolloff, Q)</label>
+            <label class="synth__label">Filter</label>
+            <div class="synth__param">
               <synth-select v-model="synth.filter.type" :options="synthOpts.filterTypes" name="synth-filter-type" />
               <synth-select v-model="synth.filter.rolloff" :options="synthOpts.filterRolloffs" name="synth-filter-rolloff" />
-              <div class="#">
-                Q: <input v-model.number="synth.filter.Q.value" type="range" min="0" max="10" step="1" >
-                {{ synth.filter.Q.value }}
-              </div>
-            </p>
-            <div class="#">
-              <label>Filter Envelope</label>
+            </div>
+            <div class="synth__param">
               <synth-adsr v-model="synth.filterEnvelope" name="synth-filter-env" />
             </div>
             <br>
-            <div class="#">
-              Freq: <input v-model.number="synth.filterEnvelope.baseFrequency" type="range" min="20" max="20000" step="1" >
+            <div class="synth__param">
+              Freq:
+              <input v-model.number="synth.filterEnvelope.baseFrequency" type="range" min="20" max="20000" step="1" >
               {{ synth.filterEnvelope.baseFrequency }}
             </div>
-            <div class="#">
-              Octaves: <input v-model.number="synth.filterEnvelope.octaves" type="range" min="-8" max="8" step="1" >
+            <div class="synth__param">
+              Octaves:
+              <input v-model.number="synth.filterEnvelope.octaves" type="range" min="-8" max="8" step="1" >
               {{ synth.filterEnvelope.octaves }}
+            </div>
+            <div class="synth__param">
+              Q:
+              <input v-model.number="synth.filter.Q.value" type="range" min="0" max="10" step="1" >
+              {{ synth.filter.Q.value }}
             </div>
           </div>
           <div class="synth__module">
-            <label>Amp Envelope</label>
-            <synth-adsr v-model="synth.envelope" name="synth-env" />
-            <br>
-            <div class="#">
-              <label>Effects:</label> <br><br>
-              <button @click="toggleFx('chorus')"
-              class="button"
-              :class="{ 'button--active': effects.chorus.active }">
-                Chorus
-              </button>
-              <button @click="toggleFx('reverb')"
-              class="button"
-              :class="{ 'button--active': effects.reverb.active }">
-                Reverb
-              </button>
-              <button @click="toggleFx('phaser')"
-              class="button"
-              :class="{ 'button--active': effects.phaser.active }">
-                Phaser
-              </button>
-              <button @click="toggleFx('distortion')"
-              class="button"
-              :class="{ 'button--active': effects.distortion.active }">
-                Distortion
-              </button>
+            <label class="synth__label">Amp Envelope</label>
+            <div class="synth__param">
+              Volume:
+              <input v-model.number="synth.volume.value" type="range" min="-8" max="8" step="1" >
+              {{ synth.volume.value | round }}
+            </div>
+            <div class="synth__param">
+              <synth-adsr v-model="synth.envelope" name="synth-env" />
+            </div>
+            <div class="synth__param">
+              Portamento:
+              <input v-model.number="synth.portamento" type="range" min="0" max="4" step="0.1" >
+              {{ synth.portamento }}
             </div>
           </div>
         </main>
+        <section class="synth__section">
+          <button @click="toggleFx('chorus')"
+          class="button" :class="{ 'button--active': effects.chorus.active }">
+            Chorus
+          </button>
+          <button @click="toggleFx('reverb')"
+          class="button" :class="{ 'button--active': effects.reverb.active }">
+            Reverb
+          </button>
+          <button @click="toggleFx('phaser')"
+          class="button" :class="{ 'button--active': effects.phaser.active }">
+            Phaser
+          </button>
+          <button @click="toggleFx('distortion')"
+          class="button" :class="{ 'button--active': effects.distortion.active }">
+            Distortion
+          </button>
+          <button @click="toggleFx('bitcrusher')"
+          class="button" :class="{ 'button--active': effects.bitcrusher.active }">
+            BitCrusher
+          </button>
+          <button @click="toggleFx('vibrato')"
+          class="button" :class="{ 'button--active': effects.vibrato.active }">
+            Vibrato
+          </button>
+          <button @click="toggleFx('freeverb')"
+          class="button" :class="{ 'button--active': effects.freeverb.active }">
+            Freeverb
+          </button>
+          <button @click="toggleFx('pingpong')"
+          class="button" :class="{ 'button--active': effects.pingpong.active }">
+            PingPongDelay
+          </button>
+        </section>
         <footer class="synth__foot">
           <button @click="logSynth">Log Synth</button>
           <button @click="initSynth">Init Synth</button>
@@ -95,7 +135,7 @@
     <div class="piano__roll">
       <button v-for="k in keys"
         class="piano__key"
-        :class="{'piano__key--black': k.color === 'black'}"
+        :class="{'piano__key--active': k.active, 'piano__key--black': k.color === 'black'}"
         :data-key-code="k.key"
         :key="k.val"
         @click="playNote(k.val + octave, noteDuration)" >
@@ -140,11 +180,15 @@
           chorus: { active: false, settings: {} },
           reverb: { active: false, settings: {} },
           phaser: { active: false, settings: {} },
-          distortion: { active: false, settings: {} }
+          distortion: { active: false, settings: {} },
+          bitcrusher: { active: false, settings: {} },
+          vibrato: { active: false, settings: {} },
+          freeverb: { active: false, settings: {} },
+          pingpong: { active: false, settings: {} }
         },
         synthOpts: {
           oscTypes: ['sine', ' square', 'triangle', 'sawtooth'],
-          oscSrc: ['', 'am', 'fm', 'fat'],
+          oscSrc: ['oscillator', 'am', 'fm', 'fat', 'pulse', 'pwm'],
           oscPartials: [],
           filterTypes: ['lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'notch', 'allpass', 'peaking'],
           filterRolloffs: ['-12', '-24', '-48', '-96']
@@ -167,6 +211,10 @@
         // check if keypress matches a note
         if (note.key === e.keyCode){
           that.synth.triggerAttackRelease(note.val+that.octave, that.noteDuration)
+          note.active = true
+          setTimeout(function(){
+            note.active = false
+          }, 250)
         }
       })
     },
@@ -180,10 +228,15 @@
         s = s.disconnect(fx[unit].settings)
         fx[unit].active = false
       }
+    },
+    round: function(val){
+      return Math.round(val)
     }
   },
   mounted: function () {
+    // initialize synth (mono)
     this.initSynth()
+    // bind keys to piano
     window.addEventListener("keydown", e => {
       e.preventDefault()
       this.handleKey(e, this)
@@ -197,11 +250,21 @@
     fx.chorus.settings = new Tone.Chorus().toMaster()
     fx.phaser.settings = new Tone.Phaser().toMaster()
     fx.distortion.settings = new Tone.Distortion().toMaster()
+    fx.bitcrusher.settings = new Tone.BitCrusher().toMaster()
+    fx.vibrato.settings = new Tone.Vibrato().toMaster()
+    fx.freeverb.settings = new Tone.Freeverb().toMaster()
+    fx.pingpong.settings = new Tone.PingPongDelay().toMaster()
+    // reverb needs to generate...
     let reverb = new Tone.Reverb().toMaster()
     reverb.generate().then(() => {
 			fx.reverb.settings = reverb
 		});
   },
+  filters: {
+    round: function(value, decimal){
+      return value.toFixed(decimal)
+    }
+  }
 }
 </script>
 
@@ -233,29 +296,54 @@
       z-index: 0
       &--black
         background-color: #ddd
+      &--active
+        background-color: #fdff72
       &:focus
         z-index: 10
     &__synth
       display: block
       border: solid 1px #ddd
-      background: #eee
+      background: #fafafa
       padding: $blh/2
       margin-bottom: $blh
+
   // Synth
   .synth
     display: block
     border: solid 1px #ddd
     background: #fff
+    &__head
+      background: #eee
+      border-bottom: solid 1px #ddd
+      padding: $blh/2
+    &__title
+      margin: 0
+      font-size: 18px
     &__main
-      font-size: 0
+      display: grid
+      grid-template-columns: 2fr 3fr 3fr
+      width: 100%
+      border-bottom: solid 1px #ddd
     &__module
-      vertical-align: top
-      display: inline-block
-      font-size: 14px
+      border-right: solid 1px #eee
+      padding: $blh/2
+      &:last-child
+        border: 0
+    &__section
       padding: $blh/2
     &__foot
       border-top: solid 1px #eee
       padding: $blh/2
+    &__param
+      display: block
+      margin-bottom: $blh/4
+    &__label
+      display: block
+      font-weight: 700
+      margin: (-$blh/2) (-$blh/2) ($blh/2) (-$blh/2)
+      border-bottom: solid 1px #eee
+      padding: $blh/2
+
   // Button
   .button
     border-radius: 0

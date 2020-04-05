@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="select">
-    <select v-model.lazy="val" :name="name">
+    <select v-model.lazy="val" :name="name" class="select__input">
       <option v-for="o in options">{{ o }}</option>
     </select>
   </div>
@@ -20,7 +20,7 @@
     },
     watch: {
       val() {
-        this.$emit('input', this.val);
+        this.$emit('input', this.val)
       }
     }
   }
