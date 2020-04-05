@@ -195,9 +195,12 @@
     // populate effects rack
     const fx = this.effects
     fx.chorus.settings = new Tone.Chorus().toMaster()
-    fx.reverb.settings = new Tone.Reverb().toMaster()
     fx.phaser.settings = new Tone.Phaser().toMaster()
-    fx.distortion.settings = new Tone.Distortion().toMaster();
+    fx.distortion.settings = new Tone.Distortion().toMaster()
+    let reverb = new Tone.Reverb().toMaster()
+    reverb.generate().then(() => {
+			fx.reverb.settings = reverb
+		});
   },
 }
 </script>
