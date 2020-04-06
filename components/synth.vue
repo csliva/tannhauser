@@ -3,6 +3,7 @@
     <div v-if="synth" class="synth__body">
       <header class="synth__head">
         <h1 class="synth__title">MonoSynth</h1>
+        <button @click="logSynth">Log Synth</button>
       </header>
       <main class="synth__main">
         <div class="synth__module">
@@ -13,22 +14,24 @@
           <label class="synth__label">Amp Envelope</label>
           <amp-env v-model="synth" />
         </div>
-        <div class="synth__module">
+        <div class="synth__module synth__module--last">
           <label class="synth__label">Filter</label>
           <synth-filter v-model="synth" />
         </div>
       </main>
-      <section class="synth__section">
+      <div class="synth__alt">
         <effects-rack v-model="synth" />
-      </section>
-      <footer class="synth__foot">
-        <button @click="logSynth">Log Synth</button>
-        <button @click="initSynth">Init Synth</button>
-      </footer>
+        <div class="synth__module synth__module--card">
+          <label class="synth__label">Mods</label>
+          <p>LFOs and Envelopes here...</p>
+        </div>
+      </div>
     </div>
     <div v-else class="synth__body">
-      <p>No Synth Loaded...</p>
-      <button @click="initSynth">Init Synth</button>
+      <div class="synth__section">
+        <p>No Synth Loaded...</p>
+        <button @click="initSynth">Init Synth</button>
+      </div>
     </div>
     <piano v-model="synth" />
   </div>
@@ -69,31 +72,36 @@
   .synth
     &__body
       display: block
-      border: solid 1px #ddd
-      background: #fff
       margin-bottom: $blh/2
     &__head
       background: #eee
-      border-bottom: solid 1px #ddd
+      border: solid 1px #ddd
       padding: $blh/2
+      vertical-align: middle
     &__title
+      display: inline-block
       margin: 0
       font-size: 18px
+      margin-right: $blh/2
     &__main
       display: grid
       grid-template-columns: 2fr 3fr 3fr
       width: 100%
-      border-bottom: solid 1px #ddd
+      border: solid 1px #ddd
+      background: #fff
+      margin-bottom: $blh/2
     &__module
       border-right: solid 1px #eee
       padding: $blh/2
-      &:last-child
+      &--last
         border: 0
-    &__section
-      padding: $blh/2
-    &__foot
-      border-top: solid 1px #eee
-      padding: $blh/2
+      &--card
+        border: solid 1px #eee
+        background: #fff
+    &__alt
+      display: grid
+      grid-template-columns: 5fr 3fr
+      grid-gap: $blh/2
     &__param
       display: block
       margin-bottom: $blh/4
