@@ -7,7 +7,7 @@
       </header>
       <main class="synth__main">
         <div class="synth__module">
-          <label class="synth__label">Oscilator</label>
+          <label class="synth__label">Oscillator</label>
           <oscillator v-model="synth.oscillator" />
         </div>
         <div class="synth__module">
