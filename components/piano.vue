@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="piano">
+  <div class="piano" v-if="value">
     <div class="piano__octave">
       <label>Octave:</label>
       <synth-select v-model="octave" :options="octaveRange" name="synth-octave" />

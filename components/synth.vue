@@ -1,7 +1,5 @@
 <template lang="html">
-
   <div class="synth">
-    <!-- Synth (Start) -->
     <div v-if="synth" class="synth__body">
       <header class="synth__head">
         <h1 class="synth__title">MonoSynth</h1>
@@ -21,7 +19,7 @@
         </div>
       </main>
       <section class="synth__section">
-        <effects v-model="synth" />
+        <effects-rack v-model="synth" />
       </section>
       <footer class="synth__foot">
         <button @click="logSynth">Log Synth</button>
@@ -32,11 +30,8 @@
       <p>No Synth Loaded...</p>
       <button @click="initSynth">Init Synth</button>
     </div>
-    <!-- Synth (End) -->
     <piano v-model="synth" />
-
   </div>
-
 </template>
 
 
@@ -45,10 +40,10 @@
   import Piano from './piano.vue'
   import Oscillator from './synth/modules/oscillator.vue'
   import SynthFilter from './synth/modules/filter.vue'
-  import Effects from './synth/modules/effects.vue'
+  import EffectsRack from './synth/modules/effectsRack.vue'
   import AmpEnv from './synth/modules/amp.vue'
   export default {
-    components: { Piano, Oscillator, SynthFilter, Effects, AmpEnv },
+    components: { Piano, Oscillator, SynthFilter, EffectsRack, AmpEnv },
     data () {
       return {
         synth: false
@@ -60,18 +55,10 @@
       },
       logSynth: function() {
         console.log(this.synth)
-      },
-      round: function(val){
-        return Math.round(val)
       }
     },
     mounted: function () {
       this.initSynth()
-    },
-    filters: {
-      round: function(value, decimal){
-        return value.toFixed(decimal)
-      }
     }
   }
 </script>

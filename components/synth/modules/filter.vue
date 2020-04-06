@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="module" v-if="value">
+  <div class="module" v-if="value.filter && value.filterEnvelope">
     <div class="module__param">
       <synth-select v-model="value.filter.type" :options="opts.filterTypes" name="synth-filter-type" />
       <synth-select v-model="value.filter.rolloff" :options="opts.filterRolloffs" name="synth-filter-rolloff" />
@@ -38,6 +38,11 @@
         opts: {
           filterTypes: ['lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'notch', 'allpass', 'peaking'],
           filterRolloffs: ['-12', '-24', '-48', '-96']
+        },
+        settings: {
+          active: true,
+          filter: {},
+          filterEnvelope: {}
         }
       }
     },
