@@ -11,7 +11,7 @@
           <oscillator v-model="synth.oscillator" />
         </div>
         <div class="synth__module">
-          <label class="synth__label">Amp Envelope</label>
+          <label class="synth__label">Amp</label>
           <amp-env v-model="synth" />
         </div>
         <div class="synth__module synth__module--last">
