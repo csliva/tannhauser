@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="module">
+  <div class="module" v-if="value">
     <div class="module__param">
       <synth-select v-model="value.filter.type" :options="opts.filterTypes" name="synth-filter-type" />
       <synth-select v-model="value.filter.rolloff" :options="opts.filterRolloffs" name="synth-filter-rolloff" />

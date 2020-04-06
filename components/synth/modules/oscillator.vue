@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="module">
+  <div class="module" v-if="value">
     <div class="module__param">
       {{ value.type }}
     </div>

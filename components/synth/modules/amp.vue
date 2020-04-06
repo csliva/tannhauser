@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="env">
+  <div class="env" v-if="value">
     <div class="env__param">
       Volume:
       <input v-model.number="value.volume.value" type="range" min="-24" max="24" step="1" >

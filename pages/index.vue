@@ -1,18 +1,36 @@
 <template>
-  <synth />
+  <div class="wrap">
+    <div class="wrap__inner">
+      <synth />
+    </div>
+  </div>
 </template>
 
 <script>
-import Synth from '~/components/Synth.vue'
-
-export default {
-  components: {
-    Synth
+  import Synth from '~/components/Synth.vue'
+  export default {
+    components: {
+      Synth
+    }
   }
-}
 </script>
 
 <style>
+
+.wrap {
+  background: #fff;
+  color: #666;
+  padding: 30px;
+}
+
+.wrap__inner {
+  display: block;
+  border: solid 1px #ddd;
+  background: #fafafa;
+  padding: 15px;
+  margin-bottom: 30px;
+}
+
 .container {
   margin: 0 auto;
   min-height: 100vh;

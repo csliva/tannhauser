@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="effects">
+  <div class="effects" v-if="value">
     <button @click="toggleFx('chorus')"
     class="button" :class="{ 'button--active': effects.chorus.active }">
       Chorus
