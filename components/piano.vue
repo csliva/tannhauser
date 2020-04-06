@@ -80,6 +80,9 @@
 <style lang="sass">
   .piano
     display: block
+    background: #fff
+    border: solid 1px #ddd
+    padding: $blh/2
     &__keyboard
       display: block
     &__octave
