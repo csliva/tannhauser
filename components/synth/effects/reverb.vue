@@ -23,7 +23,7 @@
       <div class="effect__col">
         <div class="effect__param" v-if="settings.decay">
           Decay:
-          <input v-model="settings.decay" type="range" min="0.0" max="10.0" step="0.1" />
+          <input v-model="settings.decay" type="range" min="0.0" max="100.0" step="0.1" />
           {{ settings.decay }}
         </div>
       </div>

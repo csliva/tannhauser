@@ -5,7 +5,7 @@
     </div>
     <div class="module__param">
       <synth-select v-model="value.baseType" :options="opts.oscTypes" name="synth-osc-type" />
-      <synth-select v-model="value.sourceType" :options="opts.oscSrc" name="synth-osc-source" />
+      <!-- <synth-select v-model="value.sourceType" :options="opts.oscSrc" name="synth-osc-source" /> -->
     </div>
     <div class="module__param">
       Partials:

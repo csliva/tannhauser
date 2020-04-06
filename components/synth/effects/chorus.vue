@@ -21,7 +21,7 @@
         </div>
         <div class="effect__param" v-if="settings.type">
           Type:
-          <synth-select v-model="settings.type" :options="oscTypes" name="synth-osc-type" />
+          <synth-select v-model="settings.type" :options="oscTypes" />
         </div>
       </div>
       <div class="effect__col">

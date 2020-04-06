@@ -29,8 +29,7 @@
     </div>
     <div v-else class="synth__body">
       <div class="synth__section">
-        <p>No Synth Loaded...</p>
-        <button @click="initSynth">Init Synth</button>
+        <p>Synth Loading...</p>
       </div>
     </div>
     <piano v-model="synth" />
