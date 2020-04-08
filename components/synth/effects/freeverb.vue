@@ -2,7 +2,7 @@
   <div v-if="value" class="effect" :class="{ 'effect--show': show }">
     <header class="effect__header">
       <h2 class="effect__title">{{ rack.niceName ? rack.niceName : 'Effect' }}</h2>
-      <button @click="toggle" class="x" :class="{ 'x--on': active }" >
+      <button @click="toggle" class="effect__toggle" :class="{ 'effect__toggle--on': active }" >
         {{ active ? 'On' : 'Off' }}
       </button>
       <button @click="log(settings)">Log settings</button>

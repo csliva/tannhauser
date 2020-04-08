@@ -2,9 +2,9 @@
   <div class="piano" v-if="value">
     <div class="piano__octave">
       <label>Octave:</label>
-      <synth-select v-model="octave" :options="octaveRange" name="synth-octave" />
+      <select-input v-model="octave" :options="octaveRange" name="synth-octave" />
       <label>Note Duration:</label>
-      <synth-select v-model="noteDuration" :options="durationRange" name="synth-duration" />
+      <select-input v-model="noteDuration" :options="durationRange" name="synth-duration" />
     </div>
     <div class="piano__roll">
       <button v-for="k in keys"
@@ -21,9 +21,9 @@
 
 <script>
   import Tone from 'tone'
-  import SynthSelect from './synth/Select.vue'
+  import SelectInput from './synth/controls/select.vue'
   export default {
-    components: { SynthSelect },
+    components: { SelectInput },
     props: ['value'],
     data(){
       return {

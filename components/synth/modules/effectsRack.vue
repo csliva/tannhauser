@@ -7,6 +7,9 @@
       </button>
     </nav>
     <div class="effects__section">
+
+      <!-- <component is="EffectChorus" v-model="value" :show="active === 'chorus'" :rack="rack.chorus" /> -->
+
       <effect-chorus v-model="value" :show="active === 'chorus'" :rack="rack.chorus" />
       <effect-phaser v-model="value" :show="active === 'phaser'" :rack="rack.phaser" />
       <effect-reverb v-model="value" :show="active === 'reverb'" :rack="rack.reverb" />
@@ -15,6 +18,7 @@
       <effect-vibrato v-model="value" :show="active === 'vibrato'" :rack="rack.vibrato" />
       <effect-freeverb v-model="value" :show="active === 'freeverb'" :rack="rack.freeverb" />
       <effect-pingpong v-model="value" :show="active === 'pingpong'" :rack="rack.pingpong" />
+
     </div>
   </div>
 </template>
@@ -45,16 +49,16 @@
       return {
         msg: 'Effects Rack Loaded',
         rackId: ['chorus', 'reverb', 'phaser', 'distortion', 'bitcrusher', 'vibrato', 'freeverb', 'pingpong'],
-        active: 'chorus',
+        active: 'reverb',
         rack: {
-          chorus: { niceName: 'Chorus', on: false },
-          reverb: { niceName: 'Reverb', on: false },
-          phaser: { niceName: 'Phaser', on: false },
-          distortion: { niceName: 'Distortion', on: false },
-          bitcrusher: { niceName: 'Bit Crusher', on: false },
-          vibrato: { niceName: 'Vibrato', on: false },
-          freeverb: { niceName: 'Freeverb', on: false },
-          pingpong: { niceName: 'Ping Pong Delay', on: false }
+          chorus: { niceName: 'Chorus', on: false, compName: 'Chorus' },
+          reverb: { niceName: 'Reverb', on: false, compName: 'Phaser' },
+          phaser: { niceName: 'Phaser', on: false, compName: 'Reverb' },
+          distortion: { niceName: 'Distortion', on: false, compName: 'Distortion' },
+          bitcrusher: { niceName: 'Bit Crusher', on: false, compName: 'Bitcrusher' },
+          vibrato: { niceName: 'Vibrato', on: false, compName: 'Vibrato' },
+          freeverb: { niceName: 'Freeverb', on: false, compName: 'Freeverb' },
+          pingpong: { niceName: 'Ping Pong Delay', on: false, compName: 'Pingpong' }
         }
       }
     },

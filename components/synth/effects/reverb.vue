@@ -2,7 +2,7 @@
   <div v-if="value" class="effect" :class="{ 'effect--show': show }">
     <header class="effect__header">
       <h2 class="effect__title">{{ rack.niceName ? rack.niceName : 'Effect' }}</h2>
-      <button @click="toggle" class="x" :class="{ 'x--on': active }" >
+      <button @click="toggle" class="effect__toggle" :class="{ 'effect__toggle--on': active }" >
         {{ active ? 'On' : 'Off' }}
       </button>
       <button @click="log(settings)">Log settings</button>
@@ -16,14 +16,14 @@
         </div>
         <div class="effect__param" v-if="settings.preDelay">
           Pre-Delay:
-          <input v-model="settings.preDelay" type="range" min="0.00" max="1" step="0.01" />
+          <input v-model="settings.preDelay" type="range" min="0.01" max="0.10" step="0.01" />
           {{ settings.preDelay }}
         </div>
       </div>
       <div class="effect__col">
         <div class="effect__param" v-if="settings.decay">
           Decay:
-          <input v-model="settings.decay" type="range" min="0.0" max="100.0" step="0.1" />
+          <input v-model="settings.decay" @change="generate(updated)" type="range" min="0.1" max="4.0" step="0.1" />
           {{ settings.decay }}
         </div>
       </div>
@@ -36,14 +36,31 @@
   import EffectTemplate from './_effect.vue'
   export default {
     extends: EffectTemplate,
-    data(){
-      return {}
+    data() {
+      return {
+        defaults: { decay: 4, preDelay: 0.10 }
+      }
     },
-    mounted: function(){
-      let reverb = new Tone.Reverb().toMaster()
-      reverb.generate().then(() => {
-        this.settings = reverb
-      })
+    computed: {
+      updated: function(){
+        let d = Number(this.settings.decay)
+        let pD = Number(this.settings.preDelay)
+        return { decay: d, preDelay: pD }
+      }
+    },
+    mounted: function() {
+      this.generate(this.defaults)
+    },
+    methods: {
+      generate: function(opts){
+        let on = this.active
+        let reverb = new Tone.Reverb(opts).toMaster()
+        if(on){ this.off() }
+        reverb.generate().then(() => {
+        	this.settings = reverb
+          if(on){ this.on() }
+        })
+      }
     }
   }
 </script>

@@ -5,18 +5,16 @@
         <h1 class="synth__title">MonoSynth</h1>
         <button @click="log(synth)">Log Synth</button>
         <button @click="killSynth">Kill Synth</button>
+        <button @click="alert()">Alert</button>
       </header>
       <main class="synth__main">
-        <div class="synth__module">
-          <label class="synth__label">Oscillator</label>
+        <div class="synth__col">
           <oscillator v-model="synth.oscillator" />
         </div>
-        <div class="synth__module">
-          <label class="synth__label">Amp</label>
-          <amp-env v-model="synth" />
+        <div class="synth__col">
+          <amp v-model="synth" />
         </div>
-        <div class="synth__module synth__module--last">
-          <label class="synth__label">Filter</label>
+        <div class="synth__col">
           <synth-filter v-model="synth" />
         </div>
       </main>
@@ -29,8 +27,10 @@
       </div>
     </div>
     <div v-else class="synth__body">
-      <div class="synth__section">
-        <p>No Synth Loaded</p>
+      <header class="synth__head">
+        <h1 class="synth__title">No Synth Loaded</h1>
+      </header>
+      <div class="synth__empty">
         <button @click="initSynth">Init Synth</button>
       </div>
     </div>
@@ -42,18 +42,19 @@
 <script>
   // Libraries
   import Tone from 'tone'
-  // Controls
+  // Utilities
+  import General from './synth/utils/general.vue'
+  // Controls (piano & sequencer)
   import Piano from './piano.vue'
   // Modules
   import Oscillator from './synth/modules/oscillator.vue'
   import SynthFilter from './synth/modules/filter.vue'
+  import Amp from './synth/modules/amp.vue'
+  // Effects
   import EffectsRack from './synth/modules/effectsRack.vue'
-  import AmpEnv from './synth/modules/amp.vue'
-  // Utilities
-  import General from './synth/utils/general.vue'
   // Component
   export default {
-    components: { Piano, Oscillator, SynthFilter, EffectsRack, AmpEnv },
+    components: { Piano, Oscillator, SynthFilter, Amp, EffectsRack },
     mixins: [ General ],
     data() {
       return {
@@ -61,9 +62,6 @@
       }
     },
     methods: {
-      log: function(data) {
-        console.log(data)
-      },
       initSynth: function() {
         this.synth = new Tone.MonoSynth().toMaster()
       },
@@ -89,6 +87,7 @@
       border: solid 1px #ddd
       padding: $blh/2
       vertical-align: middle
+      margin-bottom: $blh/2
     &__title
       display: inline-block
       margin: 0
@@ -97,32 +96,20 @@
     &__main
       display: grid
       grid-template-columns: 2fr 3fr 3fr
+      grid-gap: $blh/2
       width: 100%
-      border: solid 1px #ddd
-      background: #fff
       margin-bottom: $blh/2
-    &__module
-      border-right: solid 1px #eee
-      padding: $blh/2
-      &--last
-        border: 0
-      &--card
-        border: solid 1px #eee
-        background: #fff
+    &__section
+      border: solid 1px #eee
+      background: #fff
     &__alt
       display: grid
       grid-template-columns: 5fr 3fr
       grid-gap: $blh/2
-    &__param
-      display: block
-      margin-bottom: $blh/4
-    &__label
-      display: block
-      font-weight: 700
-      margin: (-$blh/2) (-$blh/2) ($blh/2) (-$blh/2)
-      border-bottom: solid 1px #eee
+    &__empty
+      border: solid 1px #eee
+      background: #fff
       padding: $blh/2
-
   // Button
   .button
     border-radius: 0

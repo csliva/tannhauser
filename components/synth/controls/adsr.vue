@@ -3,12 +3,12 @@
     <div class="asdr__range">
       A: <input v-model.number="value.attack" type="range" min="0.01" max="2" step="0.001">
       {{ value.attack }}
-      <synth-select v-model="value.attackCurve" :options="filterOpts.curves" :name="name + '-attack-curve' " />
+      <select-input v-model="value.attackCurve" :options="filterOpts.curves" :name="name + '-attack-curve' " />
     </div>
     <div class="asdr__range">
       D: <input v-model.number="value.decay" type="range" min="0.01" max="1" step="0.001" >
       {{ value.decay }}
-      <synth-select v-model="value.decayCurve" :options="filterOpts.curvesAlt" :name="name + '-decay-curve' " />
+      <select-input v-model="value.decayCurve" :options="filterOpts.curvesAlt" :name="name + '-decay-curve' " />
     </div>
     <div class="asdr__range">
       S: <input v-model.number="value.sustain" type="range" min="0" max="1" step="0.001" >
@@ -17,15 +17,15 @@
     <div class="asdr__range">
       R: <input v-model.number="value.release" type="range" min="0.1" max="4" step="0.001" >
       {{ value.release }}
-      <synth-select v-model="value.releaseCurve" :options="filterOpts.curves" :name="name + '-release-curve' " />
+      <select-input v-model="value.releaseCurve" :options="filterOpts.curves" :name="name + '-release-curve' " />
     </div>
   </div>
 </template>
 
 <script>
-  import SynthSelect from './Select.vue'
+  import SelectInput from '../controls/select.vue'
   export default {
-    components: { SynthSelect },
+    components: { SelectInput },
     props: ['value', 'name'],
     data(){
       return {
