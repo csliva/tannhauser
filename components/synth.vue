@@ -3,7 +3,8 @@
     <div v-if="synth" class="synth__body">
       <header class="synth__head">
         <h1 class="synth__title">MonoSynth</h1>
-        <button @click="logSynth">Log Synth</button>
+        <button @click="log(synth)">Log Synth</button>
+        <button @click="killSynth">Kill Synth</button>
       </header>
       <main class="synth__main">
         <div class="synth__module">
@@ -29,7 +30,8 @@
     </div>
     <div v-else class="synth__body">
       <div class="synth__section">
-        <p>Synth Loading...</p>
+        <p>No Synth Loaded</p>
+        <button @click="initSynth">Init Synth</button>
       </div>
     </div>
     <piano v-model="synth" />
@@ -38,25 +40,35 @@
 
 
 <script>
+  // Libraries
   import Tone from 'tone'
+  // Controls
   import Piano from './piano.vue'
+  // Modules
   import Oscillator from './synth/modules/oscillator.vue'
   import SynthFilter from './synth/modules/filter.vue'
   import EffectsRack from './synth/modules/effectsRack.vue'
   import AmpEnv from './synth/modules/amp.vue'
+  // Utilities
+  import General from './synth/utils/general.vue'
+  // Component
   export default {
     components: { Piano, Oscillator, SynthFilter, EffectsRack, AmpEnv },
-    data () {
+    mixins: [ General ],
+    data() {
       return {
         synth: false
       }
     },
     methods: {
-      initSynth: function(){
+      log: function(data) {
+        console.log(data)
+      },
+      initSynth: function() {
         this.synth = new Tone.MonoSynth().toMaster()
       },
-      logSynth: function() {
-        console.log(this.synth)
+      killSynth: function() {
+        this.synth = false
       }
     },
     mounted: function () {

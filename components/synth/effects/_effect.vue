@@ -35,24 +35,24 @@
       log: function(data) {
         console.log(data)
       },
+      on: function(){
+        this.value = this.value.connect(this.settings)
+        this.active = true
+        this.rack.on = true
+      },
+      off: function(){
+        this.value = this.value.disconnect(this.settings)
+        this.active = false
+        this.rack.on = false
+      },
       toggle: function() {
-        if(this.settings){
-          if(!this.active){
-            this.value = this.value.connect(this.settings)
-            this.active = true
-            this.rack.on = true
-          } else {
-            this.value = this.value.disconnect(this.settings)
-            this.active = false
-            this.rack.on = false
-          }
+        if(this.settings) {
+          if(!this.active) { this.on() }
+          else { this.off() }
         } else {
           this.log('No Settings for: ' + this.rack.niceName)
         }
       }
-    },
-    mounted: function() {
-      // Do stuff on mount...
     },
     filters: {
       round: function(value, decimal){
