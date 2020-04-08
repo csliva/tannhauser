@@ -8,52 +8,26 @@
     </nav>
     <div class="effects__section">
 
-      <!-- <component is="EffectChorus" v-model="value" :show="active === 'chorus'" :rack="rack.chorus" /> -->
-
-      <effect-chorus v-model="value" :show="active === 'chorus'" :rack="rack.chorus" />
-      <effect-phaser v-model="value" :show="active === 'phaser'" :rack="rack.phaser" />
-      <effect-reverb v-model="value" :show="active === 'reverb'" :rack="rack.reverb" />
-      <effect-distortion v-model="value" :show="active === 'distortion'" :rack="rack.distortion" />
-      <effect-bitcrusher v-model="value" :show="active === 'bitcrusher'" :rack="rack.bitcrusher" />
-      <effect-vibrato v-model="value" :show="active === 'vibrato'" :rack="rack.vibrato" />
-      <effect-freeverb v-model="value" :show="active === 'freeverb'" :rack="rack.freeverb" />
-      <effect-pingpong v-model="value" :show="active === 'pingpong'" :rack="rack.pingpong" />
+      <effect-module v-for="e in rackId" v-model="value" :show="e === active" :rack="rack[e]" :key="rack[e].compName" />
 
     </div>
   </div>
 </template>
 
 <script>
-  // import Tone from 'tone'
-  import EffectChorus from '../effects/chorus.vue'
-  import EffectPhaser from '../effects/phaser.vue'
-  import EffectReverb from '../effects/reverb.vue'
-  import EffectDistortion from '../effects/distortion.vue'
-  import EffectBitcrusher from '../effects/bitcrusher.vue'
-  import EffectVibrato from '../effects/vibrato.vue'
-  import EffectFreeverb from '../effects/freeverb.vue'
-  import EffectPingpong from '../effects/pingpong.vue'
+  import EffectModule from './effect.vue'
   export default {
-    components: {
-      EffectChorus,
-      EffectPhaser,
-      EffectReverb,
-      EffectDistortion,
-      EffectBitcrusher,
-      EffectVibrato,
-      EffectFreeverb,
-      EffectPingpong
-    },
+    components: { EffectModule },
     props: ['value'],
     data(){
       return {
         msg: 'Effects Rack Loaded',
         rackId: ['chorus', 'reverb', 'phaser', 'distortion', 'bitcrusher', 'vibrato', 'freeverb', 'pingpong'],
-        active: 'reverb',
+        active: 'chorus',
         rack: {
           chorus: { niceName: 'Chorus', on: false, compName: 'Chorus' },
-          reverb: { niceName: 'Reverb', on: false, compName: 'Phaser' },
-          phaser: { niceName: 'Phaser', on: false, compName: 'Reverb' },
+          reverb: { niceName: 'Reverb', on: false, compName: 'Reverb' },
+          phaser: { niceName: 'Phaser', on: false, compName: 'Phaser' },
           distortion: { niceName: 'Distortion', on: false, compName: 'Distortion' },
           bitcrusher: { niceName: 'Bit Crusher', on: false, compName: 'Bitcrusher' },
           vibrato: { niceName: 'Vibrato', on: false, compName: 'Vibrato' },

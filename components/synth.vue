@@ -50,8 +50,7 @@
   import Oscillator from './synth/modules/oscillator.vue'
   import SynthFilter from './synth/modules/filter.vue'
   import Amp from './synth/modules/amp.vue'
-  // Effects
-  import EffectsRack from './synth/modules/effectsRack.vue'
+  import EffectsRack from './synth/modules/rack.vue'
   // Component
   export default {
     components: { Piano, Oscillator, SynthFilter, Amp, EffectsRack },
