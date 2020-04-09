@@ -6,23 +6,14 @@
         <button @click="logSynth">Log Synth</button>
       </header>
       <main class="synth__main">
-        <div class="synth__module">
-          <label class="synth__label">Oscillator</label>
-          <oscillator v-model="synth.oscillator" />
-        </div>
-        <div class="synth__module">
-          <label class="synth__label">Amp</label>
-          <amp-env v-model="synth" />
-        </div>
-        <div class="synth__module synth__module--last">
-          <label class="synth__label">Filter</label>
-          <synth-filter v-model="synth" />
-        </div>
+        <oscillator v-model="synth.oscillator" />
+        <amp-env v-model="synth" />
+        <synth-filter v-model="synth" />
       </main>
       <div class="synth__alt">
         <effects-rack v-model="synth" />
-        <div class="synth__module synth__module--card">
-          <label class="synth__label">Mods</label>
+        <div class="synth__temp">
+          <h3>Mods</h3>
           <p>LFOs and Envelopes here...</p>
         </div>
       </div>
@@ -35,7 +26,6 @@
     <piano v-model="synth" />
   </div>
 </template>
-
 
 <script>
   import Tone from 'tone'
@@ -69,14 +59,19 @@
 <style lang="sass">
   // Synth
   .synth
+    position: relative
+    padding-bottom: $blh*5
     &__body
       display: block
+      min-height: 100vh
+      padding: $blh/2
       margin-bottom: $blh/2
     &__head
       background: #eee
       border: solid 1px #ddd
       padding: $blh/2
       vertical-align: middle
+      margin-bottom: $blh/2
     &__title
       display: inline-block
       margin: 0
@@ -84,32 +79,29 @@
       margin-right: $blh/2
     &__main
       display: grid
-      grid-template-columns: 2fr 3fr 3fr
+      grid-template-columns: 3fr 3fr 3fr
+      grid-gap: $blh/2
       width: 100%
-      border: solid 1px #ddd
-      background: #fff
+      border: 0
       margin-bottom: $blh/2
-    &__module
-      border-right: solid 1px #eee
-      padding: $blh/2
-      &--last
-        border: 0
-      &--card
-        border: solid 1px #eee
-        background: #fff
     &__alt
       display: grid
-      grid-template-columns: 5fr 3fr
+      grid-template-columns: 2fr 1fr
       grid-gap: $blh/2
-    &__param
+      width: 100%
+      border: 0
+    &__temp
       display: block
-      margin-bottom: $blh/4
-    &__label
-      display: block
-      font-weight: 700
-      margin: (-$blh/2) (-$blh/2) ($blh/2) (-$blh/2)
-      border-bottom: solid 1px #eee
+      border: dotted 2px yellow
       padding: $blh/2
+
+  .module
+    border: solid 1px red
+    background: #fff
+    padding: $blh/2
+  .param
+    display: block
+    margin-bottom: $blh/4
 
   // Button
   .button

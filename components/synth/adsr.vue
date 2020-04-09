@@ -47,4 +47,5 @@
 <style lang="sass">
   .adsr
     display: block
+    border: solid 1px orange
 </style>

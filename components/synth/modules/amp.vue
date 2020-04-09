@@ -1,17 +1,18 @@
 <template lang="html">
-  <div class="env" v-if="value">
-    <div class="env__param">
+  <div class="module" v-if="value">
+    <h3>Amp Env</h3>
+    <div class="param">
       Volume:
       <input v-model.number="value.volume.value" type="range" min="-24" max="24" step="1" >
       {{ value.volume.value | round }}
     </div>
-    <div class="env__param">
-      <synth-adsr v-model="value.envelope" name="synth-env" />
-    </div>
-    <div class="env__param">
+    <div class="param">
       Portamento:
       <input v-model.number="value.portamento" type="range" min="0" max="4" step="0.1" >
       {{ value.portamento }}
+    </div>
+    <div class="param">
+      <synth-adsr v-model="value.envelope" name="synth-env" />
     </div>
   </div>
 </template>
@@ -40,11 +41,3 @@
     }
   }
 </script>
-
-<style lang="sass">
-  .env
-    display: block
-    &__param
-      display: block
-      margin-bottom: $blh/4
-</style>

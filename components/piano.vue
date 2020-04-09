@@ -89,12 +89,14 @@
 
 <style lang="sass">
   .piano
+    position: fixed
+    bottom: 0
+    left: 0
+    width: 100%
     display: block
     background: #fff
-    border: solid 1px #ddd
     padding: $blh/2
-    &__keyboard
-      display: block
+    border-top: solid 1px #ddd
     &__octave
       display: block
       margin-bottom: $blh/2
