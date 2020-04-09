@@ -1,10 +1,9 @@
 <template lang="html">
   <div class="piano" v-if="value">
     <div class="piano__octave">
-      <label>Octave:</label>
-      <synth-select v-model="octave" :options="octaveRange" name="synth-octave" />
-      <label>Note Duration:</label>
-      <synth-select v-model="noteDuration" :options="durationRange" name="synth-duration" />
+      <button @click="octaveChange(octave -1)">Down</button>
+      <label>Octave: {{ octave }}</label>
+      <button @click="octaveChange(octave +1)">Up</button>
     </div>
     <div class="piano__roll">
       <button v-for="k in keys"
@@ -12,7 +11,8 @@
         :class="{'piano__key--active': k.active, 'piano__key--black': k.color === 'black'}"
         :data-key-code="k.key"
         :key="k.val"
-        @click="playNote(k.val + octave, noteDuration)" >
+        @mousedown="noteAttack(k)"
+        @mouseup="noteRelease(k)" >
           {{ k.val + octave }}
       </button>
     </div>
@@ -27,11 +27,7 @@
     props: ['value'],
     data(){
       return {
-        msg: 'Piano Loaded',
         octave: 4,
-        octaveRange: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-        noteDuration: '8n',
-        durationRange: ['1n', '2n', '4n', '8n', '16n'],
         keys: [
           { val: 'C',   color: 'white', key: 9 , active: false },
           { val: 'C#',  color: 'black', key: 49, active: false },
@@ -50,28 +46,42 @@
       }
     },
     methods: {
-      playNote: function (note, time) {
-        this.value.triggerAttackRelease(note, time)
+      noteAttack: function (note) {
+        this.value.triggerAttack(note.val + this.octave)
+        note.active = true
       },
-      handleKey: (e, that) => {
-        // console.log(e.keyCode)
+      noteRelease: function (note) {
+        this.value.triggerRelease()
+        note.active = false
+      },
+      handleKeyDown: (e, that) => {
         that.keys.map(note => {
-          // check if keypress matches a note
-          if (note.key === e.keyCode){
-            that.value.triggerAttackRelease(note.val+that.octave, that.noteDuration)
-            note.active = true
-            setTimeout(function(){
-              note.active = false
-            }, 250)
+          if (note.key === e.keyCode && note.active === false){
+            that.noteAttack(note)
           }
         })
+      },
+      handleKeyUp: (e, that) => {
+        that.keys.map(note => {
+          if (note.key === e.keyCode && note.active === true){
+            that.noteRelease(note)
+          }
+        })
+      },
+      octaveChange: function (o) {
+        if(o <= 8 && o >= 0) {
+          this.octave = o
+        }
       }
     },
     mounted: function(){
       // bind keys to piano
       window.addEventListener("keydown", e => {
         e.preventDefault()
-        this.handleKey(e, this)
+        this.handleKeyDown(e, this)
+      });
+      window.addEventListener("keyup", e => {
+        this.handleKeyUp(e, this)
       });
     }
   }
