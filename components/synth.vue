@@ -99,6 +99,9 @@
     border: solid 1px red
     background: #fff
     padding: $blh/2
+    h3
+      margin-bottom: $blh/2
+      
   .param
     display: block
     margin-bottom: $blh/4
