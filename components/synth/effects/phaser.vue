@@ -1,5 +1,5 @@
 <template lang="html">
-  <effect-wrap v-if="value" :class="{ 'effect--show': show }" :rack="rack" :settings="settings">
+  <effect-wrap v-model="value" :class="{ 'effect--show': show }" :rack="rack" :settings="settings">
       <div class="effect__col">
         <div class="effect__param" v-if="settings.wet">
           Dry/Wet:

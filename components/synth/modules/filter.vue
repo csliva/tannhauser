@@ -15,7 +15,7 @@
     <br>
     <div class="module__param">
       Freq:
-      <input v-model.number="value.filterEnvelope.baseFrequency" type="range" min="20" max="20000" step="1" >
+      <input v-model.number="value.filterEnvelope.baseFrequency" type="range" min="20" max="4000" step="1" >
       {{ value.filterEnvelope.baseFrequency }}
     </div>
     <div class="module__param">

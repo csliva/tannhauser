@@ -7,6 +7,8 @@
       </button>
     </nav>
     <div class="effects__section">
+      <!-- <component v-for="e in rackId" v-model="value" :is="rack[e].comp"
+      :show="active === e" :rack="rack[e]" /> -->
       <effect-chorus v-model="value" :show="active === 'chorus'" :rack="rack.chorus" />
       <effect-phaser v-model="value" :show="active === 'phaser'" :rack="rack.phaser" />
       <effect-reverb v-model="value" :show="active === 'reverb'" :rack="rack.reverb" />
@@ -44,17 +46,17 @@
     data(){
       return {
         msg: 'Effects Rack Loaded',
-        rackId: ['chorus', 'reverb', 'phaser', 'distortion', 'bitcrusher', 'vibrato', 'freeverb', 'pingpong'],
+        rackId: ['chorus', 'phaser', 'reverb',  'distortion', 'bitcrusher', 'vibrato', 'freeverb', 'pingpong'],
         active: 'chorus',
         rack: {
-          chorus: { niceName: 'Chorus', on: false },
-          reverb: { niceName: 'Reverb', on: false },
-          phaser: { niceName: 'Phaser', on: false },
-          distortion: { niceName: 'Distortion', on: false },
-          bitcrusher: { niceName: 'Bit Crusher', on: false },
-          vibrato: { niceName: 'Vibrato', on: false },
-          freeverb: { niceName: 'Freeverb', on: false },
-          pingpong: { niceName: 'Ping Pong Delay', on: false }
+          chorus: { niceName: 'Chorus', on: false, comp: 'EffectChorus' },
+          phaser: { niceName: 'Phaser', on: false, comp: 'EffectPhaser'  },
+          reverb: { niceName: 'Reverb', on: false, comp: 'EffectReverb'  },
+          distortion: { niceName: 'Distortion', on: false, comp: 'EffectDistortion'  },
+          bitcrusher: { niceName: 'Bit Crusher', on: false, comp: 'EffectBitcrusher'  },
+          vibrato: { niceName: 'Vibrato', on: false, comp: 'EffectVibrato'  },
+          freeverb: { niceName: 'Freeverb', on: false, comp: 'EffectFreeverb'  },
+          pingpong: { niceName: 'Ping Pong Delay', on: false, comp: 'EffectPingpong'  }
         }
       }
     },

@@ -1,4 +1,5 @@
 <script>
+  // import Tone from 'tone'
   import SynthSelect from '../Select.vue'
   import EffectWrap from './partials/wrap.vue'
   export default {
@@ -6,7 +7,6 @@
     props: ['value', 'show', 'rack'],
     data(){
       return {
-        active: false,
         settings: {}
       }
     },
@@ -16,21 +16,12 @@
       },
       on: function(){
         this.value = this.value.connect(this.settings)
-        this.active = true
         this.rack.on = true
       },
       off: function(){
         this.value = this.value.disconnect(this.settings)
-        this.active = false
         this.rack.on = false
       },
-      toggle: function() {
-        if(!this.active) { this.on() }
-        else { this.off() }
-      }
-    },
-    mounted: function() {
-      // Do stuff on mount...
     },
     filters: {
       round: function(value, decimal){
