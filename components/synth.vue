@@ -1,10 +1,26 @@
 <template lang="html">
   <div class="synth">
+
+    <div class="synth__temp">
+      <small>{{ testMsg }}</small>
+      <h1>{{ num }}</h1>
+      <button @click="decrement"> - </button>
+      <button @click="increment"> + </button>
+      <ul>
+        <li v-for="(i, index) in items" :key="index">
+          <input type="text" @input="update(i)" :value="i.val" />
+          <span>{{ i.val }}</span>
+        </li>
+      </ul>
+    </div>
+
+
     <div v-if="synth" class="synth__body">
       <header class="synth__head">
         <h1 class="synth__title">MonoSynth</h1>
         <button @click="logSynth">Log Synth</button>
       </header>
+
       <main class="synth__main">
         <oscillator v-model="synth.oscillator" />
         <amp-env v-model="synth" />
@@ -17,28 +33,52 @@
           <p>LFOs and Envelopes here...</p>
         </div>
       </div>
+
     </div>
     <div v-else class="synth__body">
       <div class="synth__section">
-        <p>Synth Loading...</p>
+        <p>No Synth Loaded...</p>
+        <button @click="initSynth">Initialize Synth</button>
       </div>
     </div>
-    <piano v-model="synth" />
+
+    <!-- <piano v-model="synth" /> -->
+
   </div>
 </template>
 
 <script>
+  import { mapMutations } from 'vuex'
   import Tone from 'tone'
-  import Piano from './piano.vue'
+  // import Piano from './piano.vue'
   import Oscillator from './synth/modules/oscillator.vue'
   import SynthFilter from './synth/modules/filter.vue'
   import EffectsRack from './synth/modules/effectsRack.vue'
   import AmpEnv from './synth/modules/amp.vue'
   export default {
-    components: { Piano, Oscillator, SynthFilter, EffectsRack, AmpEnv },
+    components: { Oscillator, SynthFilter, EffectsRack, AmpEnv },
     data () {
       return {
         synth: false
+      }
+    },
+    computed: {
+      num (){
+        return this.$store.state.num
+      },
+      testMsg (){
+        return this.$store.state.testMsg
+      },
+      items(){
+        return this.$store.state.items
+      },
+      item: {
+        get (index){
+
+        },
+        set(value){
+
+        }
       }
     },
     methods: {
@@ -47,10 +87,19 @@
       },
       logSynth: function() {
         console.log(this.synth)
-      }
+      },
+      increment: function(){
+        this.$store.commit('increment')
+      },
+      decrement: function(){
+        this.$store.commit('decrement')
+      },
+      ...mapMutations({
+        update: 'update'
+      })
     },
     mounted: function () {
-      this.initSynth()
+      // this.initSynth()
     }
   }
 </script>
@@ -92,8 +141,9 @@
       border: 0
     &__temp
       display: block
-      border: dotted 2px yellow
+      border: dotted 2px purple
       padding: $blh/2
+      margin-bottom: $blh/2
 
   .module
     border: solid 1px red
@@ -101,7 +151,7 @@
     padding: $blh/2
     h3
       margin-bottom: $blh/2
-      
+
   .param
     display: block
     margin-bottom: $blh/4
