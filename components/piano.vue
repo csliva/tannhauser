@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="piano" v-if="value">
+  <div class="piano">
     <div class="piano__octave">
       <button @click="octaveChange(octave -1)">Down</button>
       <label>Octave: {{ octave }}</label>
@@ -21,9 +21,7 @@
 
 <script>
   import Tone from 'tone'
-  import SynthSelect from './synth/Select.vue'
   export default {
-    components: { SynthSelect },
     props: ['value'],
     data(){
       return {

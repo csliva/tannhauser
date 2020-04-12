@@ -17,4 +17,5 @@
   .app
     background: #fff
     color: #666
+    min-height: 100vh
 </style>

@@ -14,7 +14,15 @@ export const mutations = {
   decrement (state) {
     state.num--
   },
-  update (state, { item, text }) {
-    item.val = text
+  update (state, obj) {
+    state.items[obj.index].val = obj.value
+  },
+  add (state, obj){
+    state.items.push({val: obj.value})
+  },
+  remove (state, obj) {
+    if(obj.index > -1){
+      state.items.splice(obj.index, 1)
+    }
   }
 }
