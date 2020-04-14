@@ -50,6 +50,7 @@
             </select>
           </span>
           <button @click="log(m.unit)">Log Unit</button>
+          <button @click="m.unit.mute = !m.unit.mute">{{ m.unit.mute ? 'Un-Mute' : 'Mute'}}</button>
         </div>
       </div>
 
@@ -111,16 +112,20 @@
           <h2>{{ m.name }} (ID: {{ m.id }})</h2>
           <div class="module__row">
             <div class="">
-              a: <input type="range" v-model="m.unit.attack" min="0.01" max="2.00" step="0.01">
+              a: <input type="range" v-model="m.unit.attack" min="0.01" max="2.00" step="0.01" />
+              {{ m.unit.attack }}
             </div>
             <div class="">
-              d: <input type="range" v-model="m.unit.decay" min="0.01" max="2.00" step="0.01">
+              d: <input type="range" v-model="m.unit.decay" min="0.01" max="2.00" step="0.01" />
+              {{ m.unit.decay }}
             </div>
             <div class="">
-              s: <input type="range" v-model="m.unit.sustain" min="0.01" max="1.00" step="0.01">
+              s: <input type="range" v-model="m.unit.sustain" min="0.01" max="1.00" step="0.01" />
+              {{ m.unit.sustain }}
             </div>
             <div class="">
-              r: <input type="range" v-model="m.unit.release" min="0.01" max="4.00" step="0.01">
+              r: <input type="range" v-model="m.unit.release" min="0.01" max="4.00" step="0.01" />
+              {{ m.unit.release }}
             </div>
           </div>
           <button @click="log(m.unit)" >Log Unit</button>
@@ -143,7 +148,8 @@
     data () {
       return {
         synth: {},
-        modules: []
+        modules: [],
+        routes: []
       }
     },
     computed: {
@@ -195,8 +201,8 @@
       },
       initFilter: function(){
         let filter = new Tone.Filter()
-        filter.filterEnvelope = new Tone.FrequencyEnvelope();
-        filter.filterEnvelope.connect(filter);
+        filter.filterEnvelope = new Tone.FrequencyEnvelope()
+        filter.filterEnvelope.connect(filter.frequency)
         this.modules.push(
           {
             id: this.modId,
