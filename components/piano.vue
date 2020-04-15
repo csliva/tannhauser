@@ -4,6 +4,9 @@
       <button @click="octaveChange(octave -1)">Down</button>
       <label>Octave: {{ octave }}</label>
       <button @click="octaveChange(octave +1)">Up</button>
+      <span class="piano__status" :class="{'piano__status--idle': !pianoActive }">
+        {{ pianoActive ? 'Piano Active' : 'Piano Idle' }}
+      </span>
     </div>
     <div class="piano__roll">
       <button v-for="k in keys"
@@ -22,7 +25,6 @@
 <script>
   import Tone from 'tone'
   export default {
-    props: ['value'],
     data(){
       return {
         octave: 4,
@@ -43,13 +45,34 @@
         ]
       }
     },
+    computed: {
+      // $store
+      pianoActive: function () {
+        return this.$store.state.synth.piano.active
+      }
+    },
     methods: {
+      // $store
+      setFreq: function (value) {
+        this.$store.commit('synth/setPianoFreq', value)
+      },
+      trigEnvAttack: function (value) {
+        this.$store.commit('synth/triggerAttack', value)
+      },
+      trigEnvRelease: function (value) {
+        this.$store.commit('synth/triggerRelease', value)
+      },
+      // local
       noteAttack: function (note) {
-        this.value.triggerAttack(note.val + this.octave)
+        let freq = Tone.Frequency(note.val + this.octave).toFrequency()
+        this.setFreq(freq)
+        this.trigEnvRelease(false)
+        this.trigEnvAttack(true)
         note.active = true
       },
       noteRelease: function (note) {
-        this.value.triggerRelease()
+        this.trigEnvRelease(true)
+        this.trigEnvAttack(false)
         note.active = false
       },
       handleKeyDown: (e, that) => {
@@ -75,11 +98,15 @@
     mounted: function(){
       // bind keys to piano
       window.addEventListener("keydown", e => {
-        e.preventDefault()
-        this.handleKeyDown(e, this)
+        if(this.pianoActive){
+          e.preventDefault()
+          this.handleKeyDown(e, this)
+        }
       });
       window.addEventListener("keyup", e => {
-        this.handleKeyUp(e, this)
+        if(this.pianoActive){
+          this.handleKeyUp(e, this)
+        }
       });
     }
   }
@@ -95,6 +122,12 @@
     background: #fff
     padding: $blh/2
     border-top: solid 1px #ddd
+    &__status
+      display: inline-block
+      padding-left: $blh/2
+      color: blue
+      &--idle
+        color: red
     &__octave
       display: block
       margin-bottom: $blh/2

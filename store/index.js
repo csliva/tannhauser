@@ -1,3 +1,5 @@
+// export const strict = false
+
 export const state = () => ({
   testMsg: 'Store Test Message',
   num: 0,
