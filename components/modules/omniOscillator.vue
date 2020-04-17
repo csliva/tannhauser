@@ -1,54 +1,78 @@
 <template lang="html">
   <div class="module" v-if="settings">
-    <h2>
-      {{ title }}
-      <i>{{ id }}</i>
-      <button @click="settings.mute = !settings.mute">
+    <header class="module__header" >
+      <h2 class="module__title">{{ settings.moduleId || title }}</h2>
+      <small class="module__category">{{ type }} Module</small>
+    </header>
+    <main class="module__main" >
+      <section class="module__section" >
+        <ctrl-check v-if="settings.baseType" v-model="settings.baseType" :props="params.baseType" />
+      </section>
+      <section class="module__section" >
+        <ctrl-range v-if="settings.detune" v-model="settings.detune.value" :props="params.detune" />
+        <ctrl-range v-if="stringPartials" v-model="settings.partialCount" :props="params.partials" />
+      </section>
+      <div v-if="debug" class="module__debug">
+        <span class="module__state">Status: {{ settings.state }}</span>
+        <span v-if="settings.frequency">
+          Tone:
+          {{ settings.frequency.value | toNote }}
+          ({{ settings.frequency.value | round }}hz)
+        </span>
+        <span>
+          Mute: {{ settings.mute }}
+        </span>
+      </div>
+    </main>  
+    <footer class="module__footer" >
+      <button class="module__toggle module__toggle--success" @click="settings.mute = !settings.mute">
         {{ settings.mute ? 'Un-Mute' : 'Mute' }}
       </button>
-    </h2>
-    <p v-if="settings.frequency">
-      Tone:
-      {{ settings.frequency.value | toNote }}
-      ({{ settings.frequency.value | round }}hz)
-    </p>
-    <p>
-      Type:
-      <select v-model="settings.baseType">
-        <option>sine</option>
-        <option>square</option>
-        <option>triangle</option>
-        <option>sawtooth</option>
-      </select>
-    </p>
-    <p v-if="settings.detune">
-      Detune: <input v-model="settings.detune.value" type="range" min="-100" max="100" step="1" > {{ settings.detune.value }}
-    </p>
-    <p>
-      Status:
-      <span class="module__state">{{ settings.state }}</span>
-    </p>
-    <p>
-      <button @click="log(settings)">Log Settings</button>
-    </p>
+      <button class="module__toggle" @click="log(settings)">Log</button>
+      <button class="module__toggle module__toggle--warning" @click="debug = !debug">Debug</button>
+    </footer>
   </div>
 </template>
 
 <script>
   import Tone from 'tone'
   import Module from './_module.vue'
+  import CtrlButton from '../controls/button.vue'
+  import CtrlRange from '../controls/range.vue'
+  import CtrlSelect from '../controls/select.vue'
+  import CtrlCheck from '../controls/check.vue'
   export default {
     extends: Module,
+    components: { CtrlButton, CtrlRange, CtrlSelect, CtrlCheck },
     data () {
       return {
         title: 'OmniOscillator',
-        type: 'oscillator'
+        type: 'oscillator',
+        params: {
+          baseType: {
+            label: 'Base Type',
+            options: ['sine','triangle','square','sawtooth']
+          },
+          detune: {
+            label: 'Detune',
+            min: '-100', max: '100', step: '1',
+            units: 'cents', dec: '0'
+          },
+          partials: {
+            label: 'Partials',
+            min: '0', max: '32', step: '1',
+            units: '', dec: '0'
+          }
+        }
       }
     },
     computed: {
       // $store
       noteFreq () {
         return this.$store.state.synth.piano.freq
+      },
+      stringPartials () {
+        return Number(this.settings.partialCount).toString(10)
       }
     },
     mounted: function() {

@@ -1,33 +1,60 @@
 <template lang="html">
   <div class="module" v-if="settings">
-    <h2>
-      {{ title }}
-      <i>{{ id }}</i>
-    </h2>
-    <p>
-      A: <input v-model="settings.attack" type="range" min="0.1" max="2.0" step="0.1" > {{ settings.attack }} <br>
-      D: <input v-model="settings.decay" type="range" min="0.1" max="2.0" step="0.1" > {{ settings.decay }} <br>
-      S: <input v-model="settings.sustain" type="range" min="0.1" max="1.0" step="0.1" > {{ settings.sustain }} <br>
-      R: <input v-model="settings.release" type="range" min="0.1" max="4.0" step="0.1" > {{ settings.release }}
-    </p>
-    <p>
-      <button @click="log(settings)">Log Settings</button>
-    </p>
-    <p>
-      Atk: {{ atkTriggered }}, Rel: {{ relTriggered }}
-    </p>
+    <header class="module__header">
+      <h2 class="module__title">{{ settings.moduleId || title }}</h2>
+      <small class="module__category">{{ type }} Module</small>
+    </header>
+    <main class="module__main">
+      <ctrl-range v-if="settings.attack" v-model="settings.attack" :props="adsr.a" />
+      <ctrl-range v-if="settings.decay" v-model="settings.decay" :props="adsr.d" />
+      <ctrl-range v-if="settings.sustain" v-model="settings.sustain" :props="adsr.s" />
+      <ctrl-range v-if="settings.release" v-model="settings.release" :props="adsr.r" />
+      <div v-if="debug" class="module__debug">
+        <span>A: {{ atkTriggered }}</span>
+        <span>R: {{ relTriggered }}</span>
+      </div>
+    </main>
+    <footer class="module__footer">
+      <button class="module__toggle" @click="log(settings)">Log</button>
+      <button class="module__toggle module__toggle--warning" @click="debug = !debug">Debug</button>
+    </footer>
   </div>
 </template>
 
 <script>
   import Tone from 'tone'
   import Module from './_module.vue'
+  import CtrlButton from '../controls/button.vue'
+  import CtrlRange from '../controls/range.vue'
   export default {
     extends: Module,
+    components: { CtrlButton, CtrlRange },
     data () {
       return {
         title: 'AmpEnv',
-        type: 'envelope'
+        type: 'envelope',
+        adsr: {
+          a: {
+            label: 'Attack',
+            min: '0.00', max: '2.00', step: '0.01',
+            units: 'sec', dec: '2'
+          },
+          d: {
+            label: 'Decay',
+            min: '0.00', max: '2.00', step: '0.01',
+            units: 'sec', dec: '2'
+          },
+          s: {
+            label: 'Sustain',
+            min: '0.01', max: '2.00', step: '0.01',
+            units: 'sec', dec: '2'
+          },
+          r: {
+            label: 'Release',
+            min: '0.01', max: '4.00', step: '0.01',
+            units: 'sec', dec: '2'
+          }
+        }
       }
     },
     computed: {

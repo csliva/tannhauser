@@ -1,9 +1,55 @@
 // Reset
-
 html, *, *:before, *:after
   -webkit-box-sizing: border-box
   -moz-box-sizing: border-box
   box-sizing: border-box
 
+html
+  background-color: lighten(clr('indigo'), 5%)
+  margin: 0
+  color: #fff
+  font-size: $bfs
+  line-height: $blh
+
+// http://meyerweb.com/eric/tools/css/reset/
+// v2.0 | 20110126
+// License: none (public domain)
+// Changed from CSS to SASS
+
+body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, a, img, s, small, strong, b, u, i, dl, dt, dd, ol, ul, li
+	margin: 0
+	padding: 0
+	font-size: inherit
+	vertical-align: baseline
+
+button
+  font-size: $bfs
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section
+	display: block
+
 p
+  margin-bottom: $blh/2
+
+ol, ul
+	list-style: none
+
+blockquote, q
+	quotes: none
+
+blockquote:before, blockquote:after, q:before, q:after
+	content: ''
+	content: none
+
+table
+	border-collapse: collapse
+	border-spacing: 0
+
+body
+  font-family: 'Lato', sans-serif
+
+h1, h2, h3, h4, h5, h6
+  display: block
+  font-family: 'Source Code Pro', monospace
   margin-bottom: $blh/2

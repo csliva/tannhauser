@@ -1,5 +1,5 @@
 export const state = () => ({
-  title: 'Default Synth',
+  title: 'Tannhauser',
   piano: {
     active: true,
     freq: 440,

@@ -1,49 +1,63 @@
 <template lang="html">
   <div class="module" v-if="settings">
-    <h2>
-      {{ title }}
-      <i>{{ id }}</i>
-    </h2>
-    <p>
-      <select v-model="settings.type">
-        <option>lowpass</option>
-        <option>highpass</option>
-        <option>bandpass</option>
-        <option>lowshelf</option>
-        <option>highshelf</option>
-        <option>notch</option>
-        <option>allpass</option>
-        <option>peaking</option>
-      </select>
-      <select v-model="settings.rolloff">
-        <option>-12</option>
-        <option>-24</option>
-        <option>-48</option>
-        <option>-96</option>
-      </select>
-    </p>
-    <p v-if="settings.frequency">
-      Freq: <input v-model="settings.frequency.value" type="range" min="20" max="4000" step="1" >
-      {{ settings.frequency.value }}
-      <br>
-      Q: <input v-model="settings.Q.value" type="range" min="0" max="10" step="1" >
-      {{ settings.Q.value }}
-    </p>
-    <p>
-      <button @click="log(settings)">Log Settings</button>
-    </p>
+    <header class="module__header">
+      <h2 class="module__title">{{ settings.moduleId || title }}</h2>
+      <small class="module__category">{{ type }} Module</small>
+    </header>
+    <main class="module__main">
+      <section class="module__section module__section--dual">
+        <ctrl-select v-if="settings.type" v-model="settings.type" :props="params.type" />
+        <ctrl-select v-if="settings.rolloff" v-model="settings.rolloff" :props="params.rolloff" />
+      </section>
+      <section class="module__section">
+        <ctrl-range v-if="settings.frequency" v-model="settings.frequency.value" :props="params.freq" />
+        <ctrl-range v-if="settings.Q" v-model="settings.Q.value" :props="params.q" />
+        <div v-if="debug" class="module__debug">
+          <span>Debug...</span>
+        </div>
+      </section>
+    </main>
+    <footer class="module__footer">
+      <button class="module__toggle" @click="log(settings)">Log</button>
+      <button class="module__toggle module__toggle--warning" @click="debug = !debug">Debug</button>
+    </footer>
+
   </div>
 </template>
 
 <script>
   import Tone from 'tone'
   import Module from './_module.vue'
+  import CtrlButton from '../controls/button.vue'
+  import CtrlRange from '../controls/range.vue'
+  import CtrlSelect from '../controls/select.vue'
   export default {
     extends: Module,
+    components: { CtrlButton, CtrlRange, CtrlSelect },
     data () {
       return {
         title: 'Filter',
-        type: 'filter'
+        type: 'filter',
+        params: {
+          freq: {
+            label: 'Frequency',
+            min: '20', max: '4000', step: '1',
+            units: 'hz', dec: '0'
+          },
+          q: {
+            label: 'Quality',
+            min: '0.0', max: '10.0', step: '0.1',
+            units: '', dec: '1'
+          },
+          type: {
+            label: 'Filter Type',
+            options: ['lowpass','highpass','bandpass','lowshelf','highshelf','notch','allpass','peaking']
+          },
+          rolloff: {
+            label: 'Rolloff',
+            options: ['-12', '-24', '-48', '-96']
+          }
+        }
       }
     },
     mounted: function() {

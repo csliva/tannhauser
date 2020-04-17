@@ -1,3 +1,16 @@
-// Settings
+// Use
 
-$blh: 30px
+// Settings
+$blh: 26px
+$bfs: 14px
+
+// Fonts
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap")
+@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap")
+
+// Colors
+$colors: ( "indigo": #1b203d, "blue": #0faff9, "pink": #e72e71, "mint": #69bfa2, "orange": #ec583e )
+
+@function clr($n)
+  $color: map-get($colors, $n)
+  @return $color
