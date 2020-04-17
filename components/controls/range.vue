@@ -74,7 +74,7 @@
       padding-top: $blh/4
     &__track
       display: block
-      height: 4px
+      height: 5px
       position: relative
       z-index: 0
       background: transparent
@@ -96,11 +96,11 @@
       display: block
       z-index: 10
       width: 100%
-      background-color: darken(clr('indigo'), 5%)
+      background-color: darken(clr('indigo'), 4%)
     &__current
       position: absolute
       z-index: 20
-      background-color: clr('mint')
+      background-color: lighten(clr('mint'), 10%)
     &__input
       -webkit-appearance: none
       position: relative

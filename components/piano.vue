@@ -126,7 +126,7 @@
     @include boxShadow()
     position: fixed
     bottom: $blh
-    left: $blh/2
+    left: $blh
     width: auto
     display: inline-block
     background: lighten(clr('indigo'), 5%)

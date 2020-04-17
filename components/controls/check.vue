@@ -37,6 +37,7 @@
 <style lang="sass">
   .check
     display: block
+    margin-bottom: $blh/2
     &__meta
       display: block
       margin-bottom: $blh/8

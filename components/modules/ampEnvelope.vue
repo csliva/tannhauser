@@ -1,14 +1,21 @@
 <template lang="html">
-  <div class="module" v-if="settings">
+  <div class="module" v-if="settings" :class="{ 'module--hidden' : !active}" >
     <header class="module__header">
       <h2 class="module__title">{{ settings.moduleId || title }}</h2>
       <small class="module__category">{{ type }} Module</small>
     </header>
     <main class="module__main">
-      <ctrl-range v-if="settings.attack" v-model="settings.attack" :props="adsr.a" />
-      <ctrl-range v-if="settings.decay" v-model="settings.decay" :props="adsr.d" />
-      <ctrl-range v-if="settings.sustain" v-model="settings.sustain" :props="adsr.s" />
-      <ctrl-range v-if="settings.release" v-model="settings.release" :props="adsr.r" />
+      <section class="module__section module__section--dual">
+        <div class="module__col">
+          <ctrl-range v-if="settings.attack" v-model="settings.attack" :props="adsr.a" />
+          <ctrl-range v-if="settings.decay" v-model="settings.decay" :props="adsr.d" />
+          <ctrl-range v-if="settings.sustain" v-model="settings.sustain" :props="adsr.s" />
+          <ctrl-range v-if="settings.release" v-model="settings.release" :props="adsr.r" />
+        </div>
+        <div class="module__col">
+          Additional Params...
+        </div>
+      </section>
       <div v-if="debug" class="module__debug">
         <span>A: {{ atkTriggered }}</span>
         <span>R: {{ relTriggered }}</span>

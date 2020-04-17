@@ -1,16 +1,16 @@
 <template lang="html">
-  <div class="module" v-if="settings">
+  <div class="module" v-if="settings" :class="{ 'module--hidden' : !active}" >
     <header class="module__header" >
       <h2 class="module__title">{{ settings.moduleId || title }}</h2>
       <small class="module__category">{{ type }} Module</small>
     </header>
     <main class="module__main" >
-      <section class="module__section" >
-        <ctrl-check v-if="settings.baseType" v-model="settings.baseType" :props="params.baseType" />
-      </section>
-      <section class="module__section" >
-        <ctrl-range v-if="settings.detune" v-model="settings.detune.value" :props="params.detune" />
-        <ctrl-range v-if="stringPartials" v-model="settings.partialCount" :props="params.partials" />
+      <section class="module__section module__section--dual" >
+        <div class="module__col">
+          <ctrl-check v-if="settings.baseType" v-model="settings.baseType" :props="params.baseType" />
+          <ctrl-range v-if="settings.detune" v-model="settings.detune.value" :props="params.detune" />
+          <ctrl-range v-if="stringPartials" v-model="settings.partialCount" :props="params.partials" />
+        </div>
       </section>
       <div v-if="debug" class="module__debug">
         <span class="module__state">Status: {{ settings.state }}</span>
@@ -23,7 +23,7 @@
           Mute: {{ settings.mute }}
         </span>
       </div>
-    </main>  
+    </main>
     <footer class="module__footer" >
       <button class="module__toggle module__toggle--success" @click="settings.mute = !settings.mute">
         {{ settings.mute ? 'Un-Mute' : 'Mute' }}

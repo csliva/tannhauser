@@ -1,21 +1,27 @@
 <template lang="html">
-  <div class="module" v-if="settings">
+  <div class="module" v-if="settings" :class="{ 'module--hidden' : !active}" >
     <header class="module__header">
       <h2 class="module__title">{{ settings.moduleId || title }}</h2>
       <small class="module__category">{{ type }} Module</small>
     </header>
     <main class="module__main">
-      <section class="module__section module__section--dual">
+      <section class="module__section module__section--quad">
         <ctrl-select v-if="settings.type" v-model="settings.type" :props="params.type" />
         <ctrl-select v-if="settings.rolloff" v-model="settings.rolloff" :props="params.rolloff" />
       </section>
-      <section class="module__section">
-        <ctrl-range v-if="settings.frequency" v-model="settings.frequency.value" :props="params.freq" />
-        <ctrl-range v-if="settings.Q" v-model="settings.Q.value" :props="params.q" />
-        <div v-if="debug" class="module__debug">
-          <span>Debug...</span>
+      <section class="module__section module__section--dual">
+        <div class="module__col">
+          <ctrl-range v-if="settings.frequency" v-model="settings.frequency.value" :props="params.freq" />
+          <ctrl-range v-if="settings.Q" v-model="settings.Q.value" :props="params.q" />
         </div>
+        <div class="module__col">
+          Additional params...
+        </div>
+
       </section>
+      <div v-if="debug" class="module__debug">
+        <span>Debug...</span>
+      </div>
     </main>
     <footer class="module__footer">
       <button class="module__toggle" @click="log(settings)">Log</button>

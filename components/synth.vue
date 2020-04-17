@@ -13,64 +13,61 @@
         </div>
       </header>
 
-
-      <main class="synth__main">
-        <!-- Modules -->
-        <div class="synth__row">
-          <component v-for="m in modules" :is="m.type" :id="m.id" v-model="m.obj" :key="m.id" />
-          <div class="synth__add">
-            <h3>Add New Module:</h3>
-            <ctrl-button @click="initModule('OmniOscillator')" text="Init Osc" type="success" />
-            <ctrl-button @click="initModule('FilterModule')" text="Init Filt" type="success" />
-            <ctrl-button @click="" text="Init Env" type="success" />
-          </div>
-        </div>
-
-        <!-- Routes  -->
-        <div class="routes">
-          <select v-model="newRoute.source">
-            <option value="">Select Source</option>
-            <option v-for="m in modules" v-if="m.obj" :value="m.obj">{{ m.obj.moduleId }}</option>
-          </select>
-          <select v-model="newRoute.sink">
-            <option value="">Select Sink</option>
-            <option value="Master">Master</option>
-            <option v-for="m in modules" v-if="m.obj" :value="m.obj">{{ m.obj.moduleId }}</option>
-          </select>
-          <ctrl-button @click="createRoute(newRoute.source, newRoute.sink)" text="Route Connection" />
-          <ctrl-button v-if="!routes.length" @click="testRoute()" text="Init Routes" type="success" />
-          <ul class="routes__list">
-            <li v-for="r in routes" class="routes__item">
-              {{ r.source.name }} => {{ r.sink.name }}
+      <div class="synth__body">
+        <aside class="synth__aside">
+          <ul class="menu">
+            <li class="menu__item">
+              <ctrl-button @click="initModule('OmniOscillator')" text="Init Osc" type="success" />
+              <ctrl-button @click="initModule('FilterModule')" text="Init Filt" type="success" />
+              <ctrl-button @click="" text="Init Env" type="success" />
+            </li>
+            <li class="menu__item">
+              <button class="menu__button">
+                <h3>Master</h3>
+                <small>Master Output</small>
+              </button>
+            </li>
+            <li v-for="m in modules" v-if="m.obj" class="menu__item">
+              <button v-if="m.obj" @click="activeModule = m"
+              class="menu__button":class="{'menu__button--active' : activeModule.id === m.id} ">
+                <h3>{{ m.obj.moduleId }}</h3>
+                <small>{{ m.obj.category }} Module</small>
+              </button>
             </li>
           </ul>
-        </div>
-        <!-- Controls -->
-        <div v-if="false" class="synth__row synth__row--alt">
-          <div class="synth__area">
-            <h3>Sample Buttons: <span :style="{color: testBtn.color }">{{ testBtn.value }}</span> </h3>
-            <ctrl-button @click="testBtn = { value: 'Default', color: '#0faff9' }" text="Default" />
-            <ctrl-button @click="testBtn = { value: 'Success', color: '#69bfa2' }" text="Success" type="success" />
-            <ctrl-button @click="testBtn = { value: 'Warning', color: '#ec583e' }" text="Warning" type="warning" />
-            <ctrl-button @click="testBtn = { value: 'Danger', color: '#e72e71' }" text="Danger" type="danger" />
-          </div>
-          <div class="synth__area">
-            <h3>Sample Select</h3>
-            <component is="CtrlSelect" />
-          </div>
-          <div class="synth__area">
-            <h3>Sample Range: {{ testRange.value }}</h3>
-            <ctrl-range v-model="testRange.value" :props="testRange.props" />
+        </aside>
+        <main class="synth__main">
 
-          </div>
-          <div class="synth__area">
-            <h3>Sample Check</h3>
-            <component is="CtrlCheck" />
+          <div class="synth__row">
+            <!-- Modules -->
+            <div class="synth__col">
+              <component v-for="m in modules" v-model="m.obj" :active="activeModule.id === m.id"
+              :is="m.type" :id="m.id" :key="m.id" />
+            </div>
+            <!-- Routes  -->
+            <div class="routes">
+              <h2 class="routes__title">Routes</h2>
+              <select v-model="newRoute.source">
+                <option value="">Select Source</option>
+                <option v-for="m in modules" v-if="m.obj" :value="m.obj">{{ m.obj.moduleId }}</option>
+              </select>
+              <select v-model="newRoute.sink">
+                <option value="">Select Sink</option>
+                <option value="Master">Master</option>
+                <option v-for="m in modules" v-if="m.obj" :value="m.obj">{{ m.obj.moduleId }}</option>
+              </select>
+              <ctrl-button @click="createRoute(newRoute.source, newRoute.sink)" text="Route Connection" />
+              <ctrl-button v-if="!routes.length" @click="testRoute()" text="Init Routes" type="success" />
+              <ul class="routes__list">
+                <li v-for="r in routes" class="routes__item">
+                  {{ r.source.name }} => {{ r.sink.name }}
+                </li>
+              </ul>
+            </div>
           </div>
 
-        </div>
-      </main>
-
+        </main>
+      </div> <!-- end .synth__body -->
 
     <piano />
 
@@ -108,17 +105,7 @@
           sink: ''
         },
         routes: [],
-        testBtn: { value: 'None', color: '#fff' },
-        testRange: {
-          value: 1.5,
-          props: {
-            label: 'Example #1',
-            min: 0.01,
-            max: 4.00,
-            step: 0.01,
-            units: 'deg'
-          }
-        }
+        activeModule: {}
       }
     },
     computed: {
@@ -171,15 +158,21 @@
           this.newRoute.sink = ''
         }
       },
-      testRoute: function() {
+      loadModule: function (module) {
+        this.activeModule = module
+      },
+      testRoute: function () {
         this.createRoute(this.modules[0].obj, 'Master')
         this.createRoute(this.modules[1].obj, this.modules[0].obj)
       }
     },
     mounted: function () {
+      // initial modules
       this.initModule('AmpEnvelope')
       this.initModule('OmniOscillator')
       this.initModule('FilterModule')
+      // load the amp
+      this.loadModule(this.modules[0])
     }
   }
 </script>
@@ -192,14 +185,22 @@
     padding-bottom: $blh * 6
     background: clr('dblue')
     color: #fff
+    &__body
+      padding: $blh
+      display: grid
+      grid-template-columns: 1fr 3fr
+      grid-gap: $blh
+      margin-bottom: $blh
     &__main
-      padding: $blh/2
+      display: block
+    &__aside
+      display: block
     &__section
       margin-bottom: $blh/2
     &__header
       @include boxShadow()
       padding: $blh/2
-      margin-bottom: $blh/2
+      margin-bottom: 0
       vertical-align: middle
       background: lighten(clr('indigo'), 5%)
       border-bottom: solid 1px clr('pink')
@@ -222,11 +223,9 @@
       margin-bottom: $blh/2
     &__row
       display: grid
-      grid-template-columns: 1fr 1fr 1fr 1fr
-      grid-gap: $blh/2
-      margin-bottom: $blh
-      &--alt
-        grid-gap: $blh*2
+      grid-template-columns: 2fr 1fr
+      grid-gap: $blh
+      margin-bottom: $blh/2
     &__area
       padding: 0
     &__add
@@ -246,20 +245,55 @@
         color: #fff
         cursor: pointer
 
-  .routes
-    @include boxShadow()
-    background: lighten(clr('indigo'), 5%)
+  .menu
     display: block
-    font-size: 12px
-    padding: $blh/2
-    margin: 0 0 $blh 0
-    &__list
-      display: block
-      padding: 0
-      margin: 0
+    padding: 0
+    margin: 0
     &__item
       display: block
-      margin-bottom: $blh/4
+      margin-bottom: $blh/2
+    &__button
+      @include boxShadow()
+      background-color: transparentize(lighten(clr('indigo'), 5%), 0.2)
+      display: block
+      width: 100%
+      padding: $blh/2 $blh
+      margin: 0
+      border: 0
+      color: #fff
+      text-align: left
+      border: solid 2px transparentize(lighten(clr('indigo'), 5%), 0.2)
+      &:hover
+        background-color: lighten(clr('indigo'), 10%)
+        border-color: clr('blue')
+      &:focus
+        outline: 0
+      &--active
+        border-color: clr('mint')
+        &:hover
+          border-color: clr('mint')
+      h3
+        font-size: 16px
+        margin-bottom: $blh/4
+      small
+        font-size: 10px
+        text-transform: uppercase
+        color: lighten(clr('pink'), 15%)
+
+  .routes
+    &__title
+      font-size: 16px
+    &__list
+      display: block
+      margin: 0
+      padding: $blh 0 0 0
+    &__item
+      @include boxShadow()
+      background: lighten(clr('indigo'), 5%)
+      display: block
+      font-size: 12px
+      padding: $blh/2
+      margin: 0 0 $blh/2 0
       &:last-child
         margin: 0
 

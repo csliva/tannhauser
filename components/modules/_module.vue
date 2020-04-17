@@ -1,6 +1,6 @@
 <script>
   export default {
-    props: ['value', 'id'],
+    props: ['value', 'id', 'active'],
     data () {
       return {
         debug: false,
@@ -29,6 +29,8 @@
     border: solid 2px lighten(clr('indigo'), 5%)
     position: relative
     padding-bottom: $blh*2
+    &--hidden
+      display: none
     &__header,
     &__main,
     &__footer
@@ -56,9 +58,11 @@
       &--dual
         display: grid
         grid-template-columns: 1fr 1fr
-        grid-gap: $blh/2
-    &:hover
-      border-color: transparentize(clr('blue'), 0.45)
+        grid-gap: $blh
+      &--quad
+        display: grid
+        grid-template-columns: 1fr 1fr 1fr 1fr
+        grid-gap: $blh
     &__toggle
       opacity: 0.8
       font-size: 14px
