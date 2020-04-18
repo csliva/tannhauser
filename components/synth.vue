@@ -11,6 +11,7 @@
           :value="synthTitle" />
           <ctrl-button @click="log(modules)" text="Log All Modules" />
           <ctrl-button v-if="!routes.length" @click="quickRoute()" text="Quick Route" type="success" />
+          <ctrl-button @click="log(toneMaster)" text="Log Master Module" type="warning" />
         </div>
       </header>
 
@@ -57,11 +58,12 @@
               <component v-for="m in modules" v-model="m.obj" :active="activeModule && activeModule.id === m.id"
               :is="m.type" :id="m.id" :key="m.id" />
               <!-- Master Module:  -->
-              <component v-model="masterObj" :active="!activeModule"
+              <component v-model="masterModule.obj" :active="!activeModule"
               is="MasterOutput" id="master" key="master" />
             </div>
             <!-- Routes  -->
             <div class="routes">
+
               <h2 class="routes__title">Routes</h2>
               <select v-model="newRoute.source">
                 <option value="">Select Source</option>
@@ -72,8 +74,9 @@
                 <option value="Master">Master</option>
                 <option v-for="m in modules" v-if="m.obj" :value="m.obj">{{ m.obj.moduleId }}</option>
               </select>
-              <br><br>
-              <ctrl-button @click="createRoute(newRoute.source, newRoute.sink)" text="Route Connection" />
+
+              <ctrl-button @click="createRoute(newRoute.source, newRoute.sink)" text="Connect" />
+
               <ul class="routes__list">
                 <li v-for="r in routes" class="routes__item">
                   {{ r.source.name }} => {{ r.sink.name }}
@@ -105,16 +108,20 @@
   import CtrlSelect from './controls/select.vue'
   import CtrlRange from './controls/range.vue'
   import CtrlButton from './controls/button.vue'
+  import CtrlDial from './controls/dial.vue'
   // Helpers
   export default {
     components: {
       Piano,
       MasterOutput, OmniOscillator, AmpEnvelope, FilterModule,
-      CtrlCheck, CtrlSelect, CtrlRange, CtrlButton
+      CtrlCheck, CtrlSelect, CtrlRange, CtrlButton, CtrlDial
     },
     data () {
       return {
-        masterObj: true,
+        masterModule: {
+          moduleID: 'MASTER',
+          obj: true
+        },
         modules: [],
         activeModule: {},
         newRoute: {
@@ -158,12 +165,12 @@
         )
       },
       // routing
-      createRoute: function(source, sink){
+      createRoute: function(source, sink) {
         if(!source || !sink) {
           alert('Select Source and Sink')
         } else {
           // Output to Master
-          if(sink === 'Master'){
+          if(sink === 'Master') {
             source.toMaster()
             this.routes.push({
               source: { name: source.moduleId, module: source },

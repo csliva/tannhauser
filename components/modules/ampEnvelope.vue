@@ -5,7 +5,7 @@
       <small class="module__category">{{ type }} Module</small>
     </header>
     <main class="module__main">
-      <section class="module__section module__section--dual">
+      <section class="module__section module__section--test">
         <div class="module__col">
           <ctrl-range v-if="settings.attack" v-model="settings.attack" :props="adsr.a" />
           <ctrl-range v-if="settings.decay" v-model="settings.decay" :props="adsr.d" />
@@ -13,7 +13,10 @@
           <ctrl-range v-if="settings.release" v-model="settings.release" :props="adsr.r" />
         </div>
         <div class="module__col">
-          Additional Params...
+        <ctrl-dial v-if="dialAlt.value" v-model="dialAlt.value" :props="dialAlt.props" />
+        </div>
+        <div class="module__col">
+          <ctrl-dial v-if="dial.value" v-model="dial.value" :props="dial.props" />
         </div>
       </section>
       <div v-if="debug" class="module__debug">
@@ -33,9 +36,10 @@
   import Module from './_module.vue'
   import CtrlButton from '../controls/button.vue'
   import CtrlRange from '../controls/range.vue'
+  import CtrlDial from '../controls/dial.vue'
   export default {
     extends: Module,
-    components: { CtrlButton, CtrlRange },
+    components: { CtrlButton, CtrlRange, CtrlDial },
     data () {
       return {
         title: 'AmpEnv',
@@ -60,6 +64,23 @@
             label: 'Release',
             min: '0.01', max: '4.00', step: '0.01',
             units: 'sec', dec: '2'
+          }
+        },
+        // Dial Sample
+        dial: {
+          value: '46',
+          props: {
+            label: 'Position',
+            min: '0', max: '180', step: '1',
+            units: 'deg', dec: '0', type: ''
+          }
+        },
+        dialAlt: {
+          value: '120',
+          props: {
+            label: 'Rotation',
+            min: '0', max: '180', step: '1',
+            units: 'deg', dec: '0', type: 'alt'
           }
         }
       }

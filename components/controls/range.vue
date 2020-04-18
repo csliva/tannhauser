@@ -5,7 +5,7 @@
       <span class="range__percent">{{ percent + '%' }}</span>
       <span class="range__display">
         <span class="range__val">{{ lVal }}</span>
-        {{ props.units }}
+        <span class="range__units">{{ props.units }}</span>
       </span>
     </div>
     <div class="range__main">
@@ -66,15 +66,14 @@
       width: 33.333%
     &__percent
       text-align: center
+      color: lighten(clr('indigo'), 45%)
     &__display
       text-align: right
-      font-weight: 700
-      color: lighten(clr('mint'), 10%)
     &__main
       padding-top: $blh/4
     &__track
       display: block
-      height: 5px
+      height: 6px
       position: relative
       z-index: 0
       background: transparent
@@ -96,11 +95,15 @@
       display: block
       z-index: 10
       width: 100%
-      background-color: darken(clr('indigo'), 4%)
+      background-color: clr('indigo')
+      box-shadow: inset 0 0 3px darken(clr('indigo'), 10%)
     &__current
       position: absolute
       z-index: 20
+      border-radius: 2px
       background-color: lighten(clr('mint'), 10%)
+      background-image: linear-gradient(to left, lighten(clr('mint'), 15%), lighten(clr('blue'), 15%))
+      opacity: 0.75
     &__input
       -webkit-appearance: none
       position: relative
@@ -114,11 +117,12 @@
       &::-webkit-slider-thumb
         @include boxShadow()
         -webkit-appearance: none
-        width: 16px
-        height: 16px
+        width: 18px
+        height: 18px
         border-radius: 100%
-        background-color: clr('blue')
-        border: solid 2px darken(clr('blue'), 15%)
+        background-image: radial-gradient(lighten(clr('indigo'), 35%), lighten(clr('indigo'), 25%))
+        border: solid 2px clr('indigo')
+        box-shadow: 0 0 6px clr('indigo')
       &::-ms-track
         width: 100%
         cursor: pointer

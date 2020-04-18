@@ -63,6 +63,10 @@
         display: grid
         grid-template-columns: 1fr 1fr 1fr 1fr
         grid-gap: $blh
+      &--test
+        display: grid
+        grid-template-columns: 2fr 1fr 1fr
+        grid-gap: $blh
     &__toggle
       opacity: 0.8
       font-size: 14px

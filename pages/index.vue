@@ -16,6 +16,8 @@
 <style lang="sass">
   .app
     background-color: clr('indigo')
+    // background-image: url(/static/images/papyrus.png)
+    // background-attachment: fixed
     height: 100vh
     overflow: hidden
 </style>
