@@ -67,6 +67,8 @@
         display: grid
         grid-template-columns: 2fr 1fr 1fr
         grid-gap: $blh
+      &:last-child
+        margin-bottom: 0
     &__toggle
       opacity: 0.8
       font-size: 14px

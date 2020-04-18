@@ -5,7 +5,8 @@
       <small class="module__category">Master Output</small>
     </header>
     <main class="module__main">
-      Master Parameters and Options
+
+
     </main>
     <footer class="module__footer">
       <button class="module__toggle" @click="log(settings)">Log</button>

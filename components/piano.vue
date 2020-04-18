@@ -5,7 +5,7 @@
       <button @click="setSynthPiano(!pianoActive)" class="piano__status" :class="{ 'piano__status--idle' : !pianoActive }">
       {{ pianoActive ? 'Active' : 'Idle' }}
     </button>
-    <b>Octave: </b><span>{{ octave }}</span> 
+    <b>Octave: </b><span>{{ octave }}</span>
     </header>
     <div class="piano__keyboard">
       <button class="piano__octave piano__octave--down" @click="octaveChange(octave -1)">Down</button>
