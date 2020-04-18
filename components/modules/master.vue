@@ -6,6 +6,7 @@
     </header>
     <main class="module__main">
 
+      <p>Master Stuff...</p>
 
     </main>
     <footer class="module__footer">
@@ -29,6 +30,8 @@
         title: 'Master'
       }
     },
-    mounted: function() {}
+    mounted: function() {
+      // mounted Stuff
+    }
   }
 </script>
