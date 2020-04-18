@@ -43,8 +43,7 @@
           { val: 'G#',  color: 'black', key: 53, active: false },
           { val: 'A',   color: 'white', key: 84, active: false },
           { val: 'A#',  color: 'black', key: 54, active: false },
-          { val: 'B',   color: 'white', key: 89, active: false },
-          { val: 'B#',  color: 'black', key: 85, active: false }
+          { val: 'B',   color: 'white', key: 89, active: false }
         ]
       }
     },

@@ -100,10 +100,8 @@
     &__current
       position: absolute
       z-index: 20
-      border-radius: 2px
-      background-color: lighten(clr('mint'), 10%)
-      background-image: linear-gradient(to left, lighten(clr('mint'), 15%), lighten(clr('blue'), 15%))
-      opacity: 0.75
+      border-radius: 0
+      background: linear-gradient(to right, darken(clr('mint'), 10%), lighten(clr('blue'), 10%))
     &__input
       -webkit-appearance: none
       position: relative
@@ -115,14 +113,12 @@
       border: 0
       margin: 0
       &::-webkit-slider-thumb
-        @include boxShadow()
         -webkit-appearance: none
-        width: 18px
-        height: 18px
+        width: 14px
+        height: 14px
         border-radius: 100%
-        background-image: radial-gradient(lighten(clr('indigo'), 35%), lighten(clr('indigo'), 25%))
-        border: solid 2px clr('indigo')
-        box-shadow: 0 0 6px clr('indigo')
+        border: solid 2px lighten(clr('blue'), 10%)
+        background-color: clr('indigo')
       &::-ms-track
         width: 100%
         cursor: pointer

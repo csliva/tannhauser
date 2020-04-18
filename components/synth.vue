@@ -19,9 +19,9 @@
         <aside class="synth__aside">
           <nav class="menu">
             <header class="menu__header">
-              <ctrl-button @click="initModule('OmniOscillator')" text="Init Osc" type="success" />
-              <ctrl-button @click="initModule('FilterModule')" text="Init Filt" type="success" />
-              <!-- <ctrl-button @click="" text="Init Env" type="success" /> -->
+              <ctrl-button @click="initModule('OmniOscillator')" text="Init OmniOsc" type="success" />
+              <ctrl-button @click="initModule('FilterModule')" text="Init Filter" type="success" />
+              <ctrl-button @click="initModule('AmpEnvelope')" text="Init AmpEnv" type="success" />
             </header>
             <div class="menu__body">
               <ul class="menu__list">
@@ -51,7 +51,6 @@
           </nav>
         </aside>
         <main class="synth__main">
-
           <div class="synth__row">
             <!-- Modules -->
             <div class="synth__col">
@@ -63,26 +62,24 @@
             </div>
             <!-- Routes  -->
             <div class="routes">
-
               <h2 class="routes__title">Routes</h2>
               <select v-model="newRoute.source">
                 <option value="">Select Source</option>
-                <option v-for="m in modules" v-if="m.obj" :value="m.obj">{{ m.obj.moduleId }}</option>
+                <option v-for="m in modules" v-if="m.obj" :value="m">{{ m.obj.moduleId }}</option>
               </select>
               <select v-model="newRoute.sink">
                 <option value="">Select Sink</option>
                 <option value="Master">Master</option>
-                <option v-for="m in modules" v-if="m.obj" :value="m.obj">{{ m.obj.moduleId }}</option>
+                <option v-for="m in modules" v-if="m.obj" :value="m">{{ m.obj.moduleId }}</option>
               </select>
-
               <ctrl-button @click="createRoute(newRoute.source, newRoute.sink)" text="Connect" />
-
               <ul class="routes__list">
                 <li v-for="r in routes" class="routes__item">
                   {{ r.source.name }} => {{ r.sink.name }}
                 </li>
               </ul>
             </div>
+
           </div>
 
         </main>
@@ -159,7 +156,8 @@
             type: type,
             obj: {},
             cnx: {
-              i: [], o: []
+              i: [],
+              o: []
             }
           }
         )
@@ -171,29 +169,31 @@
         } else {
           // Output to Master
           if(sink === 'Master') {
-            source.toMaster()
+            source.obj.toMaster()
             this.routes.push({
-              source: { name: source.moduleId, module: source },
+              source: { name: source.obj.moduleId, module: source.obj },
               sink: { name: 'Master', module: Tone.Master }
             })
+            source.cnx.o.push(Tone.Master)
           } else {
             // Output to Module
-            source.connect(sink)
+            source.obj.connect(sink.obj)
             this.routes.push({
-              source: { name: source.moduleId, module: source },
-              sink: { name: sink.moduleId, module: sink }
+              source: { name: source.obj.moduleId, module: source.obj },
+              sink: { name: sink.obj.moduleId, module: sink.obj }
             })
+            source.cnx.o.push(sink)
           }
-          if(source.category === 'oscillator'){
-            source.start()
+          if(source.obj.category === 'oscillator'){
+            source.obj.start()
           }
           this.newRoute.source = ''
           this.newRoute.sink = ''
         }
       },
       quickRoute: function () {
-        this.createRoute(this.modules[0].obj, 'Master')
-        this.createRoute(this.modules[1].obj, this.modules[0].obj)
+        this.createRoute(this.modules[0], 'Master')
+        this.createRoute(this.modules[1], this.modules[0])
       },
       // load module
       loadModule: function (module) {

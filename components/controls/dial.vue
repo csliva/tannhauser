@@ -36,6 +36,9 @@
     computed: {
       percent () {
         return Number(((this.lVal - this.lMin) * 100 ) / (this.lMax - this.lMin)).toFixed(0)
+      },
+      arcPercent () {
+
       }
     },
     mounted: function() {

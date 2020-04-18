@@ -13,7 +13,17 @@
           <ctrl-range v-if="settings.release" v-model="settings.release" :props="adsr.r" />
         </div>
         <div class="module__col">
-        <ctrl-dial v-if="dialAlt.value" v-model="dialAlt.value" :props="dialAlt.props" />
+          <ctrl-select v-if="settings.attackCurve" v-model="settings.attackCurve" :props="adsr.aCurve" />
+          <ctrl-select v-if="settings.decayCurve" v-model="settings.decayCurve" :props="adsr.dCurve" />
+          <ctrl-select v-if="settings.releaseCurve" v-model="settings.releaseCurve" :props="adsr.rCurve" />
+        </div>
+        <div class="module__col">
+          <p>Params...</p>
+        </div>
+      </section>
+      <section class="module__section module__section--quad">
+        <div class="module__col">
+          <ctrl-dial v-if="dialAlt.value" v-model="dialAlt.value" :props="dialAlt.props" />
         </div>
         <div class="module__col">
           <ctrl-dial v-if="dial.value" v-model="dial.value" :props="dial.props" />
@@ -31,15 +41,19 @@
   </div>
 </template>
 
+
+
+
 <script>
   import Tone from 'tone'
   import Module from './_module.vue'
   import CtrlButton from '../controls/button.vue'
   import CtrlRange from '../controls/range.vue'
+  import CtrlSelect from '../controls/select.vue'
   import CtrlDial from '../controls/dial.vue'
   export default {
     extends: Module,
-    components: { CtrlButton, CtrlRange, CtrlDial },
+    components: { CtrlButton, CtrlRange, CtrlSelect, CtrlDial },
     data () {
       return {
         title: 'AmpEnv',
@@ -50,20 +64,32 @@
             min: '0.00', max: '2.00', step: '0.01',
             units: 'sec', dec: '2'
           },
+          aCurve: {
+            label: 'Attack Curve',
+            options: ['linear', 'exponential', 'sine', 'cosine', 'bounce', 'ripple', 'step']
+          },
           d: {
             label: 'Decay',
             min: '0.00', max: '2.00', step: '0.01',
             units: 'sec', dec: '2'
           },
+          dCurve: {
+            label: 'Decay Curve',
+            options: ['linear', 'exponential']
+          },
           s: {
             label: 'Sustain',
-            min: '0.01', max: '2.00', step: '0.01',
-            units: 'sec', dec: '2'
+            min: '0.01', max: '1.00', step: '0.01',
+            units: 'nr%', dec: '2'
           },
           r: {
             label: 'Release',
             min: '0.01', max: '4.00', step: '0.01',
             units: 'sec', dec: '2'
+          },
+          rCurve: {
+            label: 'Release Curve',
+            options: ['linear', 'exponential', 'sine', 'cosine', 'bounce', 'ripple', 'step']
           }
         },
         // Dial Sample
