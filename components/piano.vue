@@ -32,19 +32,18 @@
       return {
         octave: 4,
         keys: [
-          { val: 'C',   color: 'white', key: 9 , active: false },
-          { val: 'C#',  color: 'black', key: 49, active: false },
-          { val: 'D',   color: 'white', key: 81, active: false },
-          { val: 'D#',  color: 'black', key: 50, active: false },
-          { val: 'E',   color: 'white', key: 87, active: false },
-          { val: 'F',   color: 'white', key: 69, active: false },
-          { val: 'F#',  color: 'black', key: 52, active: false },
-          { val: 'G',   color: 'white', key: 82, active: false },
-          { val: 'G#',  color: 'black', key: 53, active: false },
-          { val: 'A',   color: 'white', key: 84, active: false },
-          { val: 'A#',  color: 'black', key: 54, active: false },
-          { val: 'B',   color: 'white', key: 89, active: false },
-          { val: 'B#',  color: 'black', key: 85, active: false }
+          { val: 'C',   color: 'white', key: "TAB" , active: false },
+          { val: 'C#',  color: 'black', key: "ONE", active: false },
+          { val: 'D',   color: 'white', key: "Q", active: false },
+          { val: 'D#',  color: 'black', key: "TWO", active: false },
+          { val: 'E',   color: 'white', key: "W", active: false },
+          { val: 'F',   color: 'white', key: "E", active: false },
+          { val: 'F#',  color: 'black', key: "FOUR", active: false },
+          { val: 'G',   color: 'white', key: "R", active: false },
+          { val: 'G#',  color: 'black', key: "FIVE", active: false },
+          { val: 'A',   color: 'white', key: "T", active: false },
+          { val: 'A#',  color: 'black', key: "SIX", active: false },
+          { val: 'B',   color: 'white', key: "Y", active: false }
         ]
       }
     },
@@ -102,17 +101,17 @@
       }
     },
     mounted: function(){
-      // bind keys to piano
-      window.addEventListener("keydown", e => {
-        if(this.pianoActive){
-          e.preventDefault()
-          this.handleKeyDown(e, this)
-        }
-      });
-      window.addEventListener("keyup", e => {
-        if(this.pianoActive){
-          this.handleKeyUp(e, this)
-        }
+      var kd = require('keydrown')
+      this.keys.map(note => {
+        kd[note.key].down(() => {
+          this.noteAttack(note)
+        })
+        kd[note.key].up(() => {
+          this.noteRelease(note)
+        })
+      })
+      kd.run(function () {
+        kd.tick();
       });
     }
   }
