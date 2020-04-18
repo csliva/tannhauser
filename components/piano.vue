@@ -25,12 +25,9 @@
 </template>
 
 <script>
+  // Tone JS
   import Tone from 'tone'
-  import CtrlButton from './controls/button.vue'
   export default {
-    components: {
-      CtrlButton
-    },
     data(){
       return {
         octave: 4,

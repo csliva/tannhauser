@@ -16,5 +16,6 @@
 <style lang="sass">
   .app
     background-color: clr('indigo')
-    min-height: 100vh
+    height: 100vh
+    overflow: hidden
 </style>

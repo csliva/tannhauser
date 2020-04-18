@@ -10,39 +10,55 @@
           @blur="setSynthPiano(true)"
           :value="synthTitle" />
           <ctrl-button @click="log(modules)" text="Log All Modules" />
+          <ctrl-button v-if="!routes.length" @click="quickRoute()" text="Quick Route" type="success" />
         </div>
       </header>
 
       <div class="synth__body">
         <aside class="synth__aside">
-          <ul class="menu">
-            <li class="menu__item">
+          <nav class="menu">
+            <header class="menu__header">
               <ctrl-button @click="initModule('OmniOscillator')" text="Init Osc" type="success" />
               <ctrl-button @click="initModule('FilterModule')" text="Init Filt" type="success" />
-              <ctrl-button @click="" text="Init Env" type="success" />
-            </li>
-            <li class="menu__item">
-              <button class="menu__button">
-                <h3>Master</h3>
-                <small>Master Output</small>
-              </button>
-            </li>
-            <li v-for="m in modules" v-if="m.obj" class="menu__item">
-              <button v-if="m.obj" @click="activeModule = m"
-              class="menu__button":class="{'menu__button--active' : activeModule.id === m.id} ">
-                <h3>{{ m.obj.moduleId }}</h3>
-                <small>{{ m.obj.category }} Module</small>
-              </button>
-            </li>
-          </ul>
+              <!-- <ctrl-button @click="" text="Init Env" type="success" /> -->
+            </header>
+            <div class="menu__body">
+              <ul class="menu__list">
+                <li class="menu__item">
+                  <button @click="activeModule = false" class="menu__button" :class="{'menu__button--active' : !activeModule}">
+                    <h3>Master</h3>
+                    <small>
+                      Master Output
+                      <span class="cnx cnx--o">Connected</span>
+                    </small>
+                  </button>
+                </li>
+                <li v-for="m in modules" v-if="m.obj" class="menu__item">
+                  <button v-if="m.obj" @click="activeModule = m"
+                  class="menu__button" :class="{'menu__button--active' : activeModule.id === m.id}">
+                    <h3>{{ m.obj.moduleId }}</h3>
+                    <small>
+                      {{ m.obj.category }} Module
+                      <span class="cnx" :class="{'cnx--o' : m.cnx.o.length }" >
+                        {{ m.cnx.o.length ? 'Connected' : 'Not Connected' }}
+                      </span>
+                    </small>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </nav>
         </aside>
         <main class="synth__main">
 
           <div class="synth__row">
             <!-- Modules -->
             <div class="synth__col">
-              <component v-for="m in modules" v-model="m.obj" :active="activeModule.id === m.id"
+              <component v-for="m in modules" v-model="m.obj" :active="activeModule && activeModule.id === m.id"
               :is="m.type" :id="m.id" :key="m.id" />
+              <!-- Master Module:  -->
+              <component v-model="masterObj" :active="!activeModule"
+              is="MasterOutput" id="master" key="master" />
             </div>
             <!-- Routes  -->
             <div class="routes">
@@ -56,8 +72,8 @@
                 <option value="Master">Master</option>
                 <option v-for="m in modules" v-if="m.obj" :value="m.obj">{{ m.obj.moduleId }}</option>
               </select>
+              <br><br>
               <ctrl-button @click="createRoute(newRoute.source, newRoute.sink)" text="Route Connection" />
-              <ctrl-button v-if="!routes.length" @click="testRoute()" text="Init Routes" type="success" />
               <ul class="routes__list">
                 <li v-for="r in routes" class="routes__item">
                   {{ r.source.name }} => {{ r.sink.name }}
@@ -75,9 +91,12 @@
 </template>
 
 <script>
+  // Tone JS
   import Tone from 'tone'
+  // Interfaces
   import Piano from './piano.vue'
   // Modules
+  import MasterOutput from './modules/master.vue'
   import OmniOscillator from './modules/omniOscillator.vue'
   import AmpEnvelope from './modules/ampEnvelope.vue'
   import FilterModule from './modules/filter.vue'
@@ -86,26 +105,23 @@
   import CtrlSelect from './controls/select.vue'
   import CtrlRange from './controls/range.vue'
   import CtrlButton from './controls/button.vue'
+  // Helpers
   export default {
     components: {
       Piano,
-      OmniOscillator,
-      AmpEnvelope,
-      FilterModule,
-      CtrlCheck,
-      CtrlSelect,
-      CtrlRange,
-      CtrlButton
+      MasterOutput, OmniOscillator, AmpEnvelope, FilterModule,
+      CtrlCheck, CtrlSelect, CtrlRange, CtrlButton
     },
     data () {
       return {
+        masterObj: true,
         modules: [],
+        activeModule: {},
         newRoute: {
           source: '',
           sink: ''
         },
-        routes: [],
-        activeModule: {}
+        routes: []
       }
     },
     computed: {
@@ -130,21 +146,31 @@
         alert(data)
       },
       // init module
-      initModule: function(type, obj) {
-        this.modules.push({ id: this.modules.length + 1, type: type, obj: obj || null })
+      initModule: function(type) {
+        this.modules.push({
+            id: (this.modules.length + 1),
+            type: type,
+            obj: {},
+            cnx: {
+              i: [], o: []
+            }
+          }
+        )
       },
       // routing
       createRoute: function(source, sink){
         if(!source || !sink) {
           alert('Select Source and Sink')
         } else {
+          // Output to Master
           if(sink === 'Master'){
             source.toMaster()
             this.routes.push({
-                source: { name: source.moduleId, module: source },
-                sink: { name: 'Master', module: Tone.Master }
-              })
+              source: { name: source.moduleId, module: source },
+              sink: { name: 'Master', module: Tone.Master }
+            })
           } else {
+            // Output to Module
             source.connect(sink)
             this.routes.push({
               source: { name: source.moduleId, module: source },
@@ -158,20 +184,20 @@
           this.newRoute.sink = ''
         }
       },
-      loadModule: function (module) {
-        this.activeModule = module
-      },
-      testRoute: function () {
+      quickRoute: function () {
         this.createRoute(this.modules[0].obj, 'Master')
         this.createRoute(this.modules[1].obj, this.modules[0].obj)
+      },
+      // load module
+      loadModule: function (module) {
+        this.activeModule = module
       }
     },
     mounted: function () {
-      // initial modules
+      // create initial modules (ampEnv & omniOsc)
       this.initModule('AmpEnvelope')
       this.initModule('OmniOscillator')
-      this.initModule('FilterModule')
-      // load the amp
+      // set the amp to active
       this.loadModule(this.modules[0])
     }
   }
@@ -181,20 +207,23 @@
 <style lang="sass">
   // Synth
   .synth
-    min-height: 100vh
+    height: 100vh
     padding-bottom: $blh * 6
     background: clr('dblue')
     color: #fff
     &__body
+      height: 100%
       padding: $blh
       display: grid
       grid-template-columns: 1fr 3fr
       grid-gap: $blh
-      margin-bottom: $blh
+      margin-bottom: 0
     &__main
       display: block
     &__aside
       display: block
+      height: 100%
+      overflow: hidden
     &__section
       margin-bottom: $blh/2
     &__header
@@ -249,6 +278,23 @@
     display: block
     padding: 0
     margin: 0
+    height: 100%
+    overflow: hidden
+    &__header
+      display: block
+      margin-bottom: $blh
+    &__body
+      display: block
+      padding: 0
+      margin: 0
+      height: 100%
+      overflow-y: scroll
+      padding-bottom: $blh*3.5
+    &__list
+      display: block
+      padding: 0
+      margin: 0
+      height: auto
     &__item
       display: block
       margin-bottom: $blh/2
@@ -276,9 +322,16 @@
         font-size: 16px
         margin-bottom: $blh/4
       small
+        display: inline-block
         font-size: 10px
         text-transform: uppercase
-        color: lighten(clr('pink'), 15%)
+        color: lighten(clr('indigo'), 45%)
+      .cnx
+        color: clr('pink')
+        margin-left: $blh/2
+        font-style: italic
+        &--o
+          color: clr('mint')
 
   .routes
     &__title

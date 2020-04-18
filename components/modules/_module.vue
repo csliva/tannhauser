@@ -44,7 +44,7 @@
     &__category
       font-size: 10px
       text-transform: uppercase
-      color: lighten(clr('pink'), 15%)
+      color: lighten(clr('indigo'), 45%)
     &__header
       border-bottom: solid 1px clr('indigo')
     &__footer
