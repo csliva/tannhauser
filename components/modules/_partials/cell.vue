@@ -22,7 +22,7 @@
   }
 </script>
 
-<style lang="sass" scoped >
+<style lang="sass">
   .cell
     color: #fff
     display: grid
@@ -70,12 +70,6 @@
       padding: 0 $blh/4
       text-transform: uppercase
       letter-spacing: 0.5px
-    &--well
-      padding: $blh
-      background-color: clr('indigo')
-      color: lighten(clr('indigo'), 45%)
-      border-radius: 4px
-      box-shadow: inset 0 0 6px darken(clr('indigo'), 10%)
 
 
 

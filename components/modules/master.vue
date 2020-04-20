@@ -9,8 +9,8 @@
       <cell gap="md" type="parent">
 
         <cell cols="2" gap="lg">
-          <cell>
-            <cell type="well">ADSR Graph...</cell>
+          <cell >
+            <disp-graph v-model="combinedAdsr" />
           </cell>
           <cell cols="4">
             <cell>
@@ -112,9 +112,11 @@
   import CtrlDial from '../controls/dial.vue'
   // Partials
   import Cell from './_partials/cell.vue'
+  // Displays
+  import DispGraph from '../displays/adsrGraph.vue'
   export default {
     extends: Module,
-    components: { CtrlButton, CtrlRange, CtrlSelect, CtrlDial, Cell },
+    components: { CtrlButton, CtrlRange, CtrlSelect, CtrlDial, Cell, DispGraph },
     data () {
       return {
         title: 'Master',
@@ -157,7 +159,7 @@
           a: {
             value: '0.03',
             label: 'Attack',
-            min: '0.00', max: '2.00', step: '0.01',
+            min: '0.01', max: '2.00', step: '0.01',
             units: 'sec', dec: '2'
           },
           aCurve: {
@@ -168,7 +170,7 @@
           d: {
             value: '0.16',
             label: 'Decay',
-            min: '0.00', max: '2.00', step: '0.01',
+            min: '0.01', max: '2.00', step: '0.01',
             units: 'sec', dec: '2'
           },
           dCurve: {
@@ -201,6 +203,20 @@
             options: ['sine','triangle','square','sawtooth'],
             niceOptions: ['Sine','Triangle','Square','Sawtooth']
           }
+        }
+      }
+    },
+    computed: {
+      combinedAdsr () {
+        let a = this.adsr.a,
+            d = this.adsr.d,
+            s = this.adsr.s,
+            r = this.adsr.r
+        return {
+          a: a.value, aMin: a.min, aMax: a.max,
+          d: d.value, dMin: d.min, dMax: d.max,
+          s: s.value, sMin: s.min, sMax: s.max,
+          r: r.value, rMin: r.min, rMax: r.max
         }
       }
     },
