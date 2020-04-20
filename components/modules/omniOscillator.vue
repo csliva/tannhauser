@@ -10,15 +10,16 @@
           <ctrl-check v-if="settings.baseType" v-model="settings.baseType" :props="params.baseType" />
           <ctrl-range v-if="settings.detune" v-model="settings.detune.value" :props="params.detune" />
           <ctrl-range v-if="stringPartials" v-model="settings.partialCount" :props="params.partials" />
+          <ctrl-range v-if="stringPhase" v-model="settings.phase" :props="params.phase" />
+        </div>
+        <div class="module__col">
+          <span v-if="settings.frequency">
+            Tone: {{ freqNote }} ({{ freqHz }}hz)
+          </span>
         </div>
       </section>
       <div v-if="debug" class="module__debug">
         <span class="module__state">Status: {{ settings.state }}</span>
-        <span v-if="settings.frequency">
-          Tone:
-          {{ settings.frequency.value | toNote }}
-          ({{ settings.frequency.value | round }}hz)
-        </span>
         <span>
           Mute: {{ settings.mute }}
         </span>
@@ -62,38 +63,47 @@
             label: 'Partials',
             min: '0', max: '32', step: '1',
             units: '', dec: '0'
+          },
+          phase: {
+            label: 'Phase',
+            min: '0', max: '180', step: '1',
+            units: '', dec: '0'
           }
         }
       }
     },
     computed: {
       // $store
-      noteFreq () {
+      pianoFreq () {
         return this.$store.state.synth.piano.freq
+      },
+      freqNote () {
+        return Tone.Frequency(this.pianoFreq).toNote()
+      },
+      freqHz () {
+        return this.pianoFreq.toFixed(0)
       },
       stringPartials () {
         return Number(this.settings.partialCount).toString(10)
+      },
+      stringPhase () {
+        return Number(this.settings.phase).toString(10)
       }
     },
     mounted: function() {
-      this.settings = new Tone.OmniOscillator({ frequency: this.noteFreq })
+      this.settings = new Tone.OmniOscillator({ frequency: this.pianoFreq })
       this.settings.moduleId = this.title +'#'+this.id
       this.settings.category = this.type
+      // freq info
+      this.settings.frequency.freqNote = this.freqNote
+      this.settings.frequency.freqHz = this.freqHz
     },
     watch: {
-      noteFreq (){
-        this.settings.frequency.value = this.noteFreq
+      pianoFreq (){
+        this.settings.frequency.value = this.pianoFreq
+        this.settings.frequency.freqNote = this.freqNote
+        this.settings.frequency.freqHz = this.freqHz
       }
-    },
-    filters: {
-       toNote(value) {
-         if (!value) return ''
-         return Tone.Frequency(value).toNote()
-       },
-       round(value){
-         if (!value) return ''
-         return value.toFixed(0)
-       }
     }
   }
 </script>

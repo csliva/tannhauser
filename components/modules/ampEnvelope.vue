@@ -4,31 +4,36 @@
       <h2 class="module__title">{{ settings.moduleId || title }}</h2>
       <small class="module__category">{{ type }} Module</small>
     </header>
+
     <main class="module__main">
-      <section class="module__section module__section--test">
+      <section class="module__section module__section--oct">
         <div class="module__col">
-          <ctrl-range v-if="settings.attack" v-model="settings.attack" :props="adsr.a" />
-          <ctrl-range v-if="settings.decay" v-model="settings.decay" :props="adsr.d" />
-          <ctrl-range v-if="settings.sustain" v-model="settings.sustain" :props="adsr.s" />
-          <ctrl-range v-if="settings.release" v-model="settings.release" :props="adsr.r" />
+          <ctrl-dial v-if="settings.attack" v-model="settings.attack" :props="adsr.a" />
         </div>
+        <div class="module__col">
+          <ctrl-dial v-if="settings.decay" v-model="settings.decay" :props="adsr.d" />
+        </div>
+        <div class="module__col">
+          <ctrl-dial v-if="settings.sustain" v-model="settings.sustain" :props="adsr.s" />
+        </div>
+        <div class="module__col">
+          <ctrl-dial v-if="settings.release" v-model="settings.release" :props="adsr.r" />
+        </div>
+      </section>
+
+      <section class="module__section module__section--oct">
         <div class="module__col">
           <ctrl-select v-if="settings.attackCurve" v-model="settings.attackCurve" :props="adsr.aCurve" />
+        </div>
+        <div class="module__col">
           <ctrl-select v-if="settings.decayCurve" v-model="settings.decayCurve" :props="adsr.dCurve" />
+        </div>
+        <div class="module__col"></div>
+        <div class="module__col">
           <ctrl-select v-if="settings.releaseCurve" v-model="settings.releaseCurve" :props="adsr.rCurve" />
         </div>
-        <div class="module__col">
-          <p>Params...</p>
-        </div>
       </section>
-      <section class="module__section module__section--quad">
-        <div class="module__col">
-          <ctrl-dial v-if="dialAlt.value" v-model="dialAlt.value" :props="dialAlt.props" />
-        </div>
-        <div class="module__col">
-          <ctrl-dial v-if="dial.value" v-model="dial.value" :props="dial.props" />
-        </div>
-      </section>
+
       <div v-if="debug" class="module__debug">
         <span>A: {{ atkTriggered }}</span>
         <span>R: {{ relTriggered }}</span>
@@ -65,8 +70,9 @@
             units: 'sec', dec: '2'
           },
           aCurve: {
-            label: 'Attack Curve',
-            options: ['linear', 'exponential', 'sine', 'cosine', 'bounce', 'ripple', 'step']
+            label: 'A-Curve',
+            options: ['linear', 'exponential', 'sine', 'cosine', 'bounce', 'ripple', 'step'],
+            niceOptions: ['Linear', 'Exp.', 'Sine', 'Cosine', 'Bounce', 'Ripple', 'Step']
           },
           d: {
             label: 'Decay',
@@ -74,8 +80,9 @@
             units: 'sec', dec: '2'
           },
           dCurve: {
-            label: 'Decay Curve',
-            options: ['linear', 'exponential']
+            label: 'D-Curve',
+            options: ['linear', 'exponential'],
+            niceOptions: ['Linear', 'Exp.']
           },
           s: {
             label: 'Sustain',
@@ -88,25 +95,9 @@
             units: 'sec', dec: '2'
           },
           rCurve: {
-            label: 'Release Curve',
-            options: ['linear', 'exponential', 'sine', 'cosine', 'bounce', 'ripple', 'step']
-          }
-        },
-        // Dial Sample
-        dial: {
-          value: '46',
-          props: {
-            label: 'Position',
-            min: '0', max: '180', step: '1',
-            units: 'deg', dec: '0', type: ''
-          }
-        },
-        dialAlt: {
-          value: '120',
-          props: {
-            label: 'Rotation',
-            min: '0', max: '180', step: '1',
-            units: 'deg', dec: '0', type: 'alt'
+            label: 'R-Curve',
+            options: ['linear', 'exponential', 'sine', 'cosine', 'bounce', 'ripple', 'step'],
+            niceOptions: ['Linear', 'Exp.', 'Sine', 'Cosine', 'Bounce', 'Ripple', 'Step']
           }
         }
       }

@@ -82,6 +82,7 @@
         note.active = false
       },
       handleKeyDown: (e, that) => {
+        e.preventDefault()
         that.keys.map(note => {
           if (note.key === e.keyCode && note.active === false){
             that.noteAttack(note)
@@ -89,6 +90,7 @@
         })
       },
       handleKeyUp: (e, that) => {
+        e.preventDefault()
         that.keys.map(note => {
           if (note.key === e.keyCode && note.active === true){
             that.noteRelease(note)
@@ -179,7 +181,8 @@
       &--black
         background-color: #ddd
       &--active
-        background-color: clr('blue')
+        background-color: lighten(clr('blue'), 30%)
       &:focus
         z-index: 10
+        outline: 0
 </style>

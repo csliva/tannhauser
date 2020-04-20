@@ -11,6 +11,17 @@ $bfs: 14px
 // Colors
 $colors: ( "indigo": #1b203d, "blue": #0faff9, "pink": #e72e71, "mint": #69bfa2, "orange": #ec583e )
 
-@function clr($n)
-  $color: map-get($colors, $n)
+@function clr($name, $alpha: 0, $val: 0%)
+  $color: map-get($colors, $name)
   @return $color
+
+@function clr2($name, $alpha: 0, $val: 0%)
+  $color: map-get($colors, $name)
+  @if($val > 0)
+    $color: lighten($color, abs($val))
+  @if($val < 0)
+    $color: darken($color, abs($val))
+  @if($alpha)
+    @return transparentize($color, $alpha)
+  @else
+    @return $color

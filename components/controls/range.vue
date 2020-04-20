@@ -26,7 +26,7 @@
     props: ['value', 'props'],
     data(){
       return {
-        lVal: (Number(this.value) > 0.01) ? Number(this.value).toFixed(this.props.dec) : '0',
+        lVal: (Number(this.value) >= 0.01) ? Number(this.value).toFixed(this.props.dec) : '0',
         lMin: Number(this.props.min).toFixed(this.props.dec),
         lMax: Number(this.props.max).toFixed(this.props.dec),
         lStep: Number(this.props.step).toFixed(this.props.dec)
@@ -66,7 +66,8 @@
       width: 33.333%
     &__percent
       text-align: center
-      color: lighten(clr('indigo'), 45%)
+      // color: lighten(clr('indigo'), 45%)
+      color: transparent
     &__display
       text-align: right
     &__main

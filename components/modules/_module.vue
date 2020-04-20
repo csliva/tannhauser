@@ -8,6 +8,9 @@
       }
     },
     methods: {
+      alert: function(msg) {
+        alert(msg)
+      },
       log: function(data) {
         console.log(data)
       }
@@ -37,6 +40,8 @@
       display: block
       padding: $blh/2
       margin: 0
+    &__main
+      // padding-bottom: 0
     &__title
       font-size: 16px
       display: block
@@ -53,6 +58,7 @@
       bottom: 0
       left: 0
       width: 100%
+    // old
     &__section
       margin-bottom: $blh/2
       &--dual
@@ -63,6 +69,10 @@
         display: grid
         grid-template-columns: 1fr 1fr 1fr 1fr
         grid-gap: $blh
+      &--oct
+        display: grid
+        grid-template-columns: repeat(8, 1fr)
+        grid-gap: $blh/1.5
       &--test
         display: grid
         grid-template-columns: 2fr 1fr 1fr

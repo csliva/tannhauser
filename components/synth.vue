@@ -4,11 +4,6 @@
       <header class="synth__header">
         <div class="synth__#">
           <h1>{{ synthTitle }}</h1>
-          <input
-          @input="updateSynthTitle($event.target.value)"
-          @focus="setSynthPiano(false)"
-          @blur="setSynthPiano(true)"
-          :value="synthTitle" />
           <ctrl-button @click="log(modules)" text="Log All Modules" />
           <ctrl-button v-if="!routes.length" @click="quickRoute()" text="Quick Route" type="success" />
           <ctrl-button @click="log(toneMaster)" text="Log Master Module" type="warning" />
@@ -85,7 +80,7 @@
         </main>
       </div> <!-- end .synth__body -->
 
-    <piano />
+    <piano v-if="false" />
 
   </div>
 </template>
@@ -120,7 +115,7 @@
           obj: true
         },
         modules: [],
-        activeModule: {},
+        activeModule: false,
         newRoute: {
           source: '',
           sink: ''
@@ -204,8 +199,9 @@
       // create initial modules (ampEnv & omniOsc)
       this.initModule('AmpEnvelope')
       this.initModule('OmniOscillator')
+      this.initModule('FilterModule')
       // set the amp to active
-      this.loadModule(this.modules[0])
+      // this.loadModule(this.modules[0])
     }
   }
 </script>
@@ -216,7 +212,6 @@
   .synth
     height: 100vh
     padding-bottom: $blh * 6
-    background: clr('dblue')
     color: #fff
     &__body
       height: 100%
@@ -259,7 +254,7 @@
       margin-bottom: $blh/2
     &__row
       display: grid
-      grid-template-columns: 2fr 1fr
+      grid-template-columns: 3fr 1fr
       grid-gap: $blh
       margin-bottom: $blh/2
     &__area
