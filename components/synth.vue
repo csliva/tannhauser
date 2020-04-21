@@ -239,7 +239,7 @@
       padding: $blh/2
       margin-bottom: 0
       vertical-align: middle
-      background: lighten(clr('indigo'), 5%)
+      background: clr2('indigo', 0, 5%)
       border-bottom: solid 1px clr('pink')
       h1
         vertical-align: middle

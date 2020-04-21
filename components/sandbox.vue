@@ -5,20 +5,30 @@
       <h2>Sandbox</h2>
       <cell>
         <cell cols="3">
-          <cell cols="4">
+          <cell cols="4" grid="sm">
             <button class="btn" @click="initOsc()"><span>Init Osc</span></button>
             <button class="btn btn--success" @click="toggleAll(oscs, true)"><span>Start All</span></button>
             <button class="btn btn--warning" @click="toggleAll(oscs, false)"><span>Stop All</span></button>
-            <button class="btn" @click="log(oscs)"><span>Log Oscs</span></button>
+            <button class="btn" @click="log(oscs)"><span>Log</span></button>
+          </cell>
+          <cell></cell>
+          <cell cols="4" grid="sm">
+            <button class="btn" @click="log(meters[0])"><span>Meters</span></button>
+            <button class="btn" @click="log(getMaster)"><span>Master</span></button>
+            <cell type="test">Param</cell>
+            <cell>
+              <span v-if="false && meter">{{ meter.getLevel() | round }}</span>
+            </cell>
           </cell>
         </cell>
         <cell cols="3">
-          <cell v-for="(o, i) in oscs" :type="(i % 2 == 1) ? 'group-success' : 'group'" :title="( 'Osc #'+(i+1) )" :key="( 'osc-#'+(i+1) )">
+          <cell v-for="(o, i) in oscs" :type="(i % 2 == 1) ? 'group-success' : 'group'" :title="( o.category+'#'+(i+1) )" :key="( o.category+'#'+(i+1) )">
             <cell cols="3">
               <label>Fq:
                 <span v-if="o.frequency" class="hlt">{{ o.frequency.value | round }}</span> hz
               </label>
               <ctrl-select v-if="o.baseType" v-model="o.baseType" :props="oscProps" type="pill" />
+              <cell type="test">Meter...</cell>
             </cell>
             <cell cols="4">
               <ctrl-dial v-if="o.frequency" v-model="o.frequency.value" :props="freqProps" />
@@ -34,6 +44,9 @@
               <button class="btn btn--warning" @click="log(o)">
                 <span>Log</span>
               </button>
+              <button class="btn" @click="o.toMaster()">
+                <span>Master</span>
+              </button>
             </cell>
           </cell>
         </cell>
@@ -42,11 +55,11 @@
             <button class="btn" @click="initLfo()"><span>Init LFO</span></button>
             <button class="btn btn--success" @click="toggleAll(lfos, true)"><span>Start All</span></button>
             <button class="btn btn--warning" @click="toggleAll(lfos, false)"><span>Stop All</span></button>
-            <button class="btn" v-if="lfoProps" @click="log(lfoProps.cnxTargets)"><span>Log</span></button>
+            <button class="btn" @click="log(cnxTargets)"><span>Log</span></button>
           </cell>
         </cell>
         <cell cols="3">
-          <cell v-for="(l, i) in lfos" :type="(i % 2 == 0) ? 'group-success' : 'group'" :title="( 'LFO #'+(i+1) )" :key="( 'lfo-#'+(i+1) )">
+          <cell v-for="(l, i) in lfos" :type="(i % 2 == 0) ? 'group-success' : 'group'" :title="( l.category+'#'+(i+1) )" :key="( l.category+'#'+(i+1) )">
             <cell>
               <cell cols="3">
                 <label>Fq:
@@ -54,30 +67,23 @@
                 </label>
                 <ctrl-select v-if="l._oscillator.baseType" v-model="l._oscillator.baseType" :props="oscProps" type="pill" />
               </cell>
-
               <cell cols="4">
                 <ctrl-dial v-if="l.amplitude" v-model="l.amplitude.value" :props="lfoProps.amp" />
                 <ctrl-dial v-if="l._oscillator.frequency" v-model="l._oscillator.frequency.value" :props="lfoProps.freq" />
                 <ctrl-dial v-if="l._oscillator.detune" v-model="l._oscillator.detune.value" :props="oscDetuneProps" />
                 <ctrl-dial v-model="l._oscillator.partialCount" :props="oscPartialProps" />
               </cell>
-              <cell cols="5-3">
-                <ctrl-select v-model="lfoProps.cnxTargets.value" :props="lfoProps.cnxTargets" type="pill" />
-                <button class="btn" @click="cnxModule(l, lfoProps.cnxTargets.value)">
-                  <span>Connect Target</span>
+              <cell cols="3">
+                <ctrl-select v-model="cnxTargets.value" :props="cnxTargets" type="pill" />
+                <ctrl-select v-model="cnxTargets.param" :props="oscTargetParams" type="pill" />
+                <button class="btn" @click="mapParam(l, cnxTargets.value, cnxTargets.param)">
+                  <span>Connect</span>
                 </button>
               </cell>
-
-              <cell>
-                <cell>
-                  <span v-if="l.cnx.o.length" v-for="(o, i) in l.cnx.o">
-                    <span v-if="o">
-                      {{ o.title ? o.title : 'No Title' }}
-                    </span>
-                  </span>
-                  <span else >No Connections</span>
-                </cell>
+              <cell v-if="l.cnx.o.length">
+                <span v-for="(o, i) in l.cnx.o">{{ o.title ? o.title : 'No Title' }}</span>
               </cell>
+              <cell v-else>Not Connected</cell>
             </cell>
             <cell cols="4" >
               <button class="btn" :class="{'btn--active btn--danger': l._oscillator.state == 'started', 'btn--success' : l._oscillator.state == 'stopped' }"
@@ -130,7 +136,7 @@
         freqProps: {
           label: 'Freq',
           min: '20', max: '6000',
-          step: '1',units: 'hz',
+          step: '1', units: 'hz', dec: '0',
           reset: true
         },
         oscProps: {
@@ -169,18 +175,33 @@
             label: 'Frequency',
             min: '0.1', max: '20.0', step: '0.1',
             units: 'hz', dec: '1', reset: true
-          },
-          cnxTargets: {
-            options: [],
-            niceOptions: []
           }
+        },
+        // utilitities
+        meter: false
+      }
+    },
+    computed: {
+      cnxTargets () {
+        return {
+          value: this.oscs[0],
+          param: 'frequency',
+          options: this.oscs,
+          niceOptions: this.oscs.map(o => o.title)
         }
+      },
+      oscTargetParams () {
+        return {
+          options: ['frequency', 'detune', 'volume'],
+          niceOptions: ['Freq', 'Detune', 'Vol']
+        }
+      },
+      getMaster () {
+        return Tone.Master
       }
     },
     watch: {
-      oscs() {
-        this.getOscParams()
-      }
+      // watch
     },
     methods: {
       // dev
@@ -193,62 +214,50 @@
       // local
       toggleAll(target, start) {
         if(!target) { return false }
-        for(let i = 0; i < target.length; i++){
+        for(let i = 0; i < target.length; i++) {
           if(start){ target[i].start() }
           else { target[i].stop() }
         }
-        console.log('man i need sleep')
       },
       initOsc(tone) {
         let osc = new Tone.OmniOscillator({
-          type: 'sine', frequency: (tone || 'C5')
+          type: 'sine'
         })
         osc.title = 'Osc #'+ (this.oscs.length + 1)
+        osc.category = 'oscillator'
         this.oscs.push(osc)
       },
       initLfo() {
         let lfo = new Tone.LFO()
         lfo.title = 'LFO #'+ (this.lfos.length + 1)
-        lfo.cnx = {i: [], o: [] }
+        lfo.category = 'lfo'
+        lfo.cnx = {i: [], o: []}
         this.lfos.push(lfo)
       },
-      // build list of parameters
-      getOscParams () {
-        let params = [], paramTitles = []
-        if(this.oscs){
-          for(let i = 0; i < this.oscs.length; i++){
-            let p = this.oscs[i]
-            params.push(p.frequency.value)
-            paramTitles.push(p.title+' Frequency')
-            params.push(p.detune.value)
-            paramTitles.push(p.title+' Detune')
-            params.push(p.volume.value)
-            paramTitles.push(p.title+' Volume')
-          }
-          this.lfoProps.cnxTargets.options = params
-          this.lfoProps.cnxTargets.niceOptions = paramTitles
-          this.lfoProps.cnxTargets.value = this.lfoProps.cnxTargets.options[0]
-        }
+      // routing
+      routeSignal (output, input) {
+
       },
-      cnxModule (outP, inP) {
-        outP.connect(inP)
-        outP.cnx.o.push(inP)
+      mapParam (output, input, param) {
+        output.connect(input[param]).toMaster()
+        output.cnx.o.push({ title: input.title+' '+param, module: input, param: param })
       }
     },
     mounted () {
-      this.initOsc('C5')
-      this.initOsc('E5')
-      this.initOsc('G5')
+      // meter
+      let meter = new Tone.Meter()
+      Tone.Master.connect(meter)
+      this.meter = meter
+      // init oscs
+      this.initOsc()
+      this.initOsc()
+      this.initOsc()
+      // init lfos
       this.initLfo()
-      // get param list
-      this.getOscParams()
-      if(this.oscs.length < 1){
-        this.cnxModule(this.oscs[0], Tone.Master)
-      }
     },
     filters: {
       round (num) {
-        return num.toFixed(0)
+        return Number(num).toFixed(0)
       }
     }
   }
@@ -259,9 +268,8 @@
     display: block
     height: 100vh
     overflow-y: auto
-    background-color: clr2('indigo')
     &__inner
-      padding: $blh $blh*2
+      padding: $blh
       min-height: 100vh
     &__list
       padding: 0
@@ -277,8 +285,9 @@
     z-index: 10
     appearance: none
     -webkit-appearance: none
-    background-color: clr2('indigo', 0, 10%)
-    border: solid 1px clr2('indigo', 0, 10%)
+    background-color: clr2('indigo', 0.35, 10%)
+    border: solid 1px clr2('indigo', 0.35, 10%)
+    // border: 0
     border-radius: $blh
     padding: 0 $blh/4
     color: transparentize(#fff, 0.35)
@@ -312,7 +321,7 @@
     &:after
       opacity: 1
       z-index: 20
-      @include neuMorphInner(clr2('indigo', 0.5, 10%), clr2('indigo', 0.5, -10%))
+      @include neuMorphInner(clr2('indigo', 0.5, 7.5%), clr2('indigo', 0.5, -7.5%))
     &--success
       &:before
         border: solid 1px clr2('mint', 0, -10%)
@@ -334,9 +343,11 @@
         opacity: 1
       &:after
         opacity: 0
+
+
   // hlt = highlight
   .hlt
-    color: clr2('mint', 0, 15%)
+    color: clr2('blue', 0, 15%)
     display: inline-block
     padding: 0 $blh/8
 

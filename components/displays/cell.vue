@@ -49,7 +49,7 @@
     &--test
       border: dotted 1px clr2('mint', 0.65)
       color: clr2('mint', 0.35)
-      padding: $blh/2 0
+      padding: 0
       text-align: center
       font-style: italic
     &--group,
@@ -62,7 +62,9 @@
       border-radius: 4px
       padding: $blh/2
       padding-top: $blh
-      box-shadow: 0 0 6px darken(clr('indigo'), 10%)
+      @include neuMorphOuter(clr2('indigo', 0.35, 25%), clr2('indigo', 0.65, -15%))
+      // @include neuMorphInner(clr2('indigo', 0.63, 25%), clr2('indigo', 0.65, -15%))
+      // box-shadow: 0 0 6px darken(clr('indigo'), 10%)
     &--group-success
       border-color: clr2('mint', 0.25)
     &--group-warning
