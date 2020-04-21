@@ -12,11 +12,12 @@
           <ctrl-range v-if="stringPartials" v-model="settings.partialCount" :props="params.partials" />
           <ctrl-range v-if="stringPhase" v-model="settings.phase" :props="params.phase" />
         </div>
-        <div class="module__col">
-          <span v-if="settings.frequency">
-            Tone: {{ freqNote }} ({{ freqHz }}hz)
-          </span>
-        </div>
+        <cell cols="4">
+          <div v-if="settings.frequency">Tone: {{ freqNote }} ({{ freqHz }} hz)</div>
+          <div>
+            <ctrl-dial v-if="hardFreq.value" v-model="hardFreq.value" :props="hardFreq" />
+          </div>
+        </cell>
       </section>
       <div v-if="debug" class="module__debug">
         <span class="module__state">Status: {{ settings.state }}</span>
@@ -35,6 +36,7 @@
   </div>
 </template>
 
+
 <script>
   import Tone from 'tone'
   import Module from './_module.vue'
@@ -42,9 +44,12 @@
   import CtrlRange from '../controls/range.vue'
   import CtrlSelect from '../controls/select.vue'
   import CtrlCheck from '../controls/check.vue'
+  import CtrlDial from '../controls/dial.vue'
+  // partials
+  import Cell from '../displays/cell.vue'
   export default {
     extends: Module,
-    components: { CtrlButton, CtrlRange, CtrlSelect, CtrlCheck },
+    components: { CtrlButton, CtrlRange, CtrlSelect, CtrlCheck, CtrlDial, Cell },
     data () {
       return {
         title: 'OmniOscillator',
@@ -69,6 +74,12 @@
             min: '0', max: '180', step: '1',
             units: '', dec: '0'
           }
+        },
+        useSource: 'piano',
+        hardFreq: {
+          value: '100',
+          min: '0', max: '2000', step: '1',
+          units: 'hz', dec: '0'
         }
       }
     },
@@ -78,6 +89,7 @@
         return this.$store.state.synth.piano.freq
       },
       freqNote () {
+        // return Tone.Frequency(1000).toNote()
         return Tone.Frequency(this.pianoFreq).toNote()
       },
       freqHz () {

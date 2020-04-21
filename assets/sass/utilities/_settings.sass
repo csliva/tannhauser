@@ -11,11 +11,11 @@ $bfs: 14px
 // Colors
 $colors: ( "indigo": #1b203d, "blue": #0faff9, "pink": #e72e71, "mint": #69bfa2, "orange": #ec583e )
 
-@function clr($name, $alpha: 0, $val: 0%)
+@function clr($name: "blue", $alpha: 0, $val: 0%)
   $color: map-get($colors, $name)
   @return $color
 
-@function clr2($name, $alpha: 0, $val: 0%)
+@function clr2($name: "blue", $alpha: 0, $val: 0%)
   $color: map-get($colors, $name)
   @if($val > 0)
     $color: lighten($color, abs($val))

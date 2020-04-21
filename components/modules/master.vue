@@ -29,7 +29,7 @@
         </cell>
 
         <cell cols="2" gap="lg">
-          <cell cols="4" type="group" gap="sm" title="ADSR Envelope">
+          <cell cols="4" type="group-success" gap="sm" title="ADSR Envelope">
             <cell gap="xs">
               <ctrl-dial v-if="adsr.a.value" v-model="adsr.a.value" :props="adsr.a" />
               <ctrl-select v-if="adsr.aCurve.value" v-model="adsr.aCurve.value" :props="adsr.aCurve" />
@@ -110,9 +110,8 @@
   import CtrlRange from '../controls/range.vue'
   import CtrlSelect from '../controls/select.vue'
   import CtrlDial from '../controls/dial.vue'
-  // Partials
-  import Cell from './_partials/cell.vue'
   // Displays
+  import Cell from '../displays/cell.vue'
   import DispGraph from '../displays/adsrGraph.vue'
   export default {
     extends: Module,

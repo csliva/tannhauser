@@ -1,20 +1,39 @@
+//////////////////////////////////////////////////
 // Mixins
+//////////////////////////////////////////////////
 
+// Basic Box Shadow
 @mixin boxShadow()
   -webkit-box-shadow: 0px 0px 8px 0px transparentize(#000, 0.65)
   -moz-box-shadow: 0px 0px 8px 0px transparentize(#000, 0.65)
   box-shadow: 0px 0px 8px 0px transparentize(#000, 0.65)
 
+// NeuMorphism
 @mixin neuMorphOuter($clrA, $clrB)
   box-shadow: -3px -3px 8px 0 $clrA, 3px 3px 8px 0 $clrB
 
 @mixin neuMorphInner($clrA, $clrB)
   box-shadow: inset -4px -4px 4px 0 $clrA, inset 4px 4px 4px 0 $clrB
 
-@mixin devBound($color: clr('mint'))
-  border: dotted 1px transparentize($color, 0.65)
-  color: transparentize($color, 0.35)
+// Transitions
+@mixin transition($props...)
+  $unfoldedProps: ()
+  @each $prop in $props
+    $unfoldedProps: append($unfoldedProps, unfoldProp($prop), comma)
+  -webkit-transition: $unfoldedProps
+  transition: $unfoldedProps
 
-@mixin trans($property)
-  transition: $property 0.5s ease-out
-  -webkit-transition: $property 0.5s ease-out
+@function unfoldProp($transition)
+  $property: all
+  $duration: .3s
+  $easing: ease-out
+  $defaultProperties: ($property, $duration, $easing)
+  $unfoldedTransition: ()
+  @for $i from 1 through length($defaultProperties)
+    $p: false
+    @if $i <= length($transition)
+      $p: nth($transition, $i)
+    @else
+      $p: nth($defaultProperties, $i)
+    $unfoldedTransition: append($unfoldedTransition, $p)
+  @return $unfoldedTransition

@@ -47,29 +47,51 @@
       grid-gap: $blh
     // type
     &--test
-      @include devBound()
+      border: dotted 1px clr2('mint', 0.65)
+      color: clr2('mint', 0.35)
       padding: $blh/2 0
       text-align: center
       font-style: italic
-    &--group
+    &--group,
+    &--group-success,
+    &--group-warning,
+    &--group-danger
+      background-color: clr2('indigo', 0, 5%)
       position: relative
-      border: solid 2px transparentize(clr('mint'), 0.25)
+      border: solid 2px clr2('blue', 0.25)
       border-radius: 4px
       padding: $blh/2
       padding-top: $blh
       box-shadow: 0 0 6px darken(clr('indigo'), 10%)
+    &--group-success
+      border-color: clr2('mint', 0.25)
+    &--group-warning
+      border-color: clr2('orange', 0.25)
+    &--group-danger
+      border-color: clr2('pink', 0.25)
     &__title
       position: absolute
       top: 0
       left: 0
       font-size: 10px
       line-height: $blh/1.5
-      background-color: transparentize(clr('mint'), 0.25)
+      background-color: clr2('blue', 0.25)
       border-radius: 0
       border-bottom-right-radius: 4px
       padding: 0 $blh/4
       text-transform: uppercase
       letter-spacing: 0.5px
+      .cell--group-success &
+        background-color: clr2('mint', 0.25)
+      .cell--group-warning &
+        background-color: clr2('orange', 0.25)
+      .cell--group-danger &
+        background-color: clr2('pink', 0.25)
+    &--parent
+      // border: dotted 2px yellow
+    &--item
+      // border: dotted 2px clr2('blue')
+
 
 
 

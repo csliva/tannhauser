@@ -6,7 +6,7 @@
     <div class="select__main">
       <span class="select__icon"></span>
       <div class="select__inner">
-        <select v-model="lVal" class="select__input">
+        <select v-model="lVal" class="select__input" placeholder="Select Option">
           <option v-for="(o, i) in props.options" :value="o">{{ lNiceOpts ? lNiceOpts[i] : o | cap }}</option>
         </select>
       </div>
@@ -120,7 +120,7 @@
           opacity: 1
       .select
         &__meta
-          @include trans(opacity)
+          @include transition(opacity)
           opacity: 0
           position: absolute
           top: -$blh/1.5
@@ -136,7 +136,7 @@
               opacity: 0
           &:before,
           &:after
-            @include trans(opacity)
+            @include transition(opacity)
             content: ''
             position: absolute
             top: 0
@@ -158,7 +158,7 @@
           position: relative
           z-index: 100
         &__input
-          @include trans(transform)
+          @include transition(transform)
           padding: $blh/8 $blh/2
         &__icon
           right: 0
@@ -192,7 +192,7 @@
               border-color: #fff transparent transparent transparent
           &:before,
           &:after
-            @include trans(opacity)
+            @include transition(opacity)
             content: ''
             position: absolute
             top: 0
@@ -220,7 +220,7 @@
               opacity: 1
           &:before,
           &:after
-            @include trans(opacity)
+            @include transition(opacity)
             content: ''
             position: absolute
             top: 0
@@ -239,7 +239,7 @@
             @include neuMorphInner(clr2('indigo', 0.25, 25%), clr2('indigo', 0.25, -5%))
         &__input
           // position: absolute
-          @include trans(color)
+          @include transition(color)
           display: block
           right: auto
           width: 100%

@@ -1,15 +1,35 @@
 <template lang="html">
   <div class="graph">
     <div>
+      <p>Graph W: {{ width }}, &nbsp; Graph H: {{ height }}</p>
       <svg class="graph__svg" :width="width" :height="height">
         <path :d="path" stroke="#fff" stroke-width="3" fill="none"></path>
       </svg>
     </div>
     <div class="graph__grid">
-      <span>{{ aPerc }}% ({{ aPerc / .25 }})</span>
-      <span>{{ dPerc }}% ({{ dPerc / .25 }})</span>
-      <span>{{ sPerc }}% ({{ sPerc / .25 }})</span>
-      <span>{{ rPerc }}% ({{ rPerc / .25 }})</span>
+      <div>
+        <div>{{ aPct | fixed }}% </div>
+        <div>{{ (aPct / .25) | fixed }}</div>
+        <div>{{ aShr | fixed }}</div>
+      </div>
+      <div>
+        <div>{{ dPct | fixed }}% </div>
+        <div>{{ (dPct / .25) | fixed }}</div>
+        <div>{{ dShr | fixed }}</div>
+      </div>
+      <div>
+        <div>{{ sPct | fixed }}% </div>
+        <div>{{ (sPct / .25) | fixed }}</div>
+        <div>?</div>
+      </div>
+      <div>
+        <div>{{ rPct | fixed }}% </div>
+        <div>{{ (rPct / .25) | fixed }}</div>
+        <div>{{ rShr | fixed }}</div>
+      </div>
+    </div>
+    <div class="#">
+      Total: &nbsp; {{ adsrTotal | fixed }}
     </div>
   </div>
 </template>
@@ -36,10 +56,18 @@
       this.draw()
     },
     computed: {
-      aPerc(){ return this.getPercent(this.attack, this.aMin, this.aMax) },
-      dPerc(){ return this.getPercent(this.decay, this.dMin, this.dMax) },
-      sPerc(){ return this.getPercent(this.sustain, this.sMin, this.sMax) },
-      rPerc(){ return this.getPercent(this.release, this.rMin, this.rMax) }
+      aPct(){ return this.getPctent(this.attack, this.aMin, this.aMax) },
+      dPct(){ return this.getPctent(this.decay, this.dMin, this.dMax) },
+      sPct(){ return this.getPctent(this.sustain, this.sMin, this.sMax) },
+      rPct(){ return this.getPctent(this.release, this.rMin, this.rMax) },
+      // Percent of each inputs range, and also the Shr of the total percent for the envelope graph
+      // colt: x = ((this.aPct*100)/(this.aPct+this.dPct+this.rPct))*this.width
+      // .toFixed(2) ???
+      aShr(){ return (((this.aPct*100) / (this.aPct+this.dPct+this.rPct)) * (this.width / 4)) },
+      dShr(){ return (((this.dPct*100) / (this.dPct+this.aPct+this.rPct)) * (this.width / 4)) },
+      sShr(){ },
+      rShr(){ return (((this.rPct*100) / (this.rPct+this.dPct+this.aPct)) * (this.width / 4)) },
+      adsrTotal(){ return (this.num(this.aShr) + this.num(this.dShr) + this.num(this.rShr)) }
     },
     watch: {
       value: function () {
@@ -51,8 +79,11 @@
       }
     },
     methods: {
-      getPercent(val, min, max) {
-        return Number(((val - min) * 100 ) / (max - min)).toFixed(0)
+      num (val) {
+        return Number(val)
+      },
+      getPctent(val, min, max) {
+        return Number(((val - min) * 100 ) / (max - min))
       },
       draw() {
         const wRatio = (this.width / 4)
@@ -78,6 +109,11 @@
         paths.push(`${x} ${y}`)
 
         this.path = `M0 ${this.height},` + paths.join(',')
+      }
+    },
+    filters: {
+      fixed (val) {
+        return Number(val).toFixed(1)
       }
     }
   }

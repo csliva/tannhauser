@@ -2,12 +2,13 @@
   <div class="synth">
 
       <header class="synth__header">
-        <div class="synth__#">
           <h1>{{ synthTitle }}</h1>
           <ctrl-button @click="log(modules)" text="Log All Modules" />
           <ctrl-button v-if="!routes.length" @click="quickRoute()" text="Quick Route" type="success" />
           <ctrl-button @click="log(toneMaster)" text="Log Master Module" type="warning" />
-        </div>
+          <ctrl-button @click="setPianoDisplay(displayPiano ? false : true)"
+            :text="displayPiano ? 'Hide Piano' : 'Show Piano' "
+            :type="displayPiano ? 'danger' : '' " />
       </header>
 
       <div class="synth__body">
@@ -80,7 +81,7 @@
         </main>
       </div> <!-- end .synth__body -->
 
-    <piano v-if="false" />
+    <piano v-if="displayPiano" />
 
   </div>
 </template>
@@ -127,6 +128,9 @@
       // $store
       synthTitle () {
         return this.$store.state.synth.title
+      },
+      displayPiano () {
+        return this.$store.state.synth.piano.display
       }
     },
     methods: {
@@ -136,6 +140,9 @@
       },
       setSynthPiano: function (value) {
         this.$store.commit('synth/setPiano', value)
+      },
+      setPianoDisplay: function (value) {
+        this.$store.commit('synth/setDisplayPiano', value)
       },
       // local
       log: function(data) {
@@ -151,8 +158,7 @@
             type: type,
             obj: {},
             cnx: {
-              i: [],
-              o: []
+              i: [], o: []
             }
           }
         )
@@ -199,7 +205,7 @@
       // create initial modules (ampEnv & omniOsc)
       this.initModule('AmpEnvelope')
       this.initModule('OmniOscillator')
-      this.initModule('FilterModule')
+      // this.initModule('FilterModule')
       // set the amp to active
       // this.loadModule(this.modules[0])
     }
