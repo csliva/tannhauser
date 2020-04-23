@@ -3,10 +3,10 @@
 
       <header class="synth__header">
           <h1>{{ synthTitle }}</h1>
-          <ctrl-button @click="log(modules)" text="Log All Modules" />
-          <ctrl-button v-if="!routes.length" @click="quickRoute()" text="Quick Route" type="success" />
-          <ctrl-button @click="log(toneMaster)" text="Log Master Module" type="warning" />
-          <ctrl-button @click="setPianoDisplay(displayPiano ? false : true)"
+          <ctrl-btn @click="log(modules)" text="Log All Modules" />
+          <ctrl-btn v-if="!routes.length" @click="quickRoute()" text="Quick Route" type="success" />
+          <ctrl-btn @click="log(toneMaster)" text="Log Master Module" type="warning" />
+          <ctrl-btn @click="setPianoDisplay(displayPiano ? false : true)"
             :text="displayPiano ? 'Hide Piano' : 'Show Piano' "
             :type="displayPiano ? 'danger' : '' " />
       </header>
@@ -15,9 +15,9 @@
         <aside class="synth__aside">
           <nav class="menu">
             <header class="menu__header">
-              <ctrl-button @click="initModule('OmniOscillator')" text="Init OmniOsc" type="success" />
-              <ctrl-button @click="initModule('FilterModule')" text="Init Filter" type="success" />
-              <ctrl-button @click="initModule('AmpEnvelope')" text="Init AmpEnv" type="success" />
+              <ctrl-btn @click="initModule('OmniOscillator')" text="Init OmniOsc" type="success" />
+              <ctrl-btn @click="initModule('FilterModule')" text="Init Filter" type="success" />
+              <ctrl-btn @click="initModule('AmpEnvelope')" text="Init AmpEnv" type="success" />
             </header>
             <div class="menu__body">
               <ul class="menu__list">
@@ -68,7 +68,7 @@
                 <option value="Master">Master</option>
                 <option v-for="m in modules" v-if="m.obj" :value="m">{{ m.obj.moduleId }}</option>
               </select>
-              <ctrl-button @click="createRoute(newRoute.source, newRoute.sink)" text="Connect" />
+              <ctrl-btn @click="createRoute(newRoute.source, newRoute.sink)" text="Connect" />
               <ul class="routes__list">
                 <li v-for="r in routes" class="routes__item">
                   {{ r.source.name }} => {{ r.sink.name }}
@@ -100,14 +100,14 @@
   import CtrlCheck from './controls/check.vue'
   import CtrlSelect from './controls/select.vue'
   import CtrlRange from './controls/range.vue'
-  import CtrlButton from './controls/button.vue'
+  import CtrlBtn from './controls/btn.vue'
   import CtrlDial from './controls/dial.vue'
   // Helpers
   export default {
     components: {
       Piano,
       MasterOutput, OmniOscillator, AmpEnvelope, FilterModule,
-      CtrlCheck, CtrlSelect, CtrlRange, CtrlButton, CtrlDial
+      CtrlCheck, CtrlSelect, CtrlRange, CtrlBtn, CtrlDial
     },
     data () {
       return {

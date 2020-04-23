@@ -40,7 +40,6 @@
 <script>
   import Tone from 'tone'
   import Module from './_module.vue'
-  import CtrlButton from '../controls/button.vue'
   import CtrlRange from '../controls/range.vue'
   import CtrlSelect from '../controls/select.vue'
   import CtrlCheck from '../controls/check.vue'
@@ -49,7 +48,7 @@
   import Cell from '../displays/cell.vue'
   export default {
     extends: Module,
-    components: { CtrlButton, CtrlRange, CtrlSelect, CtrlCheck, CtrlDial, Cell },
+    components: { CtrlRange, CtrlSelect, CtrlCheck, CtrlDial, Cell },
     data () {
       return {
         title: 'OmniOscillator',

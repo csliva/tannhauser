@@ -66,29 +66,6 @@
           </cell>
         </cell>
 
-        <cell cols="2" gap="lg">
-          <cell cols="2">
-            <cell type="test">Param</cell>
-            <cell type="test">Param</cell>
-          </cell>
-          <cell cols="4" gap="na">
-            <cell type="test">Param</cell>
-            <cell type="test">Param</cell>
-            <cell type="test">Param</cell>
-            <cell type="test">Param</cell>
-          </cell>
-        </cell>
-
-        <cell cols="2" gap="lg">
-          <cell cols="2-6">
-            <cell type="test">Param</cell>
-            <cell type="test">Param</cell>
-          </cell>
-          <cell cols="5-3">
-            <cell type="test">Param</cell>
-            <cell type="test">Param</cell>
-          </cell>
-        </cell>
 
       </cell>
 
@@ -106,7 +83,6 @@
   // Module...
   import Module from './_module.vue'
   // Controls
-  import CtrlButton from '../controls/button.vue'
   import CtrlRange from '../controls/range.vue'
   import CtrlSelect from '../controls/select.vue'
   import CtrlDial from '../controls/dial.vue'
@@ -115,7 +91,7 @@
   import DispGraph from '../displays/adsrGraph.vue'
   export default {
     extends: Module,
-    components: { CtrlButton, CtrlRange, CtrlSelect, CtrlDial, Cell, DispGraph },
+    components: { CtrlRange, CtrlSelect, CtrlDial, Cell, DispGraph },
     data () {
       return {
         title: 'Master',

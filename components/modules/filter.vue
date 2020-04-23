@@ -34,12 +34,11 @@
 <script>
   import Tone from 'tone'
   import Module from './_module.vue'
-  import CtrlButton from '../controls/button.vue'
   import CtrlRange from '../controls/range.vue'
   import CtrlSelect from '../controls/select.vue'
   export default {
     extends: Module,
-    components: { CtrlButton, CtrlRange, CtrlSelect },
+    components: { CtrlRange, CtrlSelect },
     data () {
       return {
         title: 'Filter',

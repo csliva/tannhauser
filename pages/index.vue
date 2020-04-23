@@ -2,8 +2,14 @@
   <div class="app">
     <div class="app__inner">
       <nav v-if="dev" class="app__nav">
-        <button @click="active = 'synth'" class="app__btn" >Synth</button>
-        <button @click="active = 'sandbox'" class="app__btn" >Sandbox</button>
+        <button @click="active = 'synth'"
+        class="app__btn" :class="{'app__btn--active': active === 'synth'}" >
+          Synth
+        </button>
+        <button @click="active = 'sandbox'"
+        class="app__btn" :class="{'app__btn--active': active === 'sandbox'}"  >
+          Sandbox
+        </button>
       </nav>
       <synth v-if="synthActive" />
       <sandbox v-if="sandboxActive" />
@@ -35,7 +41,7 @@
 
 <style lang="sass">
   .app
-    background-color: clr2('indigo', 0, -2.5%)
+    background-color: clr2('indigo', 0, -3.5%)
     height: 100vh
     overflow: hidden
     position: relative
@@ -61,37 +67,45 @@
       z-index: 1000
       top: 0
       right: 0
-      background-color: clr2('indigo', 0, -5%)
-      border: solid 1px clr2('indigo', 0, -5%)
-      padding: $blh/4 0
+      background-color: clr2('indigo', 0, -7.5%)
+      border: solid 1px clr2('indigo', 0, -7.5%)
+      padding: 0
       margin: 0
       border-bottom-left-radius: 6px
-      button
-        display: inline-block
-        margin: 0
-        padding: 0 $blh
-        border: 0
-        color: clr2('indigo', 0, 45%)
-        line-height: $blh
-        &:hover
-          color: clr2('mint')
-        &:focus
-          outline: 0
-        &:first-child
-          padding-right: $blh/2
-        &:last-child
-          padding-left: $blh/2
+      font-size: 0
     &__btn
+      @include transition(background-color, color)
       font-size: 12px
-      padding: $blh/8 $blh/2
       display: block
       background: transparent
       border: 0
       padding: $blh/4
       color: #fff
+      display: inline-block
+      margin: 0
+      padding: 0 $blh
+      border: 0
+      color: clr2('indigo', 0, 45%)
+      line-height: $blh*1.5
+      background-color: transparent
+      text-transform: uppercase
+      font-weight: 700
       &:hover
+        color: clr2('indigo', 0, 55%)
         cursor: pointer
+        background-color: clr2('indigo', 0, -8.5%)
       &:focus
         outline: 0
+      &--active
+        color: clr2('mint', 0.25)
+        &:hover
+          color: clr2('mint')
+      &:first-child
+        padding-right: $blh/2
+        border-right: solid 1px clr2('indigo', 0, -10%)
+      &:last-child
+        padding-left: $blh/2
+
+
 
 </style>

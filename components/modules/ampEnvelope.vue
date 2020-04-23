@@ -52,13 +52,13 @@
 <script>
   import Tone from 'tone'
   import Module from './_module.vue'
-  import CtrlButton from '../controls/button.vue'
+  // import CtrlButton from '../controls/button.vue'
   import CtrlRange from '../controls/range.vue'
   import CtrlSelect from '../controls/select.vue'
   import CtrlDial from '../controls/dial.vue'
   export default {
     extends: Module,
-    components: { CtrlButton, CtrlRange, CtrlSelect, CtrlDial },
+    components: { CtrlRange, CtrlSelect, CtrlDial },
     data () {
       return {
         title: 'AmpEnv',

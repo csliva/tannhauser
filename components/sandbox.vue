@@ -1,34 +1,34 @@
 <template lang="html">
   <div class="sandbox">
-
     <div class="sandbox__inner">
+
       <h2>Sandbox</h2>
+
+      <module-osc />
+      <module-lfo />
+
       <cell>
         <cell cols="3">
           <cell cols="4" grid="sm">
-            <button class="btn" @click="initOsc()"><span>Init Osc</span></button>
-            <button class="btn btn--success" @click="toggleAll(oscs, true)"><span>Start All</span></button>
-            <button class="btn btn--warning" @click="toggleAll(oscs, false)"><span>Stop All</span></button>
-            <button class="btn" @click="log(oscs)"><span>Log</span></button>
-          </cell>
-          <cell></cell>
-          <cell cols="4" grid="sm">
-            <button class="btn" @click="log(meters[0])"><span>Meters</span></button>
-            <button class="btn" @click="log(getMaster)"><span>Master</span></button>
-            <cell type="test">Param</cell>
-            <cell>
-              <span v-if="false && meter">{{ meter.getLevel() | round }}</span>
+            <cell v-if="false">
+              <ctrl-dial v-if="getMaster.volume" v-model="getMaster.volume.value" :props="volProps" />
             </cell>
           </cell>
         </cell>
         <cell cols="3">
-          <cell v-for="(o, i) in oscs" :type="(i % 2 == 1) ? 'group-success' : 'group'" :title="( o.category+'#'+(i+1) )" :key="( o.category+'#'+(i+1) )">
-            <cell cols="3">
-              <label>Fq:
-                <span v-if="o.frequency" class="hlt">{{ o.frequency.value | round }}</span> hz
-              </label>
+          <cell cols="4" grid="sm">
+            <ctrl-btn text="Init Osc" @click="initOsc()" />
+            <ctrl-btn type="success" text="Start All" @click="toggleAll(oscs, true)" />
+            <ctrl-btn type="warning" text="Stop All" @click="toggleAll(oscs, false)" />
+            <ctrl-btn text="Log" @click="log(oscs)" />
+          </cell>
+        </cell>
+        <cell cols="4">
+          <cell v-for="(o, i) in oscs" type="group" :key="o.mId">
+            <h4 v-if="o.title" class="cell__title">{{ o.title }}</h4>
+            <cell cols="2">
               <ctrl-select v-if="o.baseType" v-model="o.baseType" :props="oscProps" type="pill" />
-              <cell type="test">Meter...</cell>
+              <cell type="wip">Note Frq</cell>
             </cell>
             <cell cols="4">
               <ctrl-dial v-if="o.frequency" v-model="o.frequency.value" :props="freqProps" />
@@ -36,36 +36,32 @@
               <ctrl-dial v-model="o.partialCount" :props="oscPartialProps" />
               <ctrl-dial v-if="o.volume" v-model="o.volume.value" :props="volProps" />
             </cell>
-            <cell cols="4" >
-              <button class="btn" :class="{'btn--active btn--danger': o.state == 'started', 'btn--success' : o.state == 'stopped' }"
-               @click="o.state === 'stopped' ? o.start() : o.stop() ">
-                <span>{{ o.state === 'stopped' ? 'Start' : 'Stop' }}</span>
-              </button>
-              <button class="btn btn--warning" @click="log(o)">
-                <span>Log</span>
-              </button>
-              <button class="btn" @click="o.toMaster()">
-                <span>Master</span>
-              </button>
+            <cell cols="3" >
+              <ctrl-btn @click="o.state === 'stopped' ? o.start() : o.stop() "
+                :text="(o.state == 'started' ? 'Stop' : 'Start')"
+                :type="(o.state == 'started' ? 'danger' : 'success')" />
+              <ctrl-btn text="Connect" @click="o.toMaster()" />
+              <ctrl-btn text="Log" @click="log(o)" />
             </cell>
           </cell>
         </cell>
+
         <cell cols="3">
           <cell cols="4">
-            <button class="btn" @click="initLfo()"><span>Init LFO</span></button>
-            <button class="btn btn--success" @click="toggleAll(lfos, true)"><span>Start All</span></button>
-            <button class="btn btn--warning" @click="toggleAll(lfos, false)"><span>Stop All</span></button>
-            <button class="btn" @click="log(cnxTargets)"><span>Log</span></button>
+            <ctrl-btn @click="initLfo()" text="Init LFO" />
+            <ctrl-btn @click="toggleAll(lfos, true)" text="Start All" type="success" />
+            <ctrl-btn @click="toggleAll(lfos, false)" text="Stop All" type="warning" />
+            <ctrl-btn @click="log(cnxTargets)" text="Log" />
           </cell>
         </cell>
-        <cell cols="3">
-          <cell v-for="(l, i) in lfos" :type="(i % 2 == 0) ? 'group-success' : 'group'" :title="( l.category+'#'+(i+1) )" :key="( l.category+'#'+(i+1) )">
+
+        <cell cols="4">
+          <cell v-for="(l, i) in lfos" type="group" :key="l.mId">
             <cell>
-              <cell cols="3">
-                <label>Fq:
-                  <span v-if="l.frequency" class="hlt">{{ l.frequency.value }}</span> hz
-                </label>
+              <h4 v-if="l.title" class="cell__title">{{ l.title }}</h4>
+              <cell cols="2">
                 <ctrl-select v-if="l._oscillator.baseType" v-model="l._oscillator.baseType" :props="oscProps" type="pill" />
+                <cell type="wip">Note Frq</cell>
               </cell>
               <cell cols="4">
                 <ctrl-dial v-if="l.amplitude" v-model="l.amplitude.value" :props="lfoProps.amp" />
@@ -74,32 +70,27 @@
                 <ctrl-dial v-model="l._oscillator.partialCount" :props="oscPartialProps" />
               </cell>
               <cell cols="3">
-                <ctrl-select v-model="cnxTargets.value" :props="cnxTargets" type="pill" />
-                <ctrl-select v-model="cnxTargets.param" :props="oscTargetParams" type="pill" />
-                <button class="btn" @click="mapParam(l, cnxTargets.value, cnxTargets.param)">
-                  <span>Connect</span>
-                </button>
+                <ctrl-select :props="cnxTargets" type="pill" />
+                <ctrl-select :props="oscModProps" type="pill" />
+                <ctrl-btn @click="" text="Connect" />
               </cell>
-              <cell v-if="l.cnx.o.length">
+              <cell v-if="l.cnx.o">
                 <span v-for="(o, i) in l.cnx.o">{{ o.title ? o.title : 'No Title' }}</span>
               </cell>
               <cell v-else>Not Connected</cell>
             </cell>
-            <cell cols="4" >
-              <button class="btn" :class="{'btn--active btn--danger': l._oscillator.state == 'started', 'btn--success' : l._oscillator.state == 'stopped' }"
-               @click="l._oscillator.state === 'stopped' ? l._oscillator.start() : l._oscillator.stop() ">
-                <span>{{ l._oscillator.state === 'stopped' ? 'Start' : 'Stop' }}</span>
-              </button>
-              <button class="btn btn--warning" @click="log(l)">
-                <span>Log</span>
-              </button>
+            <cell cols="3" >
+              <ctrl-btn @click="l._oscillator.state === 'stopped' ? l._oscillator.start() : l._oscillator.stop() "
+                :text="(l.state == 'started' ? 'Stop' : 'Start')"
+                :type="(l.state == 'started' ? 'danger' : 'success')" />
+              <ctrl-btn @click="log(l)" type="warning" text="Log" />
             </cell>
           </cell>
         </cell>
+
       </cell>
 
     </div>
-
   </div>
 </template>
 
@@ -108,25 +99,24 @@
   import Tone from 'tone'
   // Interfaces
   import Piano from './piano.vue'
-  // Modules
-  import MasterOutput from './modules/master.vue'
-  import OmniOscillator from './modules/omniOscillator.vue'
-  import AmpEnvelope from './modules/ampEnvelope.vue'
-  import FilterModule from './modules/filter.vue'
   // Controls
   import CtrlCheck from './controls/check.vue'
   import CtrlSelect from './controls/select.vue'
   import CtrlRange from './controls/range.vue'
-  import CtrlButton from './controls/button.vue'
+  import CtrlBtn from './controls/btn.vue'
   import CtrlDial from './controls/dial.vue'
   // Displays
   import Cell from './displays/cell.vue'
+
+  // Sbox Modules
+  import ModuleOsc from './modules/sbox/osc.vue'
+  import ModuleLfo from './modules/sbox/lfo.vue'
   // Helpers
   export default {
     components: {
       Piano,
-      MasterOutput, OmniOscillator, AmpEnvelope, FilterModule,
-      CtrlCheck, CtrlSelect, CtrlRange, CtrlButton, CtrlDial,
+      ModuleOsc, ModuleLfo,
+      CtrlCheck, CtrlSelect, CtrlRange, CtrlBtn, CtrlDial,
       Cell
     },
     data() {
@@ -177,23 +167,31 @@
             units: 'hz', dec: '1', reset: true
           }
         },
+        // mod props
+        oscModProps: {
+          options: ['frequency', 'detune', 'volume', 'partialCount'],
+          niceOptions: ['Freq', 'Detune', 'Vol', 'Partial Count']
+        },
+        lfoModProps: {
+          options: ['frequency', 'amplitude'],
+          niceOptions: ['Freq', 'Amp']
+        },
         // utilitities
         meter: false
       }
     },
     computed: {
-      cnxTargets () {
-        return {
-          value: this.oscs[0],
-          param: 'frequency',
-          options: this.oscs,
-          niceOptions: this.oscs.map(o => o.title)
-        }
+      getModules () {
+        // return all modules
+        let modules = []
+        modules.push(...this.oscs, ...this.lfos)
+        return modules
       },
-      oscTargetParams () {
+      cnxTargets () {
+        // returns name and ids of modules
         return {
-          options: ['frequency', 'detune', 'volume'],
-          niceOptions: ['Freq', 'Detune', 'Vol']
+          options: this.getModules.map(t => t.mId),
+          niceOptions: this.getModules.map(t => t.title)
         }
       },
       getMaster () {
@@ -223,19 +221,31 @@
         let osc = new Tone.OmniOscillator({
           type: 'sine'
         })
-        osc.title = 'Osc #'+ (this.oscs.length + 1)
+        osc.mId = 'omniOsc#' + (this.oscs.length + 1)
+        osc.title = 'Omni Osc #'+ (this.oscs.length + 1)
         osc.category = 'oscillator'
         this.oscs.push(osc)
       },
       initLfo() {
         let lfo = new Tone.LFO()
+        lfo.mId = 'lfo#'+ (this.lfos.length + 1)
         lfo.title = 'LFO #'+ (this.lfos.length + 1)
         lfo.category = 'lfo'
         lfo.cnx = {i: [], o: []}
         this.lfos.push(lfo)
       },
+      // get modules (id & category)
+      getModuleById (id) {
+        this.getModules.filter(t => t.mId === id)
+      },
+      getModuleCat (cat) {
+        this.getModules.filter(t => t.catategory === cat)
+      },
       // routing
       routeSignal (output, input) {
+
+      },
+      unmapParam (output, input, param) {
 
       },
       mapParam (output, input, param) {
@@ -277,77 +287,9 @@
     &__item
       display: inline-block
 
-  // btn - incorporate or move out of template
-  .btn
-    @include transition(background-color, color)
-    display: block
-    position: relative
-    z-index: 10
-    appearance: none
-    -webkit-appearance: none
-    background-color: clr2('indigo', 0.35, 10%)
-    border: solid 1px clr2('indigo', 0.35, 10%)
-    // border: 0
-    border-radius: $blh
-    padding: 0 $blh/4
-    color: transparentize(#fff, 0.35)
-    text-align: center
-    font-size: 12px
-    text-shadow: 0 0 2px clr2('indigo', 0, 10%)
-    line-height: $blh
-    span
-      position: relative
-      z-index: 30
-      display: inline-block
-      padding-top: 1px
-    &:focus
-      outline: 0
-    &:before,
-    &:after
-      @include transition(opacity)
-      content: ''
-      position: absolute
-      width: 100%
-      height: 100%
-      top: 0
-      left: 0
-      border-radius: $blh
-    &:before
-      opacity: 0
-      z-index: 0
-      border: solid 1px clr2('blue', 0, -10%)
-      background: linear-gradient(-45deg, clr2('blue', 0.25, -5%), clr2('blue', 0, -10%), clr2('blue', 0.25, -20%))
-      @include neuMorphOuter(clr2('indigo', 0.25, 10%), clr2('indigo', 0.25, -10%))
-    &:after
-      opacity: 1
-      z-index: 20
-      @include neuMorphInner(clr2('indigo', 0.5, 7.5%), clr2('indigo', 0.5, -7.5%))
-    &--success
-      &:before
-        border: solid 1px clr2('mint', 0, -10%)
-        background: linear-gradient(-45deg, clr2('mint', 0.25, -5%), clr2('mint', 0, -10%), clr2('mint', 0.25, -20%))
-    &--warning
-      &:before
-        border: solid 1px clr2('orange', 0, -10%)
-        background: linear-gradient(-45deg, clr2('orange', 0.25, -5%), clr2('orange', 0, -10%), clr2('orange', 0.25, -20%))
-    &--danger
-      &:before
-        border: solid 1px clr2('pink', 0, -10%)
-        background: linear-gradient(-45deg, clr2('pink', 0.25, -5%), clr2('pink', 0, -10%), clr2('pink', 0.25, -20%))
-    &:hover,
-    &--active
-      cursor: pointer
-      background-color: transparent
-      color: #fff
-      &:before
-        opacity: 1
-      &:after
-        opacity: 0
-
-
   // hlt = highlight
   .hlt
-    color: clr2('blue', 0, 15%)
+    color: clr2('blue', 0, 25%)
     display: inline-block
     padding: 0 $blh/8
 

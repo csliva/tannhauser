@@ -19,7 +19,7 @@
     props: ['value', 'props', 'type'],
     data () {
       return {
-        lVal: this.value,
+        lVal: this.value || this.props.options[0],
         lOpts: this.props.options,
         lNiceOpts: this.props.niceOptions
       }

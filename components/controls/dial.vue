@@ -142,15 +142,15 @@
       height: 0
       padding-bottom: 100%
       border-radius: 100%
-      background-color: clr('indigo')
+      background-color: clr2('indigo')
       overflow: hidden
-      box-shadow: inset 0 0 4px darken(clr('indigo'), 10%)
+      box-shadow: inset 0 0 4px darken(clr('indigo'), 5%)
       &:after,
       &:before
         content: ''
         position: absolute
         z-index: 90
-        background-color: lighten(clr('indigo'), 5%)
+        background-color: clr2('indigo', 0, 2.5%)
         width: 80%
         height: 80%
         border-radius: 100%
@@ -160,7 +160,7 @@
       &:before
         z-index: 20
         background-color: transparent
-        box-shadow: 0 0 4px darken(clr('indigo'), 10%)
+        box-shadow: 0 0 4px darken(clr('indigo'), 5%)
     &__display
       position: absolute
       z-index: 100
@@ -192,7 +192,7 @@
         z-index: 60
         width: 100%
         height: 50%
-        box-shadow: 0 0 4px darken(clr('indigo'), 10%)
+        box-shadow: 0 0 4px darken(clr('indigo'), 5%)
       &:before
         background: linear-gradient(to right, darken(clr('mint'), 10%), lighten(clr('blue'), 10%))
         bottom: 0
