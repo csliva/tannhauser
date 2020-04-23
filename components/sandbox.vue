@@ -1,95 +1,33 @@
 <template lang="html">
   <div class="sandbox">
     <div class="sandbox__inner">
-
       <h2>Sandbox</h2>
-
-      <module-osc />
-      <module-lfo />
-
       <cell>
-        <cell cols="3">
+        <cell cols="3"  v-if="false" >
           <cell cols="4" grid="sm">
-            <cell v-if="false">
+            <cell>
               <ctrl-dial v-if="getMaster.volume" v-model="getMaster.volume.value" :props="volProps" />
             </cell>
           </cell>
         </cell>
         <cell cols="3">
           <cell cols="4" grid="sm">
-            <ctrl-btn text="Init Osc" @click="initOsc()" />
-            <ctrl-btn type="success" text="Start All" @click="toggleAll(oscs, true)" />
-            <ctrl-btn type="warning" text="Stop All" @click="toggleAll(oscs, false)" />
-            <ctrl-btn text="Log" @click="log(oscs)" />
+            <ctrl-btn @click="initOsc()" text="Init Osc" />
+            <ctrl-btn @click="log(oscs)" text="Log" />
           </cell>
         </cell>
-        <cell cols="4">
-          <cell v-for="(o, i) in oscs" type="group" :key="o.mId">
-            <h4 v-if="o.title" class="cell__title">{{ o.title }}</h4>
-            <cell cols="2">
-              <ctrl-select v-if="o.baseType" v-model="o.baseType" :props="oscProps" type="pill" />
-              <cell type="wip">Note Frq</cell>
-            </cell>
-            <cell cols="4">
-              <ctrl-dial v-if="o.frequency" v-model="o.frequency.value" :props="freqProps" />
-              <ctrl-dial v-if="o.detune" v-model="o.detune.value" :props="oscDetuneProps" />
-              <ctrl-dial v-model="o.partialCount" :props="oscPartialProps" />
-              <ctrl-dial v-if="o.volume" v-model="o.volume.value" :props="volProps" />
-            </cell>
-            <cell cols="3" >
-              <ctrl-btn @click="o.state === 'stopped' ? o.start() : o.stop() "
-                :text="(o.state == 'started' ? 'Stop' : 'Start')"
-                :type="(o.state == 'started' ? 'danger' : 'success')" />
-              <ctrl-btn text="Connect" @click="o.toMaster()" />
-              <ctrl-btn text="Log" @click="log(o)" />
-            </cell>
-          </cell>
+        <cell cols="4" v-if="oscs.length">
+          <module-osc v-for="(o, i) in oscs" v-model="oscs[i]" :key="o.mId" />
         </cell>
-
         <cell cols="3">
           <cell cols="4">
             <ctrl-btn @click="initLfo()" text="Init LFO" />
-            <ctrl-btn @click="toggleAll(lfos, true)" text="Start All" type="success" />
-            <ctrl-btn @click="toggleAll(lfos, false)" text="Stop All" type="warning" />
-            <ctrl-btn @click="log(cnxTargets)" text="Log" />
           </cell>
         </cell>
-
-        <cell cols="4">
-          <cell v-for="(l, i) in lfos" type="group" :key="l.mId">
-            <cell>
-              <h4 v-if="l.title" class="cell__title">{{ l.title }}</h4>
-              <cell cols="2">
-                <ctrl-select v-if="l._oscillator.baseType" v-model="l._oscillator.baseType" :props="oscProps" type="pill" />
-                <cell type="wip">Note Frq</cell>
-              </cell>
-              <cell cols="4">
-                <ctrl-dial v-if="l.amplitude" v-model="l.amplitude.value" :props="lfoProps.amp" />
-                <ctrl-dial v-if="l._oscillator.frequency" v-model="l._oscillator.frequency.value" :props="lfoProps.freq" />
-                <ctrl-dial v-if="l._oscillator.detune" v-model="l._oscillator.detune.value" :props="oscDetuneProps" />
-                <ctrl-dial v-model="l._oscillator.partialCount" :props="oscPartialProps" />
-              </cell>
-              <cell cols="3">
-                <ctrl-select :props="cnxTargets" type="pill" />
-                <ctrl-select :props="oscModProps" type="pill" />
-                <ctrl-btn @click="" text="Connect" />
-              </cell>
-              <cell v-if="l.cnx.o">
-                <span v-for="(o, i) in l.cnx.o">{{ o.title ? o.title : 'No Title' }}</span>
-              </cell>
-              <cell v-else>Not Connected</cell>
-            </cell>
-            <cell cols="3" >
-              <ctrl-btn @click="l._oscillator.state === 'stopped' ? l._oscillator.start() : l._oscillator.stop() "
-                :text="(l.state == 'started' ? 'Stop' : 'Start')"
-                :type="(l.state == 'started' ? 'danger' : 'success')" />
-              <ctrl-btn @click="log(l)" type="warning" text="Log" />
-            </cell>
-          </cell>
+        <cell cols="4" v-if="lfos.length">
+          <module-lfo v-for="(o, i) in lfos" v-model="lfos[i]" :key="o.mId" />
         </cell>
-
       </cell>
-
     </div>
   </div>
 </template>
@@ -210,13 +148,6 @@
         alert(data)
       },
       // local
-      toggleAll(target, start) {
-        if(!target) { return false }
-        for(let i = 0; i < target.length; i++) {
-          if(start){ target[i].start() }
-          else { target[i].stop() }
-        }
-      },
       initOsc(tone) {
         let osc = new Tone.OmniOscillator({
           type: 'sine'
@@ -261,8 +192,8 @@
       // init oscs
       this.initOsc()
       this.initOsc()
-      this.initOsc()
       // init lfos
+      this.initLfo()
       this.initLfo()
     },
     filters: {

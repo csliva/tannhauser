@@ -1,27 +1,30 @@
 <template lang="html">
-  <button class="btn" :class="btnClass" @click="handleClick">
-    <span class="btn__text">{{ text || msg }}</span>
+  <button class="btn" @click="handleClick" :class="btnClass" >
+    <span class="btn__text">{{ text || 'Btn' }}</span>
   </button>
 </template>
 
 <script>
   export default {
-    props: ['value', 'text', 'type', 'size'],
+    props: ['value', 'text', 'type', 'toggle'],
     data(){
       return {
-        msg: 'No Text'
+        active: false
       }
     },
     computed: {
       btnClass () {
         let result = this.type ? 'btn--' + this.type : ''
-        result += this.size ? ' btn--' + this.size : ''
+        if(this.toggle){
+          result += (this.active) ? ' btn--active' : ' '
+        }
         return result
       }
     },
     methods: {
     	handleClick () {
       	this.$emit('click')
+        this.active = !this.active
       }
     }
   }
@@ -66,7 +69,7 @@
       outline: 0
     &:before,
     &:after
-      @include transition(opacity)
+      @include transition(opacity, border-color)
       content: ''
       position: absolute
       width: 100%
@@ -83,6 +86,7 @@
     &:after
       opacity: 1
       z-index: 20
+      border: solid 1px clr2('blue', 1)
       @include neuMorphInner(clr2('indigo', 0.5, 7.5%), clr2('indigo', 0.5, -7.5%))
     &--success
       &:before
