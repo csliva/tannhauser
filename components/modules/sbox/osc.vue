@@ -4,7 +4,7 @@
       <h4 v-if="settings.title" class="cell__title">{{ settings.title }}</h4>
       <cell cols="2">
         <ctrl-select v-if="settings.baseType" v-model="settings.baseType" :props="oscProps" type="pill" />
-        <cell type="wip">Note Frq</cell>
+        <cell type="wip">Note: {{ hzToNote }}</cell>
       </cell>
       <cell cols="4">
         <ctrl-dial v-if="settings.frequency" v-model="settings.frequency.value" :props="freqProps" />
@@ -20,14 +20,14 @@
         <ctrl-btn text="Connect" @click="settings.toMaster()" toggle="true" />
         <ctrl-btn @click="toggleDebug()" type="danger" text="Debug" toggle="true" />
       </cell>
-      <cell v-if="debug.active" type="well">
-        {{ debugData }}
-      </cell>
+      <cell v-if="debug.active" type="debug">{{ debugData }}</cell>
     </cell>
   </div>
 </template>
 
 <script>
+  // Tone JS
+  import Tone from 'tone'
   // import components from '../../controls/_index.js'
   import CtrlDial from '../../controls/dial.vue'
   import CtrlSelect from '../../controls/select.vue'
@@ -69,12 +69,20 @@
         }
       }
     },
+    methods: {
+      noteToHz (hz) {
+        // return Tone.Frequency(hz).toFrequency()
+      }
+    },
     computed: {
       debugData () {
         let s = this.settings
         let data = 'Freq: '+s.frequency.value
         data += ', '+' Detune: '+s.detune.value
         return data
+      },
+      hzToNote () {
+        return Tone.Frequency(this.settings.frequency.value).toNote()
       }
     }
   }

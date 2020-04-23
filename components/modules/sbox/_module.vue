@@ -1,6 +1,6 @@
 <script>
   export default {
-    props: ['value'],
+    props: ['value', 'targets'],
     data () {
       return {
         settings: this.value,
@@ -13,12 +13,8 @@
       // on mounted
     },
     methods: {
-      log(data) {
-        console.log(data)
-      },
-      alert(data) {
-        alert(data)
-      },
+      log(data) { console.log(data) },
+      alert(data) { alert(data) },
       toggleDebug(){
         this.debug.active = !this.debug.active
       }
@@ -39,8 +35,4 @@
 <style lang="sass">
   .new-module
     display: block
-  .debug
-    padding: $blh/4 $blh/2
-    border: dotted 2px clr2('pink', 0.75, 40%)
-    color: clr2('pink', 0.5, 50%)
 </style>
