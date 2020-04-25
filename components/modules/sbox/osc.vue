@@ -20,7 +20,10 @@
         <ctrl-btn text="Connect" @click="settings.toMaster()" toggle="true" />
         <ctrl-btn @click="toggleDebug()" type="danger" text="Debug" toggle="true" />
       </cell>
-      <cell v-if="debug.active" type="debug">{{ debugData }}</cell>
+      <cell v-if="debug.active" type="debug">
+        {{ debugData }}
+        <ctrl-btn @click="log(settings)" type="danger" text="Log" />
+      </cell>
     </cell>
   </div>
 </template>

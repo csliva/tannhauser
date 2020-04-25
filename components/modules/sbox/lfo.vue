@@ -97,7 +97,7 @@
         },
         // Track Target Selections
         cnxSelected: this.targets[0],
-        cnxSelectedParam: 'frequency',
+        cnxSelectedParam: false,
         cnxOscParams: {
           options: ['frequency', 'detune', 'partialCount'],
           niceOptions: ['Freq', 'Detune', 'Partial #']
@@ -108,7 +108,9 @@
         }
       }
     },
-    mounted () { },
+    mounted () {
+      // mounted
+    },
     computed: {
       // Shortcuts
       sAmp () {
