@@ -4,7 +4,9 @@
       <cell v-if="settings.title" type="title">{{ settings.title }}</cell>
       <cell cols="2">
         <ctrl-select v-if="settings.baseType" v-model="settings.baseType" :props="params.oscType" type="pill" />
-        <!-- <cell type="wip">Note: {{ hzToNote }}</cell> -->
+        <cell v-if="settings.frequency" type="wip">
+          <ctrl-btn :text="hzToNote(settings.frequency.value)" @click="setNoteValue(settings.frequency.value)" />
+        </cell>
       </cell>
       <cell cols="4">
         <ctrl-dial v-if="settings.frequency" v-model="settings.frequency.value" :props="params.freq" />
@@ -50,16 +52,32 @@
       return {
         // Param Props
         params: {
-          freq: { label: 'Freq', min: '20', max: '6000', step: '1', units: 'hz', dec: '0', reset: true},
-          oscType: { value: 'sine', label: 'Waveform', options: ['sine','triangle','square','sawtooth'] },
-          detune: { label: 'Detune', min: '-100', max: '100', steps: '1', units: 'cents', reset: true },
-          partialCount: { label: 'Partials', min: '0', max: '32', steps: '1', units: '', reset: true },
-          vol: { label: 'Volume', min: '-12', max: '12', step: '1', units: 'db', dec: '0', type: 'abs', reset: true }
+          freq: {
+            label: 'Freq',
+            min: '20', max: '6000', step: '0.01', 
+            units: 'hz', dec: '2', reset: true
+          },
+          oscType: {
+            value: 'sine', label: 'Waveform', options: ['sine','triangle','square','sawtooth']
+          },
+          detune: {
+            label: 'Detune', min: '-100', max: '100', steps: '1', units: 'cents', reset: true
+          },
+          partialCount: {
+            label: 'Partials', min: '0', max: '32', steps: '1', units: '', reset: true
+          },
+          vol: {
+            label: 'Volume', min: '-12', max: '12', step: '1', units: 'db', dec: '0', type: 'abs', reset: true
+          }
         }
       }
     },
     // mounted: function () { },
-    // methods: { },
+    methods: {
+      setNoteValue (note) {
+        this.settings.frequency.value = this.noteToHz(note)
+      }
+    },
     computed: {
       debugData () {
         let s = this.settings

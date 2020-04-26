@@ -9,11 +9,11 @@
             <ctrl-btn @click="log(modules)" text="Log" />
           </cell>
         </cell>
-        <cell cols="4">
-          <module-osc v-for="(m, i) in modules" v-if="(m.category === 'oscillator')" v-model="modules[i]" :key="m.uid" />
+        <cell cols="3">
+          <module-osc v-for="(m, i) in modules" v-if="(m.category === 'oscillator')" v-model="modules[i]" :key="modules[i].uid" />
         </cell>
-        <cell cols="4">
-          <module-lfo v-for="(m, i) in modules" v-if="(m.category === 'lfo')"  v-model="modules[i]" :key="m.uid" />
+        <cell cols="3">
+          <module-lfo v-for="(m, i) in modules" v-if="(m.category === 'lfo')"  v-model="modules[i]" :key="modules[i].uid" />
         </cell>
       </cell>
     </div>
@@ -45,12 +45,18 @@
       },
       oscModules () {
         let modules = this.getCatModules('oscillator')
-        return modules
+        // return modules
       },
       lfoModules () {
         let modules = this.getCatModules('lfo')
-        return modules
-      },
+        // return modules
+      }
+    },
+    // watch: {},
+    methods: {
+      // dev
+      log (data) { console.log(data) },
+      alert (data) { alert(data) },
       // id gen
       setUid () {
         let dt = new Date().getTime()
@@ -60,18 +66,12 @@
           return (c=='x' ? r :(r&0x3|0x8)).toString(16)
         })
         return uid
-      }
-    },
-    // watch: {},
-    methods: {
-      // dev
-      log (data) { console.log(data) },
-      alert (data) { alert(data) },
+      },
       // get modules: uid, cat
       getModule (uid) {
-        if(!uid) { return false }
-        let filteredModules = this.modules.filter(m => m.uid === uid)
-        return filteredModules[0]
+        // if(!uid) { return false }
+        // let filteredModules = this.modules.filter(m => m.uid === uid)
+        // return filteredModules[0]
       },
       getCatModules(cat){
         if(!cat) { return false }
@@ -81,7 +81,7 @@
       // local
       initOsc() {
         let osc = new Tone.OmniOscillator({type: 'sine'})
-        osc.uid = this.setUid
+        osc.uid = this.setUid()
         osc.title = 'Omni Oscillator'
         osc.category = 'oscillator'
         osc.meter = new Tone.Meter()
@@ -90,7 +90,7 @@
       },
       initLfo() {
         let lfo = new Tone.LFO()
-        lfo.uid = this.setUid
+        lfo.uid = this.setUid()
         lfo.title = 'LFO'
         lfo.category = 'lfo'
         lfo.meter = new Tone.Meter()

@@ -1,4 +1,6 @@
 <script>
+  // Tone JS
+  import Tone from 'tone'
   export default {
     props: ['value'],
     data () {
@@ -14,7 +16,7 @@
     mounted () {
       setInterval(() => (
         this.setLevel(this.settings.meter)
-      ), 250)
+      ), 100)
     },
     methods: {
       log(data) {
@@ -31,11 +33,11 @@
         return el ? this.cssBlock+'__'+el : false
       },
       // Note <=> Hz
-      noteToHz (hz) {
-        // return Tone.Frequency(hz).toFrequency(2)
+      noteToHz (val) {
+        return Tone.Frequency(val).toFrequency()
       },
-      hzToNote () {
-        // return Tone.Frequency(this.settings.frequency.value).toNote()
+      hzToNote (val) {
+        return Tone.Frequency(val).toNote()
       },
       // meter level
       setLevel(meter) {
@@ -75,5 +77,5 @@
       text-shadow: 0 0 4px clr2('indigo', 0, -20%)
       font-size: 12px
       font-family: $ffHead
-      margin-top: blh
+      margin-top: $blh/2
 </style>
