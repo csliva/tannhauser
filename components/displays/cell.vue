@@ -1,6 +1,5 @@
 <template lang="html">
   <div class="cell" :class="cellClass">
-    <h4 v-if="title" class="cell__title#">{{ title }}</h4>
     <slot />
   </div>
 </template>
@@ -64,7 +63,7 @@
       border-color: clr2('orange', 0.4)
     &--group-danger
       border-color: clr2('pink', 0.4)
-    &__title
+    &--title
       position: absolute
       z-index: 100
       top: 0
@@ -103,16 +102,6 @@
         font-size: 10px
         line-height: 14px
         display: block
-    &--debug
-      @include neuMorphInner(clr2('pink', 0.85, -15%), clr2('pink', 0.75, -55%))
-      background-color: clr2('pink', 0.80, -25%)
-      padding: $blh/4 $blh/2
-      border: solid 2px clr2('pink', 0.5, -45%)
-      border-radius: $blh
-      color: clr2('pink', 0.25, 40%)
-      text-shadow: 0 0 4px clr2('indigo', 0, -20%)
-      font-size: 12px
-      font-family: $ffHead
     &--wip
       @include transition(background-color, color)
       @include neuMorphInner(clr2('indigo', 0.5, 7.5%), clr2('indigo', 0.5, -7.5%))

@@ -1,7 +1,7 @@
 <template lang="html">
-  <div class="new-module" v-if="value">
+  <div v-if="value" :class="cssBlock" >
     <cell type="group-success">
-      <h4 v-if="settings.title" class="cell__title">{{ settings.title }}</h4>
+      <cell v-if="settings.title" type="title">{{ settings.title }}</cell>
       <cell cols="2">
         <ctrl-select v-if="settings._oscillator.baseType" v-model="settings._oscillator.baseType" :props="oscProps" type="pill" />
         <cell type="wip">Note Frq</cell>
@@ -12,14 +12,13 @@
         <ctrl-dial v-if="sODetune" v-model="sODetune.value" :props="oscDetuneProps" />
         <ctrl-dial v-model="sOPartCnt" :props="oscPartialProps" />
       </cell>
-      <cell cols="2" gap="sm">
+      <!-- <cell cols="2" gap="sm">
         <ctrl-select v-if="cnxSelected" v-model="cnxSelected" :props="cnxTargets" type="pill" />
         <ctrl-select v-model="cnxSelectedParam" :props="getCnxParams" type="pill" />
-        <cell v-if="false" type="wip">Connect</cell>
       </cell>
       <cell>
         {{ cnxSelected.title +' - '+cnxSelectedParam }}
-      </cell>
+      </cell> -->
       <cell cols="3" >
         <ctrl-btn @click="settings._oscillator.state === 'stopped' ? settings._oscillator.start() : settings._oscillator.stop() "
           :text="(settings.state == 'started' ? 'Stop' : 'Start')"
@@ -27,22 +26,11 @@
           toggle="true" />
         <ctrl-btn @click="toggleDebug()" type="danger" text="Debug" toggle="true" />
       </cell>
-      <cell v-if="debug.active" type="debug">{{ debugData }}</cell>
-
-
-
-      <!--
-        <cell cols="3">
-          <ctrl-select :props="cnxTargets" type="pill" />
-          <ctrl-select :props="oscModProps" type="pill" />
-          <ctrl-btn @click="" text="Connect" />
-        </cell>
-        <cell v-if="settings.cnx.o">
-          <span v-for="(o, i) in l.cnx.o">{{ o.title ? o.title : 'No Title' }}</span>
-        </cell>
-        <cell v-else>Not Connected</cell>
-      -->
-
+      <div v-if="debug.active" :class="cssEl('debug')">
+        <small>{{ settings.uid }}</small>
+        <div>{{ debugData }}</div>
+        <ctrl-btn @click="log(settings)" type="danger" text="Log" />
+      </div>
     </cell>
   </div>
 </template>
@@ -94,23 +82,22 @@
           label: 'Volume',
           min: '-12', max: '12', step: '1',
           units: 'db', dec: '0', type: 'abs', reset: true
-        },
-        // Track Target Selections
-        cnxSelected: this.targets[0],
-        cnxSelectedParam: false,
-        cnxOscParams: {
-          options: ['frequency', 'detune', 'partialCount'],
-          niceOptions: ['Freq', 'Detune', 'Partial #']
-        },
-        cnxLfoParams: {
-          options: ['amplitude', 'frequency'],
-          niceOptions: ['Amp', 'Freq']
         }
+        //,
+        // Track Target Selections
+        // cnxSelected: this.targets[0],
+        // cnxSelectedParam: false,
+        // cnxOscParams: {
+        //   options: ['frequency', 'detune', 'partialCount'],
+        //   niceOptions: ['Freq', 'Detune', 'Partial #']
+        // },
+        // cnxLfoParams: {
+        //   options: ['amplitude', 'frequency'],
+        //   niceOptions: ['Amp', 'Freq']
+        // }
       }
     },
-    mounted () {
-      // mounted
-    },
+    // mounted () {},
     computed: {
       // Shortcuts
       sAmp () {
@@ -137,12 +124,12 @@
       // Connections
       cnxTargets () {
         // returns name and ids of modules
-        if(this.targets.length){
-          return {
-            options: this.targets,
-            niceOptions: this.targets.map(t => t.title)
-          }
-        }
+        // if(this.targets.length){
+        //   return {
+        //     options: this.targets,
+        //     niceOptions: this.targets.map(t => t.title)
+        //   }
+        // }
       },
       getCnxParams () {
         if (this.cnxSelected.category === 'oscillator') {

@@ -18,10 +18,13 @@
 </template>
 
 <script>
-  import Synth from '~/components/Synth.vue'
+  import Synth from '~/components/synth.vue'
   import Sandbox from '~/components/sandbox.vue'
   export default {
-    components: { Synth, Sandbox },
+    components: {
+      Synth,
+      Sandbox
+    },
     data() {
       return {
         dev: true,
@@ -30,10 +33,10 @@
     },
     computed: {
       synthActive() {
-        return (this.active == 'synth') ? true : false
+        return (this.active === 'synth') ? true : false
       },
       sandboxActive() {
-        return (this.active == 'sandbox') ? true : false
+        return (this.active === 'sandbox') ? true : false
       }
     }
   }

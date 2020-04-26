@@ -4,21 +4,16 @@
       <h2>Sandbox</h2>
       <cell>
         <cell cols="3">
-          <cell cols="4" grid="sm">
-            <ctrl-btn @click="initOsc()" text="Init Osc" />
-            <ctrl-btn @click="log(oscs)" text="Log" />
-          </cell>
-        </cell>
-        <cell cols="4" v-if="oscs.length">
-          <module-osc v-for="(module, i) in oscs" v-model="oscs[i]" :key="module.mId" />
-        </cell>
-        <cell cols="3">
           <cell cols="4">
-            <ctrl-btn @click="initLfo()" text="Init LFO" />
+            <ctrl-btn @click="initOsc()" text="Init Osc" />
+            <ctrl-btn @click="log(modules)" text="Log" />
           </cell>
         </cell>
-        <cell cols="4" v-if="lfos.length">
-          <module-lfo v-for="(module, i) in lfos" v-model="lfos[i]" :targets="getModulesButId(module.mId)" :key="module.mId" />
+        <cell cols="4">
+          <module-osc v-for="(m, i) in modules" v-if="(m.category === 'oscillator')" v-model="modules[i]" :key="m.uid" />
+        </cell>
+        <cell cols="4">
+          <module-lfo v-for="(m, i) in modules" v-if="(m.category === 'lfo')"  v-model="modules[i]" :key="m.uid" />
         </cell>
       </cell>
     </div>
@@ -37,97 +32,86 @@
   import ModuleLfo from './modules/sbox/lfo.vue'
   // Helpers
   export default {
-    components: {
-      ModuleOsc, ModuleLfo,
-      CtrlBtn,
-      Cell
-    },
+    components: { ModuleOsc, ModuleLfo, CtrlBtn, Cell },
     data() {
       return {
-        // OSC
-        oscs: [],
-        // LFOs
-        lfos: [],
-        // Routes
-        routes: [],
-        // utilitities
-        meter: false
+        modules: [],
+        routes: []
       }
     },
     computed: {
-      getModules () {
-        // return all modules
-        let modules = []
-        modules.push(...this.oscs, ...this.lfos)
-        return modules
-      },
       getMaster () {
         return Tone.Master
+      },
+      oscModules () {
+        let modules = this.getCatModules('oscillator')
+        return modules
+      },
+      lfoModules () {
+        let modules = this.getCatModules('lfo')
+        return modules
+      },
+      // id gen
+      setUid () {
+        let dt = new Date().getTime()
+        let uid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          let r = (dt + Math.random()*16)%16 | 0
+          dt = Math.floor(dt/16)
+          return (c=='x' ? r :(r&0x3|0x8)).toString(16)
+        })
+        return uid
       }
     },
-    watch: {
-      // watch
-    },
+    // watch: {},
     methods: {
       // dev
-      log(data) { console.log(data) },
-      alert(data) { alert(data) },
+      log (data) { console.log(data) },
+      alert (data) { alert(data) },
+      // get modules: uid, cat
+      getModule (uid) {
+        if(!uid) { return false }
+        let filteredModules = this.modules.filter(m => m.uid === uid)
+        return filteredModules[0]
+      },
+      getCatModules(cat){
+        if(!cat) { return false }
+        let filteredModules = this.modules.filter(m => m.category === cat)
+        return filteredModules
+      },
       // local
-      initOsc(tone) {
-        let osc = new Tone.OmniOscillator({
-          type: 'sine'
-        })
-        osc.mId = 'omniOsc#' + (this.oscs.length + 1)
-        osc.title = 'Omni Osc #'+ (this.oscs.length + 1)
+      initOsc() {
+        let osc = new Tone.OmniOscillator({type: 'sine'})
+        osc.uid = this.setUid
+        osc.title = 'Omni Oscillator'
         osc.category = 'oscillator'
-        this.oscs.push(osc)
+        osc.meter = new Tone.Meter()
+        osc.connect(osc.meter)
+        this.modules.push(osc)
       },
       initLfo() {
         let lfo = new Tone.LFO()
-        lfo.mId = 'lfo#'+ (this.lfos.length + 1)
-        lfo.title = 'LFO #'+ (this.lfos.length + 1)
+        lfo.uid = this.setUid
+        lfo.title = 'LFO'
         lfo.category = 'lfo'
-        lfo.cnx = {i: [], o: []}
-        this.lfos.push(lfo)
-      },
-      // get modules (id & category)
-      getModuleById (id) {
-        return this.getModules.filter(t => t.mId === id)
-      },
-      getModulesButId (id) {
-        return this.getModules.filter(t => t.mId != id)
-      },
-      getModuleCat (cat) {
-        return this.getModules.filter(t => t.catategory === cat)
+        lfo.meter = new Tone.Meter()
+        lfo.connect(lfo.meter)
+        this.modules.push(lfo)
       },
       // routing
-      routeSignal (output, input) {
-
+      createRoute (source, sink) {
+        source.connect(sink)
+        let route = { uid: '####'}
+        this.routes.push(route)
       },
-      unmapParam (output, input, param) {
-
-      },
-      mapParam (output, input, param) {
-        output.connect(input[param]).toMaster()
-        output.cnx.o.push({ title: input.title+' '+param, module: input, param: param })
-      }
+      destroyRoute () {}
     },
     mounted () {
-      // meter
-      let meter = new Tone.Meter()
-      Tone.Master.connect(meter)
-      this.meter = meter
       // init oscs
       this.initOsc()
       this.initOsc()
       // init lfos
       this.initLfo()
       this.initLfo()
-    },
-    filters: {
-      round (num) {
-        return Number(num).toFixed(0)
-      }
     }
   }
 </script>
