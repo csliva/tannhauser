@@ -8,6 +8,7 @@
         settings: this.value,
         cssBlock: 'new-module',
         level: -Infinity,
+        sink: this.value.sink,
         debug: {
           active: false
         }
@@ -19,12 +20,8 @@
       ), 100)
     },
     methods: {
-      log(data) {
-        console.log(data)
-      },
-      alert(data) {
-        alert(data)
-      },
+      log(data) { console.log(data) },
+      alert(data) { alert(data) },
       toggleDebug(){
         this.debug.active = !this.debug.active
       },
@@ -44,6 +41,16 @@
         if(!meter) { return false }
         let level = meter.getLevel()
         this.level = (level >= -24 && level <= 24) ? level.toFixed(2) : -Infinity
+      },
+      // connect
+      setSink(sink){
+        if(!sink) { return false }
+        if(sink === 'Master') {
+          this.settings.connect(Tone.Master)
+          this.sink = 'Master'
+        } else {
+          
+        }
       }
     },
     computed: {

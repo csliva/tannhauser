@@ -4,7 +4,7 @@
       <cell v-if="settings.title" type="title">{{ settings.title }}</cell>
       <cell cols="2">
         <ctrl-select v-if="settings.baseType" v-model="settings.baseType" :props="params.oscType" type="pill" />
-        <cell v-if="settings.frequency" type="wip">
+        <cell v-if="settings.frequency">
           <ctrl-btn :text="hzToNote(settings.frequency.value)" @click="setNoteValue(settings.frequency.value)" />
         </cell>
       </cell>
@@ -19,19 +19,22 @@
           :text="(settings.state == 'started' ? 'Stop' : 'Start')"
           :type="(settings.state == 'started' ? 'danger' : 'success')"
           toggle="true" />
-        <ctrl-btn text="Connect" @click="settings.toMaster()" toggle="true" />
+        <ctrl-btn text="Connect" @click="setSink('Master')" toggle="true" />
         <ctrl-btn @click="toggleDebug()" type="danger" text="Debug" toggle="true" />
       </cell>
       <cell cols="2">
-        <cell v-if="(level == -Infinity)">No signal</cell>
-        <cell v-else>{{ 'Level: '+level }}</cell>
-        <cell text="Param" />
+        <cell>
+          <span v-if="(level == -Infinity)">No signal</span>
+          <span v-else >{{ 'Level: '+level }}</span>
+        </cell>
+        <cell>Sink: {{ sink ? sink : 'None' }}</cell>
       </cell>
     </cell>
+    <small>{{ settings.uid }}</small>
     <div v-if="debug.active" :class="cssEl('debug')">
-      <small>{{ settings.uid }}</small>
+      <small>Meter: {{ settings.meter.uid }}</small>
       <div>{{ debugData }}</div>
-      <ctrl-btn @click="log(settings)" type="danger" text="Log" />
+      <ctrl-btn @click="log(settings)" type="simple" text="Log to Console" />
     </div>
   </div>
 </template>
@@ -54,7 +57,7 @@
         params: {
           freq: {
             label: 'Freq',
-            min: '20', max: '6000', step: '0.01', 
+            min: '20', max: '6000', step: '0.01',
             units: 'hz', dec: '2', reset: true
           },
           oscType: {

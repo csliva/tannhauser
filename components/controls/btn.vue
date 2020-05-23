@@ -109,5 +109,20 @@
         opacity: 1
       &:after
         opacity: 0
+    &--simple
+      padding: 0
+      color: #fff
+      background-color: transparent
+      border: 0
+      opacity: 0.65
+      text-transform: uppercase
+      &:before,
+      &:after
+        display: none
+      &:hover,
+      &:active,
+      &:focus
+        color: #fff
+        opacity: 1
 
 </style>

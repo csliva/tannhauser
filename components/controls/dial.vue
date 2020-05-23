@@ -11,7 +11,7 @@
       <div class="dial__graphic">
         <div class="dial__circle">
           <div class="dial__display">
-              <span class="dial__val">{{ lVal }}</span>
+            <span class="dial__val">{{ lVal }}</span>
           </div>
           <div class="dial__inner" :class="{'dial__inner--alt': props.type == 'alt', 'dial__inner--abs': props.type == 'abs'}"
           :style="{ transform: 'rotate('+arcPercent+'deg) scale(1.1, 1.1)'}"></div>
