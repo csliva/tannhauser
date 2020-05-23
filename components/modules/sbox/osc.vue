@@ -24,7 +24,7 @@
       </cell>
       <cell cols="2">
         <cell v-if="(level == -Infinity)">No signal</cell>
-        <cell v-else>{{ 'Level: '+level }}</cell>
+        <cell v-else><level-meter :value="level" /></cell>
         <cell text="Param" />
       </cell>
     </cell>
@@ -44,9 +44,10 @@
   import CtrlSelect from '../../controls/select.vue'
   import CtrlBtn from '../../controls/btn.vue'
   import Cell from '../../displays/cell.vue'
+  import LevelMeter from '../../displays/levelMeter.vue'
   import Module from './_module.vue'
   export default {
-    components: { Cell, CtrlDial, CtrlSelect, CtrlBtn },
+    components: { Cell, CtrlDial, CtrlSelect, CtrlBtn, LevelMeter },
     extends: Module,
     data () {
       return {
