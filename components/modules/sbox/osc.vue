@@ -23,8 +23,7 @@
         <ctrl-btn @click="toggleDebug()" type="danger" text="Debug" toggle="true" />
       </cell>
       <cell cols="2">
-        <cell v-if="(level == -Infinity)">No signal</cell>
-        <cell v-else><level-meter :value="level" /></cell>
+        <cell><level-meter :value="level" /></cell>
         <cell text="Param" />
       </cell>
     </cell>
@@ -76,7 +75,8 @@
     // mounted: function () { },
     methods: {
       setNoteValue (note) {
-        this.settings.frequency.value = this.noteToHz(note)
+        this.settings.frequency.value = parseInt(this.noteToHz(this.hzToNote(note)))
+        alert(this.settings.frequency.value)
       }
     },
     computed: {

@@ -11,7 +11,10 @@
     props: [ 'value' ],
     computed: {
       lerp: function () {
-        return ( ((parseFloat(this.value) + 24)/48)*100 )
+        let lerp_val = ((parseFloat(this.value) + 24)/48)*100
+        if (lerp_val < 0) { return 0 }
+        else if (lerp_val > 100) { return 100 }
+        else { return lerp_val }
       }
     }
   }
