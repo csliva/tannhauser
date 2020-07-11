@@ -1,7 +1,8 @@
 <template lang="html">
   <div v-if="value" :class="cssBlock" >
     <cell type="group">
-      <cell v-if="settings.title" type="title">{{ settings.title }}</cell>
+      <cell v-if="settings.title" type="title">
+        {{ settings.title }}</cell>
       <cell cols="2">
         <ctrl-select v-if="settings.baseType" v-model="settings.baseType" :props="params.oscType" type="pill" />
         <cell v-if="settings.frequency">

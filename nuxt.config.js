@@ -4,11 +4,15 @@ module.exports = {
   /*
   ** Headers of the page
   */
+  server: {
+    port: 3000, // default: 3000
+    host: '0.0.0.0' // default: localhost
+  },
   head: {
     title: 'Tannhauser Web Synth',
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1.0' },
       { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
     ],
     link: [
