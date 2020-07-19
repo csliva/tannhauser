@@ -12,13 +12,6 @@
         <ctrl-dial v-if="sODetune" v-model="sODetune.value" :props="oscDetuneProps" />
         <ctrl-dial v-model="sOPartCnt" :props="oscPartialProps" />
       </cell>
-      <!-- <cell cols="2" gap="sm">
-        <ctrl-select v-if="cnxSelected" v-model="cnxSelected" :props="cnxTargets" type="pill" />
-        <ctrl-select v-model="cnxSelectedParam" :props="getCnxParams" type="pill" />
-      </cell>
-      <cell>
-        {{ cnxSelected.title +' - '+cnxSelectedParam }}
-      </cell> -->
       <cell cols="3" >
         <ctrl-btn @click="settings._oscillator.state === 'stopped' ? settings._oscillator.start() : settings._oscillator.stop() "
           :text="(settings.state == 'started' ? 'Stop' : 'Start')"
@@ -26,12 +19,20 @@
           toggle="true" />
         <ctrl-btn @click="toggleDebug()" type="danger" text="Debug" toggle="true" />
       </cell>
-      <div v-if="debug.active" :class="cssEl('debug')">
-        <small>{{ settings.uid }}</small>
-        <div>{{ debugData }}</div>
-        <ctrl-btn @click="log(settings)" type="danger" text="Log" />
-      </div>
+      <cell cols="2">
+        <cell>
+          <span v-if="(level == -Infinity)">No signal</span>
+          <span v-else >{{ 'Level: '+level }}</span>
+        </cell>
+        <cell>Sink: {{ sink ? sink : 'None' }}</cell>
+      </cell>
     </cell>
+    <small>{{ settings.uid }}</small>
+    <div v-if="debug.active" :class="cssEl('debug')">
+      <small>Meter: {{ settings.meter.uid }}</small>
+      <div>{{ debugData }}</div>
+      <ctrl-btn @click="log(settings)" type="simple" text="Log to Console" />
+    </div>
   </div>
 </template>
 
@@ -83,18 +84,6 @@
           min: '-12', max: '12', step: '1',
           units: 'db', dec: '0', type: 'abs', reset: true
         }
-        //,
-        // Track Target Selections
-        // cnxSelected: this.targets[0],
-        // cnxSelectedParam: false,
-        // cnxOscParams: {
-        //   options: ['frequency', 'detune', 'partialCount'],
-        //   niceOptions: ['Freq', 'Detune', 'Partial #']
-        // },
-        // cnxLfoParams: {
-        //   options: ['amplitude', 'frequency'],
-        //   niceOptions: ['Amp', 'Freq']
-        // }
       }
     },
     // mounted () {},
@@ -122,24 +111,7 @@
         return data
       },
       // Connections
-      cnxTargets () {
-        // returns name and ids of modules
-        // if(this.targets.length){
-        //   return {
-        //     options: this.targets,
-        //     niceOptions: this.targets.map(t => t.title)
-        //   }
-        // }
-      },
-      getCnxParams () {
-        if (this.cnxSelected.category === 'oscillator') {
-          return this.cnxOscParams
-        } else if (this.cnxSelected.category === 'lfo') {
-          return this.cnxLfoParams
-        } else {
-          return false
-        }
-      }
+
     }
   }
 </script>

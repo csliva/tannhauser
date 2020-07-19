@@ -30,6 +30,7 @@
     </div>
     <div class="#">
       Total: &nbsp; {{ adsrTotal | fixed }}
+      {{ percentSum }}
     </div>
   </div>
 </template>
@@ -67,7 +68,8 @@
       dShr(){ return (((this.dPct*100) / (this.dPct+this.aPct+this.rPct)) * (this.width / 4)) },
       sShr(){ },
       rShr(){ return (((this.rPct*100) / (this.rPct+this.dPct+this.aPct)) * (this.width / 4)) },
-      adsrTotal(){ return (this.num(this.aShr) + this.num(this.dShr) + this.num(this.rShr)) }
+      adsrTotal(){ return (this.num(this.aShr) + this.num(this.dShr) + this.num(this.rShr)) },
+      percentSum() { return ( (Number(this.aPct) + Number(this.dPct) + Number(this.rPct)) ) }
     },
     watch: {
       value: function () {
@@ -83,7 +85,7 @@
         return Number(val)
       },
       getPctent(val, min, max) {
-        return Number(((val - min) * 100 ) / (max - min))
+        return Number(((val - min)) / (max - min))
       },
       draw() {
         const wRatio = (this.width / 4)
@@ -93,18 +95,18 @@
         let x, y
         x = y = 0
         // attack
-        x = (this.attack / this.aMax) * wRatio
+        x = (this.aPct/this.percentSum)*this.width
         y = 0
         paths.push(`${x} ${y}`)
         // decay
-        x += (this.decay / this.dMax) * wRatio
+        x += (this.dPct/this.percentSum)*this.width
         y = this.height - this.sustain * hRatio
         paths.push(`${x} ${y}`)
         // sustain
-        x += 1 * wRatio
-        paths.push(`${x} ${y}`)
+        //x += 1 * wRatio
+        //paths.push(`${x} ${y}`)
         // release
-        x += (this.release / this.rMax) * wRatio
+        x = this.width
         y = this.height
         paths.push(`${x} ${y}`)
 
